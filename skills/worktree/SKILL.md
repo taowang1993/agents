@@ -43,8 +43,8 @@ As a Worktree Pi, you:
 - **All worktrees** live under `~/projects/worktrees/<name>`
 - **Naming**: `<repo>-<task-slug>`. Extract the repo name from `basename $(pwd)` (e.g., `harness`), then append a short hyphenated slug derived from the task (e.g., `fix-readme`, `add-ci`, `update-deps`). Examples: `harness-fix-readme`, `harness-add-ci`, `harness-update-deps`. Never use bare slugs without the repo prefix.
 - **Branch names** use the task slug only (no repo prefix): `fix-readme`, `add-ci`, `update-deps`.
-- **Remote** is `taowang1993` — the user's only remote. Never add or use `origin`.
-- **`gh` CLI** is authenticated as `taowang1993` — use it for PR creation and merging.
+- **Remote** is `origin` → the repo's GitHub URL. This is the only remote.
+- **`gh` CLI** is authenticated as the repo owner — use it for PR creation and merging.
 - **VS Code** is configured: the `~/projects/worktrees/` folder is in the sidebar. New worktrees appear automatically.
 
 ---
@@ -137,7 +137,7 @@ If the current branch is `main`, **stop and tell the user**. You should never wo
 ```bash
 git add -A
 git commit -m "feat: <description>"
-git push taowang1993 <your-branch>
+git push origin <your-branch>
 ```
 
 ### What you NEVER do
@@ -152,7 +152,7 @@ git push taowang1993 <your-branch>
 
 When your task is done, tell the user clearly:
 
-> ✅ **Done.** Branch `fix-typos` pushed to `taowang1993`. Return to the Master Pi to merge.
+> ✅ **Done.** Branch `fix-typos` pushed to `origin`. Return to the Master Pi to merge.
 
 The user switches back to the Master Pi session and says "merge everything."
 
@@ -165,18 +165,18 @@ When the user says to merge, merge branches **one at a time, sequentially**. Thi
 ### Step 1: Fetch all branches
 
 ```bash
-git fetch taowang1993
+git fetch origin
 ```
 
 ### Step 2: Merge each branch into main, one by one
 
 ```bash
 git checkout main
-git merge taowang1993/<branch-1>
+git merge origin/<branch-1>
 # Resolve conflicts if any → git add . → git commit
-git merge taowang1993/<branch-2>
+git merge origin/<branch-2>
 # Resolve conflicts if any → git add . → git commit
-git merge taowang1993/<branch-3>
+git merge origin/<branch-3>
 # ...
 ```
 
@@ -185,7 +185,7 @@ If a merge conflict occurs, resolve it immediately before moving to the next bra
 ### Step 3: Push the final main
 
 ```bash
-git push taowang1993 main
+git push origin main
 ```
 
 ### Step 4: Clean up worktrees
@@ -199,7 +199,7 @@ git worktree prune
 ### Step 5: Delete remote branches (optional)
 
 ```bash
-git push taowang1993 --delete <branch-1> <branch-2> <branch-3>
+git push origin --delete <branch-1> <branch-2> <branch-3>
 ```
 
 ### Step 6: Report
@@ -218,12 +218,12 @@ If the user wants a single worktree merged via PR (for CI checks and audit trail
 # In the worktree:
 git checkout -b <branch-name>
 git add -A && git commit -m "<message>"
-git push taowang1993 <branch-name>
+git push origin <branch-name>
 gh pr create --title "<title>" --body "<description>" --base main
 gh pr merge --squash --delete-branch
 
 # In the main repo:
-git pull taowang1993 main
+git pull origin main
 git worktree remove ~/projects/worktrees/<name>
 git worktree prune
 ```
@@ -243,8 +243,8 @@ cd ~/projects/worktrees/<name> && git checkout -b <branch>
 git worktree list
 
 # Merge sequentially
-git fetch taowang1993
-git merge taowang1993/<branch>
+git fetch origin
+git merge origin/<branch>
 
 # Cleanup
 git worktree remove ~/projects/worktrees/<name>
@@ -260,7 +260,7 @@ git worktree list | grep "$(pwd)"
 # Work and push
 git add -A
 git commit -m "feat: <description>"
-git push taowang1993 <your-branch>
+git push origin <your-branch>
 ```
 
 ---
@@ -270,6 +270,6 @@ git push taowang1993 <your-branch>
 - **Same branch twice**: Git won't let two worktrees check out the same branch. Use `--detach` and create a new branch.
 - **Port conflicts**: Multiple dev servers need per-worktree `.env` files with different ports.
 - **VS Code sidebar**: The `~/projects/worktrees/` parent folder is already added. New worktrees appear automatically. Do not run `code --add`.
-- **Remote name**: Always push to `taowang1993`, never add or use `origin`.
+- **Remote name**: Always push to `origin`, the only remote.
 - **Stale entries**: If a worktree folder is deleted manually, run `git worktree prune` to clean the reference.
 - **Worktree Pi context**: A Pi session launched inside a worktree loads that directory's `AGENTS.md` and `.pi/` config. This is the same as the main repo (same files), so the Worktree Pi has full project context — it just needs this skill to know it's a worker, not the master.

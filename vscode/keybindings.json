@@ -1,0 +1,32 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+    "key": "cmd+c",
+    "command": "workbench.action.terminal.copySelection",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "\u001b[13;2u"
+    },
+    "when": "terminalFocus"
+  },
+  {
+    "key": "shift+\\",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "\u001b[92;2u"
+    },
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+shift+\\",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "\u001b[92;6u"
+    },
+    "when": "terminalFocus"
+  }
+]
