@@ -1,0 +1,23 @@
+{
+  "skill_name": "autoflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Bootstrap a long-running long-running agent workflow in this brand new pnpm monorepo. It has apps/web, packages/api, no .agents folder yet, and I want initializer/coding-agent modes, scope-aware features.json, workflow audits, and GitHub Actions enforcement.",
+      "expected_output": "Creates a repo map, .agents scaffold, workflow skill, scope-aware progress artifacts, audits, and CI wiring tailored to the monorepo.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Upgrade this existing Next.js repo to the current reference workflow without breaking CI. It already has a bloated AGENTS.md, some docs under .context, and a basic progress.md file. I want the same reference workflow shape now, not a lightweight version.",
+      "expected_output": "Migrates legacy docs/progress into a workflow-parity scaffold, shortens AGENTS.md into a TOC, installs audits, and preserves existing CI while patching it.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Set up the full autonomous workflow harness in this Python CLI repo. There is no browser UI, but I still want the same long-running initializer/coding split, progress artifacts, CI checks, doc-gardening schedule, and truthful verification rules adapted to a CLI/test-based smoke path.",
+      "expected_output": "Adapts the same workflow contract to a Python-first CLI repo, using repo-native scripts/tasks instead of forcing browser-specific or Node-only assumptions.",
+      "files": []
+    }
+  ]
+}
