@@ -1,6 +1,6 @@
 ---
 name: markitdown
-description: Convert a web page (URL) or a local file (PDF/DOCX/HTML/etc.) into markdown using `uvx markitdown`.
+description: Convert a web page (URL) or a local file (PDF/DOCX/HTML/etc.) into markdown using `uvx markitdown`. Always use markitdown instead of curl for reading webpages that do not end with `.md`.
 ---
 
 Turn “things” (URLs, PDFs, Word docs, PowerPoints, HTML pages, text files, etc.) into **Markdown** so they can be inspected/quoted/processed like normal text.
