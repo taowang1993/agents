@@ -141,35 +141,3 @@
 | `com.max.update-repos`      | `.agents/cronjob/update-repos.sh`      |
 | `com.max.update-packages`   | `.agents/cronjob/update-packages.sh`   |
 
-## Pi Docs
-
-Source: `~/.pi/docs/`
-
-| File                  | Description                    |
-| --------------------- | ------------------------------ |
-| `compaction.md`       | compaction and summarization   |
-| `custom-provider.md`  | custom providers configuration |
-| `development.md`      | development guide              |
-| `extensions.md`       | extension system               |
-| `index.md`            | documentation index            |
-| `json.md`             | JSON event stream mode         |
-| `keybindings.md`      | keyboard shortcuts             |
-| `models.md`           | custom models setup            |
-| `packages.md`         | Pi packages                    |
-| `prompt-templates.md` | prompt template system         |
-| `providers.md`        | provider configuration         |
-| `quickstart.md`       | Getting started                |
-| `rpc.md`              | RPC mode                       |
-| `sdk.md`              | SDK integration                |
-| `session-format.md`   | session file format            |
-| `sessions.md`         | session management             |
-| `settings.md`         | settings reference             |
-| `shell-aliases.md`    | shell alias setup              |
-| `skills.md`           | agent skills system            |
-| `terminal-setup.md`   | terminal configuration         |
-| `termux.md`           | Termux (Android) setup         |
-| `themes.md`           | theme customization            |
-| `tmux.md`             | tmux integration               |
-| `tui.md`              | TUI components API             |
-| `usage.md`            | general usage guide            |
-| `windows.md`          | Windows setup                  |
