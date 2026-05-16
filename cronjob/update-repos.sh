@@ -47,10 +47,4 @@ done
 echo "=== Git Pull Completed: $(date) ===" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
 
-# Repair dangling skill symlinks (e.g., if upstream moved a skill folder)
-REPAIR_SCRIPT="$HOME/.local/bin/skills-repair-symlinks.sh"
-if [ -x "$REPAIR_SCRIPT" ]; then
-    LOG_FILE_OVERRIDE="$LOG_FILE" "$REPAIR_SCRIPT"
-else
-    echo ">>> Skill symlink repair: script not found at $REPAIR_SCRIPT" >> "$LOG_FILE"
-fi
+

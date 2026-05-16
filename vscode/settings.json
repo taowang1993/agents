@@ -169,5 +169,6 @@
     "files.autoSave": "afterDelay",
     "workbench.editor.enablePreview": false,
     "vsicons.dontShowNewVersionMessage": true,
-    "editor.formatOnSaveMode": "file"
+    "editor.formatOnSaveMode": "file",
+    "terminal.integrated.mouseWheelScrollSensitivity": 3
 }

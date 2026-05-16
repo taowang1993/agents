@@ -19,8 +19,8 @@ import type { AssistantMessage } from "@earendil-works/pi-ai";
 
 /** Models to try in order. First one that fits the context is used. */
 const MODEL_CHAIN: Array<{ provider: string; id: string }> = [
-  { provider: "openrouter", id: "deepseek/deepseek-v4-flash:free" },
-  { provider: "opencode", id: "deepseek-v4-flash-free" },
+  { provider: "github-copilot", id: "gpt-5-mini" },
+  { provider: "deepseek", id: "deepseek-v4-flash" },
 ];
 
 /** Tokens reserved for the system prompt and the model's response. */

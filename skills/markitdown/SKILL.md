@@ -56,4 +56,4 @@ node scripts/to-markdown.mjs <url-or-path> --summary --prompt "Focus on security
 This will:
 1) convert to Markdown via `uvx --from 'markitdown[pdf]' markitdown`
 2) write the full Markdown to a temp `.md` file and print its path as a "Hint" line
-3) run `pi --model claude-haiku-4-5` (no-tools, no-session) to summarize using your extra prompt
+3) run `pi --model deepseek-v4-pro` (no-tools, no-session) to summarize using your extra prompt

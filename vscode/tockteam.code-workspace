@@ -15,6 +15,9 @@
 		{
 			"name": "worktrees",
 			"path": "/Users/max/projects/worktrees"
+		},
+		{
+			"path": "../../.pi"
 		}
 	],
 	"settings": {

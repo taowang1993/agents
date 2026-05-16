@@ -1,10 +1,23 @@
 # AGENTS.md
 
-If a file looks different after your work, it means the user modified it. Never delete, revert, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your mental model of the desired state. If you notice something the user did that you didn't, ask before touching it.
+## Development Guidelines
 
-When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
+- If a file looks different after your work, it means the user modified it. Never delete, revert, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your mental model of the desired state. If you notice something the user did that you didn't, ask before touching it.
+- When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
+- After creating or modifing an agent skill, use the skill-validator skill to audit it.
 
-After creating or modifing an agent skill, use the skill-validator skill to audit it.
+### Git
+
+- Make small and frequent commits to prevent accidental work loss.
+- PR summary scrope must include all committed changes.
+
+### Copy
+
+- **Title Case** is mandatory for: UI labels, buttons, menu items, options, chips, table headings, nav items, panel names, row titles, trigger labels, and standalone phrases.
+- **ASCII and text diagrams:** box labels and diagram titles are standalone phrases — apply Title Case. Arrow text and flow descriptions are body copy — use sentence case.
+- **Table headings** (column and row labels) use Title Case regardless of content type — reference tables, comparison tables, feature tables, or UI tables.
+- **Sentence case** only for: body copy, descriptions, helper text, and full sentences.
+- **Preserve exact on-screen capitalization** when writing markdown reports, plans, and docs.
 
 ## Package Managers
 
@@ -34,8 +47,8 @@ After creating or modifing an agent skill, use the skill-validator skill to audi
 | `cargo-deny`        | Rust license/deps checker      |
 | `cargo-geiger`      | Unsafe Rust code finder        |
 | `cargo-miri`        | Rust MIR interpreter           |
-| `cmake`             | Build system                   |
-| `cmux`              | Terminal multiplexer           |
+| `cmake`             | build system                   |
+| `cmux`              | terminal multiplexer           |
 | `cocoapods`         | iOS dependency manager         |
 | `code`              | VS Code editor                 |
 | `codex`             | OpenAI Codex CLI               |
@@ -53,10 +66,10 @@ After creating or modifing an agent skill, use the skill-validator skill to audi
 | `fallow-lsp`        | Fallow language server         |
 | `fallow-mcp`        | Fallow MCP server              |
 | `fd`                | find alternative               |
-| `ffmpeg`            | Audio/video processing         |
-| `firecrawl`         | Web scraping CLI               |
+| `ffmpeg`            | audio/video processing         |
+| `firecrawl`         | web scraping CLI               |
 | `forge`             | _(unknown)_                    |
-| `fzf`               | Fuzzy finder                   |
+| `fzf`               | fuzzy finder                   |
 | `gemini`            | Google Gemini CLI              |
 | `gh`                | GitHub CLI                     |
 | `git-lfs`           | Git Large File Storage         |
@@ -69,56 +82,56 @@ After creating or modifing an agent skill, use the skill-validator skill to audi
 | `javadoc`           | Java API doc generator         |
 | `jcmd`              | JVM diagnostic command tool    |
 | `jdb`               | Java debugger                  |
-| `jscpd`             | Copy-paste detector            |
+| `jscpd`             | copy-paste detector            |
 | `kilo`              | KiloCode AI coding agent       |
 | `kiro-cli`          | Kiro CLI                       |
 | `kiro-cli-chat`     | Kiro chat mode                 |
 | `kiro-cli-term`     | Kiro terminal mode             |
-| `knip` / `knip-bun` | Unused code analyzer           |
+| `knip` / `knip-bun` | unused code analyzer           |
 | `kubectl`           | Kubernetes CLI                 |
 | `livekit-cli`       | LiveKit real-time audio        |
-| `maestro`           | Mobile E2E testing             |
+| `maestro`           | mobile E2E testing             |
 | `mcporter`          | MCP server manager             |
 | `mitmproxy`         | HTTPS proxy & debugger         |
-| `ngrok`             | Tunnel / ingress               |
+| `ngrok`             | tunnel / ingress               |
 | `npm` / `npx`       | Node.js package manager        |
 | `opencode`          | OpenCode CLI                   |
 | `opencode-desktop`  | OpenCode desktop app           |
 | `orb` / `orbctl`    | OrbStack Docker alternative    |
-| `pandoc`            | Document converter             |
+| `pandoc`            | document converter             |
 | `pi`                | Pi coding agent                |
 | `playwright-cli`    | browser automation & testing   |
 | `pm2`               | Node.js PM (daemon)            |
 | `pm2-dev`           | PM2 development mode           |
 | `pm2-docker`        | PM2 Docker integration         |
 | `pm2-runtime`       | PM2 container runtime          |
-| `pnpm` / `pnpx`     | Fast, disk-efficient PM        |
-| `prettier`          | Code formatter                 |
+| `pnpm` / `pnpx`     | fast, disk-efficient PM        |
+| `prettier`          | code formatter                 |
 | `python3`           | Python 3.13 runtime            |
 | `qwen`              | Qwen Code AI coding agent      |
 | `react-doctor`      | React code quality checker     |
-| `ripgrep` (`rg`)    | Fast grep                      |
+| `ripgrep` (`rg`)    | fast grep                      |
 | `rust-analyzer`     | Rust LSP server                |
 | `rustc`             | Rust compiler                  |
 | `rustdoc`           | Rust doc generator             |
 | `rustfmt`           | Rust formatter                 |
 | `rustup`            | Rust toolchain manager         |
-| `semgrep`           | Multi-lang SAST & code scanner |
-| `skill-validator`   | Agent skill package validator  |
+| `semgrep`           | multi-lang SAST & code scanner |
+| `skill-validator`   | agent skill package validator  |
 | `add-skill`         | Install an agent skill         |
-| `skills`            | Agent skill manager            |
+| `skills`            | agent skill manager            |
 | `stripe`            | Stripe CLI                     |
 | `swift`             | Apple Swift compiler           |
 | `terminal-notifier` | macOS notification sender      |
-| `tldx`              | Domain name checker            |
-| `tokei`             | Code line counter              |
-| `tree`              | Directory tree viewer          |
-| `tree-sitter`       | Parser generator               |
-| `trufflehog`        | Secret scanner                 |
+| `tldx`              | domain name checker            |
+| `tokei`             | code line counter              |
+| `tree`              | directory tree viewer          |
+| `tree-sitter`       | parser generator               |
+| `trufflehog`        | secret scanner                 |
 | `uv` / `uvx`        | Python package & PM            |
 | `vercel` / `vc`     | Vercel deployment CLI          |
 | `wrangler`          | Cloudflare Workers CLI         |
-| `mise`              | Polyglot runtime manager       |
+| `mise`              | polyglot runtime manager       |
 
 ## Launch Agents
 
@@ -127,3 +140,36 @@ After creating or modifing an agent skill, use the skill-validator skill to audi
 | `com.max.cleanup-processes` | `.agents/cronjob/cleanup-processes.sh` |
 | `com.max.update-repos`      | `.agents/cronjob/update-repos.sh`      |
 | `com.max.update-packages`   | `.agents/cronjob/update-packages.sh`   |
+
+## Pi Docs
+
+Source: `~/.pi/docs/`
+
+| File                  | Description                    |
+| --------------------- | ------------------------------ |
+| `compaction.md`       | compaction and summarization   |
+| `custom-provider.md`  | custom providers configuration |
+| `development.md`      | development guide              |
+| `extensions.md`       | extension system               |
+| `index.md`            | documentation index            |
+| `json.md`             | JSON event stream mode         |
+| `keybindings.md`      | keyboard shortcuts             |
+| `models.md`           | custom models setup            |
+| `packages.md`         | Pi packages                    |
+| `prompt-templates.md` | prompt template system         |
+| `providers.md`        | provider configuration         |
+| `quickstart.md`       | Getting started                |
+| `rpc.md`              | RPC mode                       |
+| `sdk.md`              | SDK integration                |
+| `session-format.md`   | session file format            |
+| `sessions.md`         | session management             |
+| `settings.md`         | settings reference             |
+| `shell-aliases.md`    | shell alias setup              |
+| `skills.md`           | agent skills system            |
+| `terminal-setup.md`   | terminal configuration         |
+| `termux.md`           | Termux (Android) setup         |
+| `themes.md`           | theme customization            |
+| `tmux.md`             | tmux integration               |
+| `tui.md`              | TUI components API             |
+| `usage.md`            | general usage guide            |
+| `windows.md`          | Windows setup                  |

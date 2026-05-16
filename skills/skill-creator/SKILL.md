@@ -114,7 +114,17 @@ This goes without saying, but skills must not contain malware, exploit code, or 
 
 #### Writing Patterns
 
-Prefer using the imperative form in instructions.
+**Imperative second-person is mandatory.** Every instruction in a skill must address the reader directly as "you" using imperative verbs. Do not refer to the agent in third person.
+
+| ❌ Wrong (third person) | ✅ Correct (imperative second person) |
+|---|---|
+| The agent should review its own code before opening a PR. | Review all uncommitted changes before opening a PR. |
+| The coding agent needs the ports and log paths. | Print the ports and log paths you need. |
+| Agents in feature worktrees push their branch and stop. | Push your branch and stop — never merge from a feature worktree. |
+| It invokes the agent in a read-only review mode. | It runs in a read-only review mode. |
+| The agent must continue after each verified slice. | Continue after each verified slice. |
+
+The only exception: conceptual discussions about agents in general (e.g., "multi-agent future", "agent readability", "specialized agents") or proper names of tools (e.g., `agent-browser`).
 
 **Defining output formats** - You can do it like this:
 ```markdown
