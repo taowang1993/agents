@@ -2,16 +2,17 @@
 # Night Shift — Launch a coding agent in non-interactive mode for a scheduled task.
 #
 # Usage: nightshift.sh <hour-index> [timeout_minutes]
-#   hour-index:     0-7 (maps to ## Task N in nightshift-tasks.md)
+#   hour-index:     0-7 (maps to ## Phase N in review.md)
 #   timeout_minutes: optional, default 45
 #
 # Environment (override in $SCRIPT_DIR/.env):
+#   NIGHT_SHIFT_ENABLED    — "true" to run, anything else skips (default: false)
 #   NIGHT_SHIFT_AGENT     — agent to use: "pi", "claude", or "codex" (default: pi)
 #   NIGHT_SHIFT_PROJECT   — project directory to run in (default: ~/projects/tockbot)
 #   NIGHT_SHIFT_TIMEOUT   — timeout in minutes (default: 45)
 #
-# Tasks are read from nightshift-tasks.md (same directory as this script).
-# Format: markdown with ## Task N headings. Content between headings
+# Phases are read from review.md (same directory as this script).
+# Format: markdown with ## Phase N headings. Content between headings
 # is the task description. If the task file is missing or the task is
 # empty, the script exits cleanly.
 
@@ -23,7 +24,7 @@ TIMEOUT_MIN="${2:-45}"
 PROJECT_DIR="${NIGHT_SHIFT_PROJECT:-$HOME/projects/tockbot}"
 LOG_DIR="$HOME/.cron-logs"
 LOG_FILE="$LOG_DIR/nightshift-$(date +%Y%m%d).log"
-TASK_FILE="$SCRIPT_DIR/nightshift-tasks.md"
+TASK_FILE="$SCRIPT_DIR/review.md"
 
 # Default agent is pi
 AGENT="${NIGHT_SHIFT_AGENT:-pi}"
@@ -33,6 +34,12 @@ mkdir -p "$LOG_DIR"
 # ── Load .env ─────────────────────────────────────────────────
 if [[ -f "$SCRIPT_DIR/.env" ]]; then
   set -a; source "$SCRIPT_DIR/.env"; set +a
+fi
+
+# ── Master toggle ─────────────────────────────────────────────
+if [[ "${NIGHT_SHIFT_ENABLED:-false}" != "true" ]]; then
+  echo "[$(date '+%H:%M:%S')] Night shift disabled (NIGHT_SHIFT_ENABLED not set to 'true')." | tee -a "$LOG_FILE"
+  exit 0
 fi
 
 # ── Skip sentinel ─────────────────────────────────────────────
@@ -81,15 +88,23 @@ mkdir -p "$SESSION_DIR"
 
 # ── Resolve task ──────────────────────────────────────────────
 if [[ ! -f "$TASK_FILE" ]]; then
-  echo "[$(date '+%H:%M:%S')] ERROR: Task file not found: $TASK_FILE" | tee -a "$LOG_FILE"
+  echo "[$(date '+%H:%M:%S')] ERROR: Phase file not found: $TASK_FILE" | tee -a "$LOG_FILE"
   exit 1
 fi
 
+# ── Extract preamble (everything before ## Phase 1) ───────────
+PREAMBLE="$(awk '
+  /^## Phase 1$/ { exit }
+  { print }
+' "$TASK_FILE")"
+# Escape backticks to prevent command substitution in prompt
+PREAMBLE="${PREAMBLE//\`/\\\`}"
+
 TASK_N=$((HOUR_INDEX + 1))
 TASK="$(awk -v n="$TASK_N" '
-  /^## Task [0-9]+/         { in_task=0 }
-  $0 ~ "^## Task " n "$"   { in_task=1; next }
-  in_task && /^## Task /    { exit }
+  /^## Phase [0-9]+/         { in_task=0 }
+  $0 ~ "^## Phase " n "$"   { in_task=1; next }
+  in_task && /^## Phase /    { exit }
   in_task                   { print }
 ' "$TASK_FILE")"
 
@@ -99,9 +114,11 @@ TASK="$(echo "$TASK" | awk '
   { lines[NR]=$0 }
   END { for (i=first; i<=last; i++) print lines[i] }
 ')"
+# Escape backticks to prevent command substitution in prompt
+TASK="${TASK//\`/\\\`}"
 
 if [[ -z "$TASK" ]]; then
-  echo "[$(date '+%H:%M:%S')] Hour $HOUR_INDEX (Task $TASK_N): no task defined — skipping." | tee -a "$LOG_FILE"
+  echo "[$(date '+%H:%M:%S')] Hour $HOUR_INDEX (Phase $TASK_N): no phase defined — skipping." | tee -a "$LOG_FILE"
   exit 0
 fi
 
@@ -113,26 +130,32 @@ echo "════════════════════════�
 echo "  Night Shift — Hour $HOUR_INDEX ($(date '+%Y-%m-%d %H:%M:%S'))" >> "$LOG_FILE"
 echo "  Agent:   $AGENT_LABEL" >> "$LOG_FILE"
 echo "  Project: $PROJECT_DIR" >> "$LOG_FILE"
-echo "  Task:    $TASK_ONELINE" >> "$LOG_FILE"
+echo "  Phase:   $TASK_ONELINE" >> "$LOG_FILE"
 echo "  Timeout: ${TIMEOUT_MIN}m" >> "$LOG_FILE"
 echo "══════════════════════════════════════════════════════════════" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
 
 # ── Notify start ──────────────────────────────────────────────
-osascript -e "display notification \"Task $TASK_N: $TASK_ONELINE\" with title \"🌙 $AGENT_LABEL Night Shift Started\" sound name \"Pop\"" 2>/dev/null || true
+osascript -e "display notification \"Phase $TASK_N: $TASK_ONELINE\" with title \"🌙 $AGENT_LABEL Night Shift Started\" sound name \"Pop\"" 2>/dev/null || true
 
 # ── Build the prompt ──────────────────────────────────────────
 # We wrap the task in instructions that encourage focused, committed work.
 FULL_PROMPT="You are running in an unattended overnight batch. Work autonomously.
-Your task: $TASK
+
+$PREAMBLE
+
+---
+
+Your task (Phase $HOUR_INDEX): $TASK
 
 Guidelines:
 - Work efficiently; you have ~${TIMEOUT_MIN} minutes before you are terminated.
+- Find issues and fix them directly. Do NOT write reports or document findings — just fix the code.
 - Make small, frequent commits with clear messages.
-- After completing meaningful work, commit and push to the current branch.
-- If you hit a blocker you can't resolve, document it in .agents/cronjob/nightshift-blockers.md and move on.
+- After completing this phase, commit and push all fixes to the current branch.
+- If you hit a blocker you can't resolve, move on — do not document it.
 - Do NOT open interactive prompts or ask questions — you are running headless.
-- At the end, summarize what you accomplished."
+- At the end, summarize what you fixed."
 
 # ── Run Agent ─────────────────────────────────────────────────
 cd "$PROJECT_DIR"

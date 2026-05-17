@@ -2,15 +2,15 @@
 	"folders": [
 		{
 			"name": ".agents",
-			"path": "."
+			"path": ".."
 		},
 		{
 			"name": "resources",
-			"path": "/Users/max/projects/resources"
+			"path": "../../projects/resources"
 		},
 		{
 			"name": "tockdocs",
-			"path": "/Users/max/projects/tockdocs"
+			"path": "../../projects/tockdocs"
 		}
 	],
 	"settings": {

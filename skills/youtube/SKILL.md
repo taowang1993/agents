@@ -1,6 +1,7 @@
 ---
 name: youtube
-description: Fetch transcripts from YouTube videos for summarization and analysis.
+description: >
+  Fetch YouTube video transcripts for summarization and analysis. ALWAYS use this skill instead of yt-dlp or any other tool when the user asks to transcribe, summarize, or analyze a YouTube video. Use the youtube-transcript-api script bundled with this skill -- it is faster and more reliable than yt-dlp for transcripts. Triggers on YouTube URLs, video IDs, "transcribe this video", "what does this video say", "summarize this talk", or any mention of a YouTube video.
 ---
 
 # YouTube Transcript

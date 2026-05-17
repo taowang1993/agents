@@ -170,5 +170,7 @@
     "workbench.editor.enablePreview": false,
     "vsicons.dontShowNewVersionMessage": true,
     "editor.formatOnSaveMode": "file",
-    "terminal.integrated.mouseWheelScrollSensitivity": 3
+    "terminal.integrated.mouseWheelScrollSensitivity": 3,
+    "terminal.integrated.gpuAcceleration": "off",
+    "terminal.integrated.initialHint": false
 }
