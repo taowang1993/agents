@@ -1,9 +1,15 @@
 #!/bin/bash
 # Night Shift — Launch a coding agent in non-interactive mode for a scheduled task.
 #
-# Usage: nightshift.sh <hour-index> [timeout_minutes]
-#   hour-index:     0-7 (maps to ## Phase N in review.md)
-#   timeout_minutes: optional, default 45
+# Usage:
+#   nightshift.sh --all                        Run all 8 phases sequentially
+#   nightshift.sh <hour-index> [timeout_min]   Run a single phase (0-7)
+#
+# When invoked with --all:
+#   - Checks NIGHT_SHIFT_ENABLED and skip sentinel
+#   - If enabled, runs caffeinate for the full 8.5-hour window
+#   - Loops through hours 0-7 sequentially
+#   - Skips the sleep prevention if disabled (lets Mac sleep normally)
 #
 # Environment (override in $SCRIPT_DIR/.env):
 #   NIGHT_SHIFT_ENABLED    — "true" to run, anything else skips (default: false)
@@ -19,6 +25,34 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# ── Load .env (needed early for --all gating) ───────────────
+if [[ -f "$SCRIPT_DIR/.env" ]]; then
+  set -a; source "$SCRIPT_DIR/.env"; set +a
+fi
+
+# ── --all mode: run every phase in one shot ─────────────────
+if [[ "${1:-}" == "--all" ]]; then
+  if [[ "${NIGHT_SHIFT_ENABLED:-false}" != "true" ]]; then
+    echo "[$(date '+%H:%M:%S')] Night shift disabled (NIGHT_SHIFT_ENABLED not set to 'true')."
+    exit 0
+  fi
+  SKIP_FILE="$SCRIPT_DIR/.night-shift-skip"
+  if [[ -f "$SKIP_FILE" ]]; then
+    echo "[$(date '+%H:%M:%S')] Night shift skipped (sentinel present)."
+    exit 0
+  fi
+  # Prevent sleep for the full window (8 phases × 45 min + 30 min buffer = 390 min)
+  # -i covers idle sleep. If you want lid-close protection too, use -m.
+  caffeinate -i -t $((8 * 45 * 60 + 1800)) bash -c '
+    for hour in 0 1 2 3 4 5 6 7; do
+      "$0" "$hour" || true
+    done
+    echo "[$(date "+%H:%M:%S")] Night shift complete — all phases finished."
+  ' "$0"
+  exit $?
+fi
+
 HOUR_INDEX="${1:?Usage: $0 <hour-index> [timeout_minutes]}"
 TIMEOUT_MIN="${2:-45}"
 PROJECT_DIR="${NIGHT_SHIFT_PROJECT:-$HOME/projects/tockbot}"
@@ -30,11 +64,6 @@ TASK_FILE="$SCRIPT_DIR/review.md"
 AGENT="${NIGHT_SHIFT_AGENT:-pi}"
 
 mkdir -p "$LOG_DIR"
-
-# ── Load .env ─────────────────────────────────────────────────
-if [[ -f "$SCRIPT_DIR/.env" ]]; then
-  set -a; source "$SCRIPT_DIR/.env"; set +a
-fi
 
 # ── Master toggle ─────────────────────────────────────────────
 if [[ "${NIGHT_SHIFT_ENABLED:-false}" != "true" ]]; then
