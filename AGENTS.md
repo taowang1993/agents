@@ -13,11 +13,28 @@
 
 ### Copy
 
-- **Title Case** is mandatory for: UI labels, buttons, menu items, options, chips, table headings, nav items, panel names, row titles, trigger labels, and standalone phrases.
-- **ASCII and text diagrams:** box labels and diagram titles are standalone phrases — apply Title Case. Arrow text and flow descriptions are body copy — use sentence case.
-- **Table headings** (column and row labels) use Title Case regardless of content type — reference tables, comparison tables, feature tables, or UI tables.
-- **Sentence case** only for: body copy, descriptions, helper text, and full sentences.
-- **Preserve exact on-screen capitalization** when writing markdown reports, plans, and docs.
+**Title Case** applies to all UI surface text that is not a full sentence:
+
+- UI labels and button text
+- Menu items, menu group labels, and dropdown options
+- Section headers, panel names, and card titles
+- Chips, badges, and status labels
+- Table headings, column headers, and row labels
+- Nav items, tab labels, and breadcrumb segments
+- Trigger labels and standalone phrases
+
+**Sentence case** applies only to:
+
+- Body copy and paragraph text
+- Descriptions, helper text, and field hints
+- Full sentences in tooltips, dialogs, or alerts
+
+**ASCII and text diagrams:**
+
+- Box labels and diagram titles are standalone phrases — apply Title Case
+- Arrow text and flow descriptions are body copy — use sentence case
+
+**Preserve exact on-screen capitalization** when writing markdown reports, plans, and docs.
 
 ## Package Managers
 

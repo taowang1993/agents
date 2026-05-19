@@ -96,7 +96,7 @@ RIGHT (vertical):
 
 ### 1. Planning
 
-When a feature request arrives, **start by reading any specs or design docs** relevant to the feature. Use the project's domain glossary so that test names and interface vocabulary match the project's language, and respect ADRs in the area you're touching.
+When a feature request arrives, **start by reading any specs or design docs** relevant to the feature. If the project has an architecture.md, consult it — but proceed without it if it doesn't exist.
 
 Before writing any code:
 
