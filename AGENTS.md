@@ -10,6 +10,7 @@
 
 - Make small and frequent commits to prevent accidental work loss.
 - PR summary scrope must include all committed changes.
+- Commit all files in the working tree when asked to open a PR. 
 
 ### Copy
 

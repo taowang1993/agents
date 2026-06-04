@@ -38,7 +38,7 @@ Redirect Python tooling (`pip`, `python`, `poetry`) to `uv` equivalents for fast
 
 Automate browser interactions: navigate pages, fill forms, click buttons, take screenshots, scrape data, test web apps. Supports proxy, headers, geo/device emulation, Electron apps, Slack automation, and cloud browsers.
 
-Origin: https://github.com/vercel-labs/agent-browser
+Origin: https://github.com/vercel-labs/agent-browser/tree/main/skills/agent-browser
 
 ### ai-sdk
 
@@ -46,13 +46,9 @@ Build AI-powered features with the Vercel AI SDK — generateText, streamText, t
 
 Origin: https://github.com/kthrob/ai_sdk/tree/main/skills/use-ai-sdk
 
-### andrej-karpathy-perspective
-
-Andrej Karpathy's thinking framework. Analyze AI technology reliability, learning methods, industry trends, and product design through his lens. Covers Software 2.0/3.0, vibe coding, neural network training, and LLM capability boundaries.
-
 ### architect
 
-Find deepening opportunities in a codebase, informed by the project's architecture.md. Use for improving architecture, finding refactoring opportunities, consolidating tightly-coupled modules, or making a codebase more testable and AI-navigable.
+Find deepening opportunities in a codebase, informed by the project's `architecture.md`. Use for improving architecture, finding refactoring opportunities, consolidating tightly-coupled modules, or making a codebase more testable and AI-navigable.
 
 ### ascii-tutor
 
@@ -84,10 +80,6 @@ Origin: https://github.com/taowang1993/docsee/tree/main/skill/docsee
 
 Brainstorm and check availability of domain names using tldx CLI.
 
-### elon-musk-perspective
-
-Elon Musk's thinking framework. Analyze problems through his lens: first principles reasoning, cost structure decomposition, vertical integration, and the five-step algorithm.
-
 ### exa
 
 Free neural web search, code search, and company research via Exa MCP (no API key needed).
@@ -101,10 +93,6 @@ Web search, content extraction, and deep research via Exa API. Supports highligh
 Codebase intelligence for JS/TS — find unused code, duplicates, circular deps, complexity hotspots, and feature flags.
 
 Origin: https://github.com/fallow-rs/fallow/tree/main/npm/fallow/skills/fallow
-
-### feynman-perspective
-
-Richard Feynman's thinking framework. Analyze problems through his lens: cargo cult detection, naming vs. understanding, anti-self-deception, and learning by teaching.
 
 ### find-skills
 
@@ -138,17 +126,9 @@ Convert URLs, PDFs, DOCX, HTML, and other files into Markdown using `uvx markitd
 
 List, configure, authenticate, call, and inspect MCP servers/tools over HTTP or stdio.
 
-### munger-perspective
-
-Charlie Munger's thinking framework. Analyze problems through his lens: inversion, cognitive biases, multi-disciplinary thinking, Lollapalooza effects, and circle of competence.
-
 ### night-shift
 
 Manage the Pi Night Shift system — review overnight results, create/update/delete tasks, skip nights, and configure the target project.
-
-### paul-graham-perspective
-
-Paul Graham's thinking framework. Analyze startups, writing, products, and life choices through the lens of the Y Combinator founder.
 
 ### playwright-cli
 
@@ -176,10 +156,6 @@ Origin: https://github.com/anthropics/skills/tree/main/skills/skill-creator
 
 Validate and score Agent Skill packages for spec compliance, content quality, contamination, and LLM scoring.
 
-### steve-jobs-perspective
-
-Steve Jobs' thinking framework. Analyze products and decisions through his lens: simplicity, intersection of technology and liberal arts, reality distortion, and taste.
-
 ### surf
 
 Chrome-only secondary browser CLI. Use for AI queries via browser cookies (ChatGPT, Gemini, Perplexity, Grok, AI Studio), multi-step workflows with loops/variables, iframe interaction, window isolation, and semantic locators.
@@ -187,10 +163,6 @@ Chrome-only secondary browser CLI. Use for AI queries via browser cookies (ChatG
 ### tailwind
 
 Build scalable design systems with Tailwind CSS v4, design tokens, component libraries, and responsive patterns.
-
-### taleb-perspective
-
-Nassim Nicholas Taleb's thinking framework. Analyze problems through his lens: black swans, antifragility, skin in the game, fat tails, and the Lindy effect.
 
 ### tdd
 
@@ -219,10 +191,6 @@ Origin: https://github.com/vercel/vercel/tree/main/skills/vercel-cli
 ### youtube
 
 Fetch transcripts from YouTube videos for summarization and analysis.
-
-### zhang-yiming-perspective
-
-Zhang Yiming's (ByteDance/TikTok founder) thinking framework. Analyze products, organizations, globalization, talent, and personal growth through his lens.
 
 ## Cron Jobs (Launchd Agents)
 
