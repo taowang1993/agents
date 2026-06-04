@@ -1,0 +1,32 @@
+{
+  "version": 3,
+  "skills": {
+    "paul-graham-perspective": {
+      "source": "alchaincyf/paul-graham-skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/alchaincyf/paul-graham-skill.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "8de3d2bf4e0c301ea3caf015b189307f8d8d8dc0",
+      "installedAt": "2026-06-04T20:50:46.440Z",
+      "updatedAt": "2026-06-04T20:50:46.440Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "antigravity-cli",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-code-cli",
+    "opencode",
+    "warp",
+    "zed"
+  ]
+}

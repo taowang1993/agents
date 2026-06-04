@@ -47,4 +47,29 @@ done
 echo "=== Git Pull Completed: $(date) ===" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
 
+# Clean up stale git repos in /tmp (clones, worktrees, subagent sessions)
+echo "=== Tmp Git Cleanup Started: $(date) ===" >> "$LOG_FILE"
+
+removed=0
+while read gitdir; do
+    repo_dir=$(dirname "$gitdir")
+
+    # Skip dirs modified in the last hour (may be in active use)
+    if [ "$(uname)" = "Darwin" ]; then
+        age_sec=$(($(date +%s) - $(stat -f %m "$repo_dir" 2>/dev/null || echo 0)))
+    else
+        age_sec=$(($(date +%s) - $(stat -c %Y "$repo_dir" 2>/dev/null || echo 0)))
+    fi
+    if [ "$age_sec" -lt 3600 ]; then
+        echo "    ⏭ Skipping (active): $repo_dir" >> "$LOG_FILE"
+        continue
+    fi
+
+    echo "    🗑 Removing: $repo_dir" >> "$LOG_FILE"
+    rm -rf "$repo_dir" && removed=$((removed + 1))
+done < <(find -P /tmp -type d -name ".git" -mindepth 2 -maxdepth 5 2>/dev/null)
+
+echo "    Removed $removed stale git repos" >> "$LOG_FILE"
+echo "=== Tmp Git Cleanup Completed: $(date) ===" >> "$LOG_FILE"
+echo "" >> "$LOG_FILE"
 

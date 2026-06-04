@@ -150,6 +150,8 @@
 | `wrangler`          | Cloudflare Workers CLI         |
 | `mise`              | polyglot runtime manager       |
 
+| `beads` | Memory upgrade for your coding agent |
+
 ## Launch Agents
 
 | Agent                       | Script                                 |
