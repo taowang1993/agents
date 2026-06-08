@@ -153,6 +153,10 @@
 
 | `beads` | Memory upgrade for your coding agent |
 
+| `codegraph` | Local-first code intelligence for AI agents (MCP). Self-contained — bundles its own runtime. |
+
+| `clawpatch` | Automated code review that lands fixes. |
+
 ## Launch Agents
 
 | Agent                       | Script                                 |
