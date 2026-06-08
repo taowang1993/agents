@@ -2,20 +2,23 @@
 # Night Shift — Launch a coding agent in non-interactive mode for a scheduled task.
 #
 # Usage:
-#   nightshift.sh --all                        Run all 8 phases sequentially
-#   nightshift.sh <hour-index> [timeout_min]   Run a single phase (0-7)
+#   nightshift.sh <hour-index> [timeout_min]   Run one phase (0-7)
+#   nightshift.sh --all                        Deprecated; exits without running
 #
-# When invoked with --all:
-#   - Checks NIGHT_SHIFT_ENABLED and skip sentinel
-#   - If enabled, runs caffeinate for the full 8.5-hour window
-#   - Loops through hours 0-7 sequentially
-#   - Skips the sleep prevention if disabled (lets Mac sleep normally)
+# Launchd should schedule eight independent jobs, one per hour:
+#   com.max.nightshift-0 at 00:00 -> Phase 1
+#   com.max.nightshift-1 at 01:00 -> Phase 2
+#   ...
+#   com.max.nightshift-7 at 07:00 -> Phase 8
+#
+# Each phase runs in a fresh agent session directory. Do not use --continue:
+# fresh context avoids cross-phase and cross-night context-window growth.
 #
 # Environment (override in $SCRIPT_DIR/.env):
 #   NIGHT_SHIFT_ENABLED    — "true" to run, anything else skips (default: false)
-#   NIGHT_SHIFT_AGENT     — agent to use: "pi", "claude", or "codex" (default: pi)
-#   NIGHT_SHIFT_PROJECT   — project directory to run in (default: ~/projects/tockbot)
-#   NIGHT_SHIFT_TIMEOUT   — timeout in minutes (default: 45)
+#   NIGHT_SHIFT_AGENT      — agent to use: "pi", "claude", or "codex" (default: pi)
+#   NIGHT_SHIFT_PROJECT    — project directory to run in (default: ~/projects/tockbot)
+#   NIGHT_SHIFT_TIMEOUT    — timeout in minutes (default: 45)
 #
 # Phases are read from review.md (same directory as this script).
 # Format: markdown with ## Phase N headings. Content between headings
@@ -26,35 +29,29 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# ── Load .env (needed early for --all gating) ───────────────
+# ── Load .env ───────────────────────────────────────────────
 if [[ -f "$SCRIPT_DIR/.env" ]]; then
   set -a; source "$SCRIPT_DIR/.env"; set +a
 fi
 
-# ── --all mode: run every phase in one shot ─────────────────
+# ── Deprecated batch mode guard ─────────────────────────────
 if [[ "${1:-}" == "--all" ]]; then
-  if [[ "${NIGHT_SHIFT_ENABLED:-false}" != "true" ]]; then
-    echo "[$(date '+%H:%M:%S')] Night shift disabled (NIGHT_SHIFT_ENABLED not set to 'true')."
-    exit 0
-  fi
-  SKIP_FILE="$SCRIPT_DIR/.night-shift-skip"
-  if [[ -f "$SKIP_FILE" ]]; then
-    echo "[$(date '+%H:%M:%S')] Night shift skipped (sentinel present)."
-    exit 0
-  fi
-  # Prevent sleep for the full window (8 phases × 45 min + 30 min buffer = 390 min)
-  # -i covers idle sleep. If you want lid-close protection too, use -m.
-  caffeinate -i -t $((8 * 45 * 60 + 1800)) bash -c '
-    for hour in 0 1 2 3 4 5 6 7; do
-      "$0" "$hour" || true
-    done
-    echo "[$(date "+%H:%M:%S")] Night shift complete — all phases finished."
-  ' "$0"
-  exit $?
+  echo "[$(date '+%H:%M:%S')] ERROR: --all mode is disabled. Use the hourly launchd jobs (com.max.nightshift-0..7) or run a single hour index." >&2
+  exit 64
 fi
 
 HOUR_INDEX="${1:?Usage: $0 <hour-index> [timeout_minutes]}"
-TIMEOUT_MIN="${2:-45}"
+TIMEOUT_MIN="${2:-${NIGHT_SHIFT_TIMEOUT:-45}}"
+
+if ! [[ "$HOUR_INDEX" =~ ^[0-7]$ ]]; then
+  echo "[$(date '+%H:%M:%S')] ERROR: hour index must be 0-7; got '$HOUR_INDEX'." >&2
+  exit 64
+fi
+
+if ! [[ "$TIMEOUT_MIN" =~ ^[0-9]+$ ]] || [[ "$TIMEOUT_MIN" -lt 1 ]]; then
+  echo "[$(date '+%H:%M:%S')] ERROR: timeout must be a positive integer; got '$TIMEOUT_MIN'." >&2
+  exit 64
+fi
 PROJECT_DIR="${NIGHT_SHIFT_PROJECT:-$HOME/projects/tockbot}"
 LOG_DIR="$HOME/.cron-logs"
 LOG_FILE="$LOG_DIR/nightshift-$(date +%Y%m%d).log"
@@ -78,12 +75,32 @@ if [[ -f "$SKIP_FILE" ]]; then
   exit 0
 fi
 
+# ── Overlap guard ─────────────────────────────────────────────
+# Phases are scheduled hourly with a default 45m timeout. This lock prevents
+# accidental parallel agent runs if a phase overruns or is started manually.
+LOCK_DIR="$LOG_DIR/nightshift-active.lock"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  LOCK_MTIME="$(stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0)"
+  LOCK_AGE_MIN=$(( ( $(date +%s) - LOCK_MTIME ) / 60 ))
+
+  if [[ "$LOCK_AGE_MIN" -gt 120 ]]; then
+    echo "[$(date '+%H:%M:%S')] Removing stale night shift lock (${LOCK_AGE_MIN}m old)." | tee -a "$LOG_FILE"
+    rm -rf "$LOCK_DIR"
+    mkdir "$LOCK_DIR"
+  else
+    echo "[$(date '+%H:%M:%S')] Hour $HOUR_INDEX skipped — another night shift phase is still running (${LOCK_AGE_MIN}m old lock)." | tee -a "$LOG_FILE"
+    exit 0
+  fi
+fi
+printf '%s\n' "$$" > "$LOCK_DIR/pid"
+trap 'rm -rf "$LOCK_DIR"' EXIT
+
 # ── Resolve agent binary ─────────────────────────────────────
 case "$AGENT" in
   pi)
     AGENT_LABEL="Pi"
     AGENT_BIN="$(which pi 2>/dev/null || echo '')"
-    SESSION_DIR="$HOME/.pi/agent/sessions-night"
+    SESSION_ROOT="$HOME/.pi/agent/sessions-night"
     if [[ -z "$AGENT_BIN" ]]; then
       echo "[$(date '+%H:%M:%S')] ERROR: pi not found in PATH" | tee -a "$LOG_FILE"
       exit 1
@@ -92,7 +109,7 @@ case "$AGENT" in
   claude)
     AGENT_LABEL="Claude Code"
     AGENT_BIN="$(which claude 2>/dev/null || echo '')"
-    SESSION_DIR="$HOME/.claude/sessions-night"
+    SESSION_ROOT="$HOME/.claude/sessions-night"
     if [[ -z "$AGENT_BIN" ]]; then
       echo "[$(date '+%H:%M:%S')] ERROR: claude not found in PATH" | tee -a "$LOG_FILE"
       exit 1
@@ -101,7 +118,7 @@ case "$AGENT" in
   codex)
     AGENT_LABEL="Codex"
     AGENT_BIN="$(which codex 2>/dev/null || echo '')"
-    SESSION_DIR="$HOME/.codex/sessions-night"
+    SESSION_ROOT="$HOME/.codex/sessions-night"
     if [[ -z "$AGENT_BIN" ]]; then
       echo "[$(date '+%H:%M:%S')] ERROR: codex not found in PATH" | tee -a "$LOG_FILE"
       exit 1
@@ -113,7 +130,9 @@ case "$AGENT" in
     ;;
 esac
 
-mkdir -p "$SESSION_DIR"
+RUN_DATE="$(date +%Y%m%d)"
+RUN_SESSION_DIR="$SESSION_ROOT/$RUN_DATE/hour-$HOUR_INDEX"
+mkdir -p "$RUN_SESSION_DIR"
 
 # ── Resolve task ──────────────────────────────────────────────
 if [[ ! -f "$TASK_FILE" ]]; then
@@ -159,6 +178,7 @@ echo "════════════════════════�
 echo "  Night Shift — Hour $HOUR_INDEX ($(date '+%Y-%m-%d %H:%M:%S'))" >> "$LOG_FILE"
 echo "  Agent:   $AGENT_LABEL" >> "$LOG_FILE"
 echo "  Project: $PROJECT_DIR" >> "$LOG_FILE"
+echo "  Session: $RUN_SESSION_DIR" >> "$LOG_FILE"
 echo "  Phase:   $TASK_ONELINE" >> "$LOG_FILE"
 echo "  Timeout: ${TIMEOUT_MIN}m" >> "$LOG_FILE"
 echo "══════════════════════════════════════════════════════════════" >> "$LOG_FILE"
@@ -175,9 +195,10 @@ $PREAMBLE
 
 ---
 
-Your task (Phase $HOUR_INDEX): $TASK
+Your task (Phase $TASK_N, scheduled hour $HOUR_INDEX): $TASK
 
 Guidelines:
+- This is a fresh, isolated phase. Do not rely on earlier phase chat context.
 - Work efficiently; you have ~${TIMEOUT_MIN} minutes before you are terminated.
 - Find issues and fix them directly. Do NOT write reports or document findings — just fix the code.
 - Make small, frequent commits with clear messages.
@@ -195,8 +216,7 @@ case "$AGENT" in
     AGENT_CMD=(
       "$AGENT_BIN"
         --print
-        --session-dir "$SESSION_DIR"
-        --continue
+        --session-dir "$RUN_SESSION_DIR"
         --thinking xhigh
     )
     ;;
