@@ -195,57 +195,56 @@ Fetch transcripts from YouTube videos for summarization and analysis.
 ## Cron Jobs (Launchd Agents)
 
 Scheduled background jobs managed via macOS launchd (`~/Library/LaunchAgents/`).
-All scripts live in `~/.agents/cronjob/`.
+Canonical scripts and plist files live in `~/.agents/cron/`; `~/Library/LaunchAgents/com.max.*.plist` symlinks point back to the versioned plist files in that directory.
+
+Manage jobs with:
+
+```bash
+~/.agents/cron/manage.sh list
+~/.agents/cron/manage.sh status <job>
+~/.agents/cron/manage.sh doctor
+~/.agents/cron/manage.sh logs <job>
+~/.agents/cron/manage.sh reload <job>
+```
 
 ### cleanup-processes
 
 - **Label:** `com.max.cleanup-processes`
 - **Schedule:** Daily at 4:00 AM
-- **Script:** `~/.agents/cronjob/cleanup-processes.sh`
+- **Script:** `~/.agents/cron/cleanup-processes/cleanup-processes.sh`
+- **Plist:** `~/.agents/cron/cleanup-processes/com.max.cleanup-processes.plist`
 - **Log:** `~/Library/Logs/cleanup-processes.log`
-- **What it does:** Kills orphaned and zombie user processes that outlived their purpose:
-  - Superset orphans (crashpad_handler, terminal-host, host-service, pty-daemon) with PPID=1 and age >1 hour
-  - Stale Node.js dev servers listening on localhost for >3 days
-  - Zombie `caffeinate` processes running >1 day
-  - Orphaned app helpers/subsystems (crashpad handlers, updaters, Sparkle/autoupdaters) >3 days
+- **What it does:** Kills orphaned and zombie user processes that outlived their purpose.
 
 ### update-packages
 
 - **Label:** `com.max.update-packages`
 - **Schedule:** Mondays at 6:00 AM
-- **Script:** `~/.agents/cronjob/update-packages.sh`
+- **Script:** `~/.agents/cron/update-packages/update-packages.sh`
+- **Plist:** `~/.agents/cron/update-packages/com.max.update-packages.plist`
 - **Log:** `~/Library/Logs/update-packages.log`
-- **What it does:** Upgrades Homebrew formulae and pnpm global packages. Auto-discovers newly installed CLI tools (from `brew leaves` and pnpm global binaries) and appends them to the CLI Tools table in `AGENTS.md`.
+- **What it does:** Upgrades Homebrew formulae and pnpm global packages. Auto-discovers newly installed CLI tools and appends them to the CLI Tools table in `AGENTS.md`.
 
 ### update-repos
 
 - **Label:** `com.max.update-repos`
 - **Schedule:** Daily at 8:00 AM
-- **Script:** `~/.agents/cronjob/update-repos.sh`
+- **Script:** `~/.agents/cron/update-repos/update-repos.sh`
+- **Plist:** `~/.agents/cron/update-repos/com.max.update-repos.plist`
 - **Log:** `~/.cron-logs/update-repos-YYYYMMDD.log`
-- **What it does:** Runs `git pull --prune` on all repositories under `~/projects/resources/`. Prunes stale remote refs first (prevents ref conflicts from renamed branches).
+- **What it does:** Runs `git pull --prune` on all repositories under `~/projects/resources/` and removes stale temporary git repos.
 
-### pi-night-shift
+### nightshift
 
-- **Labels:** `com.max.pi-night-shift-0` through `com.max.pi-night-shift-7`
-- **Schedule:** Hourly from 0:00 AM to 7:00 AM (8 jobs, one per hour)
-- **Script:** `~/.agents/cronjob/pi-night-shift.sh <hour-index> [timeout_minutes]`
-- **Log:** `~/.cron-logs/pi-night-shift-YYYYMMDD.log`
-- **What it does:** Launches `pi` in non-interactive headless mode to autonomously work on a project overnight. The target project is configured in `~/.agents/cronjob/.env` (`NIGHT_SHIFT_PROJECT`, default: `~/projects/tockbot`). Each hour selects a task from `~/.agents/cronjob/pi-night-tasks.md` (hour index 0 maps to `## Task 1`, etc.). Each run has a 45-minute timeout. Sends macOS notifications on start/success/timeout/failure.
-- **Skip a Night:** Create `~/.agents/cronjob/.night-shift-skip` — all 8 jobs will exit immediately with a single log line. Remove the file to resume.
-- **⚠️ Sleep Warning:** The script calls `pi` directly (not through the `caffeinate`-wrapped zsh alias), so the Mac will sleep during night shift unless kept awake separately (e.g., System Settings → Battery → Prevent automatic sleeping, or `caffeinate -d -i` before bed).
-- **Task Roster (`pi-night-tasks.md`):**
-
-  | Hour                  | Task                                                      |
-  | --------------------- | --------------------------------------------------------- |
-  | 0 (Task 1, midnight)  | Audit TypeScript strict mode violations and fix them      |
-  | 1 (Task 2)            | Review and resolve TODO/FIXME/HACK comments               |
-  | 2 (Task 3)            | Write unit tests for untested code paths                  |
-  | 3 (Task 4)            | Run lint suite and fix all warnings/errors                |
-  | 4 (Task 5)            | Audit dependencies (unused, outdated, security vulns)     |
-  | 5 (Task 6)            | Review and improve documentation                          |
-  | 6 (Task 7)            | Run fallow for dead code, duplicates, circular deps       |
-  | 7 (Task 8)            | Performance audit (bundle sizes, re-renders, N+1 queries) |
+- **Labels:** `com.max.nightshift-0` through `com.max.nightshift-7`
+- **Schedule:** Hourly from midnight through 7:00 AM (8 jobs, one phase per hour)
+- **Script:** `~/.agents/cron/nightshift/nightshift.sh <hour-index> [timeout_minutes]`
+- **Plists:** `~/.agents/cron/nightshift/launchagents/com.max.nightshift-*.plist`
+- **Config:** `~/.agents/cron/nightshift/.env`
+- **Phase File:** `~/.agents/cron/nightshift/review.md`
+- **Logs:** `~/.cron-logs/nightshift-YYYYMMDD.log` and `~/.cron-logs/nightshift-<HOUR>.log`
+- **What it does:** Launches the configured agent in non-interactive headless mode to autonomously work on a project overnight. Each hour maps to the matching `## Phase N` section in `review.md`.
+- **Skip a Night:** Create `~/.agents/cron/nightshift/.night-shift-skip`; remove it to resume.
 
 ## Other
 

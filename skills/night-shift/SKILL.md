@@ -19,13 +19,14 @@ You are the interface to the user's Pi Night Shift system — a set of 8 hourly 
 
 | File | Purpose |
 |------|---------|
-| `~/.agents/cronjob/nightshift.sh` | The runner script |
-| `~/.agents/cronjob/review.md` | Phase definitions (`## Phase N` headings). Symlink to `<project>/.agents/reference/review.md`. |
-| `~/.agents/cronjob/.env` | Project config (`NIGHT_SHIFT_PROJECT`, `NIGHT_SHIFT_AGENT`, `NIGHT_SHIFT_ENABLED`) |
-| `~/.agents/cronjob/.night-shift-skip` | Sentinel — if present, all jobs skip |
+| `~/.agents/cron/nightshift/nightshift.sh` | The runner script |
+| `~/.agents/cron/nightshift/review.md` | Phase definitions (`## Phase N` headings). Symlink to `<project>/.agents/reference/review.md`. |
+| `~/.agents/cron/nightshift/.env` | Project config (`NIGHT_SHIFT_PROJECT`, `NIGHT_SHIFT_AGENT`, `NIGHT_SHIFT_ENABLED`) |
+| `~/.agents/cron/nightshift/.night-shift-skip` | Sentinel — if present, all jobs skip |
 | `~/.cron-logs/nightshift-YYYYMMDD.log` | Combined daily log (status lines from all hours) |
 | `~/.cron-logs/nightshift-<HOUR>.log` | Per-hour stdout log (full agent output for that hour) |
-| `~/Library/LaunchAgents/com.max.nightshift-*.plist` | launchd job definitions (one per hour 0–7) |
+| `~/.agents/cron/nightshift/launchagents/com.max.nightshift-*.plist` | Versioned launchd job definitions (one per hour 0–7) |
+| `~/Library/LaunchAgents/com.max.nightshift-*.plist` | Symlinks to the versioned launchd job definitions |
 
 When the user refers to a "phase number," they mean the `## Phase N` heading number, not the hour index. Phase 1 runs at midnight (hour 0), phase 2 at 1 AM, etc.
 
@@ -106,18 +107,18 @@ Always confirm with the user before deleting.
 
 ### 6. Skip / unskip a night
 
-- **Skip:** `touch ~/.agents/cronjob/.night-shift-skip`
-- **Unskip:** `rm ~/.agents/cronjob/.night-shift-skip`
+- **Skip:** `touch ~/.agents/cron/nightshift/.night-shift-skip`
+- **Unskip:** `rm ~/.agents/cron/nightshift/.night-shift-skip`
 
 Tell the user what you did. If the sentinel already exists and the user asks to skip, confirm they still want it (it may be from a previous skip).
 
 ### 7. Change project
 
-Read `~/.agents/cronjob/.env`, update the `NIGHT_SHIFT_PROJECT` line, and write back. Confirm the new path exists and is a git repo. Warn if it isn't.
+Read `~/.agents/cron/nightshift/.env`, update the `NIGHT_SHIFT_PROJECT` line, and write back. Confirm the new path exists and is a git repo. Warn if it isn't.
 
 ### 8. Show configuration
 
-Read `~/.agents/cronjob/.env` and display the current settings:
+Read `~/.agents/cron/nightshift/.env` and display the current settings:
 
 ```
 # Night Shift Configuration

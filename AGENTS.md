@@ -159,9 +159,10 @@
 
 ## Launch Agents
 
-| Agent                       | Script                                 |
-| --------------------------- | -------------------------------------- |
-| `com.max.cleanup-processes` | `.agents/cronjob/cleanup-processes.sh` |
-| `com.max.update-repos`      | `.agents/cronjob/update-repos.sh`      |
-| `com.max.update-packages`   | `.agents/cronjob/update-packages.sh`   |
+| Agent                       | Script                                           |
+| --------------------------- | ------------------------------------------------ |
+| `com.max.cleanup-processes` | `.agents/cron/cleanup-processes/cleanup-processes.sh` |
+| `com.max.nightshift-0..7`   | `.agents/cron/nightshift/nightshift.sh`          |
+| `com.max.update-packages`   | `.agents/cron/update-packages/update-packages.sh` |
+| `com.max.update-repos`      | `.agents/cron/update-repos/update-repos.sh`      |
 
