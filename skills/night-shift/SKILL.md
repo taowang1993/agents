@@ -13,7 +13,7 @@ description: >-
 
 # Night Shift
 
-You are the interface to the user's Pi Night Shift system — a set of 8 hourly launchd jobs (midnight–7 AM) that run `pi` headlessly against a project.
+You are the interface to the user's Pi Night Shift system — a set of 9 half-hourly launchd jobs (midnight–4 AM) that run `pi` headlessly against a project.
 
 ## Key files
 
@@ -24,11 +24,11 @@ You are the interface to the user's Pi Night Shift system — a set of 8 hourly 
 | `~/.agents/cron/nightshift/.env` | Project config (`NIGHT_SHIFT_PROJECT`, `NIGHT_SHIFT_AGENT`, `NIGHT_SHIFT_ENABLED`) |
 | `~/.agents/cron/nightshift/.night-shift-skip` | Sentinel — if present, all jobs skip |
 | `~/.cron-logs/nightshift-YYYYMMDD.log` | Combined daily log (status lines from all hours) |
-| `~/.cron-logs/nightshift-<HOUR>.log` | Per-hour stdout log (full agent output for that hour) |
-| `~/.agents/cron/nightshift/launchagents/com.max.nightshift-*.plist` | Versioned launchd job definitions (one per hour 0–7) |
+| `~/.cron-logs/nightshift-<SLOT>.log` | Per-slot stdout log (full agent output for that scheduled slot) |
+| `~/.agents/cron/nightshift/launchagents/com.max.nightshift-*.plist` | Versioned launchd job definitions (one per 30-minute slot 0–8) |
 | `~/Library/LaunchAgents/com.max.nightshift-*.plist` | Symlinks to the versioned launchd job definitions |
 
-When the user refers to a "phase number," they mean the `## Phase N` heading number, not the hour index. Phase 1 runs at midnight (hour 0), phase 2 at 1 AM, etc.
+When the user refers to a "phase number," they mean the `## Phase N` heading number, not the launch slot index. Phase 1 runs at midnight (slot 0), Phase 2 at 12:30 AM (slot 1), Phase 3 at 1 AM (slot 2), etc.; Phase 9 runs at 4 AM (slot 8).
 
 ## Operations
 
@@ -39,13 +39,13 @@ Determine which operation the user wants, then follow the corresponding section 
 Read and summarize what the night shift did.
 
 - **Finding the log:** Default to today (`date +%Y%m%d`). If today's log doesn't exist or is empty, fall back to yesterday (`date -v-1d +%Y%m%d`). Respect explicit dates ("Tuesday", "May 12").
-  - The combined log: `~/.cron-logs/nightshift-YYYYMMDD.log` — summary status per hour.
-  - Per-hour logs: `~/.cron-logs/nightshift-<HOUR>.log` — full agent output for that hour.
-- **Extracting the project:** Each run header in the per-hour log has a `Project:` line. Use that path for blockers and git checks. If missing (older logs), fall back to the project from `.env`.
-- **Parsing:** Each hour block in the combined log begins with a `═══` header or a status line like `[HH:MM:SS] Hour N …`. Extract hour number, phase one-liner (from header in per-hour log), and result (`✅` completed, `⏰` timed out, `❌` failed). An incomplete block (header but no result) means "interrupted."
+  - The combined log: `~/.cron-logs/nightshift-YYYYMMDD.log` — summary status per scheduled slot.
+  - Per-slot logs: `~/.cron-logs/nightshift-<SLOT>.log` — full agent output for that scheduled slot.
+- **Extracting the project:** Each run header in the per-slot log has a `Project:` line. Use that path for blockers and git checks. If missing (older logs), fall back to the project from `.env`.
+- **Parsing:** Each slot block in the combined log begins with a `═══` header or a status line like `[HH:MM:SS] Slot N …`; older logs may say `Hour N`. Extract slot number, phase one-liner (from header in the per-slot log), and result (`✅` completed, `⏰` timed out, `❌` failed). An incomplete block (header but no result) means "interrupted."
 - **Supporting evidence:**
   1. `<project>/.pi/night-shift-blockers.md` — if modified since the night shift ran, read it.
-  2. `git -C <project> log --since="YYYY-MM-DD 00:00" --until="YYYY-MM-DD 08:00" --oneline` — drop `--author` if no results.
+  2. `git -C <project> log --since="YYYY-MM-DD 00:00" --until="YYYY-MM-DD 05:00" --oneline` — drop `--author` if no results.
 
 **Report template:**
 
@@ -57,7 +57,7 @@ Read and summarize what the night shift did.
 
 ## Results
 
-| Hour | Phase | Result |
+| Slot | Phase | Result |
 |------|-------|--------|
 | 0    | [first ~60 chars] | ✅ completed |
 | ...  | ...   | ...    |
@@ -78,10 +78,10 @@ Read the phase file (resolve the `review.md` symlink first) and display the curr
 ```
 # Night Shift Phases
 
-| # | Hour | Phase |
+| # | Slot | Phase |
 |---|------|-------|
 | 1 | 0 (midnight) | [first ~60 chars] |
-| 2 | 1 AM | [first ~60 chars] |
+| 2 | 1 (12:30 AM) | [first ~60 chars] |
 | ... | ... | ... |
 ```
 

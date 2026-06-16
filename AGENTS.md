@@ -157,6 +157,8 @@
 
 | `clawpatch` | Automated code review that lands fixes. |
 
+| `node` | Open-source, cross-platform JavaScript runtime environment |
+
 ## Launch Agents
 
 | Agent                       | Script                                           |

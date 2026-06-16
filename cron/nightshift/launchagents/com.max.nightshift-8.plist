@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.max.nightshift-3</string>
+	<string>com.max.nightshift-8</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/Users/max/.agents/cron/nightshift/nightshift.sh</string>
-		<string>3</string>
+		<string>8</string>
 	</array>
 	<key>EnvironmentVariables</key>
 	<dict>
@@ -21,13 +21,13 @@
 	<key>StartCalendarInterval</key>
 	<dict>
 		<key>Hour</key>
-		<integer>1</integer>
+		<integer>4</integer>
 		<key>Minute</key>
-		<integer>30</integer>
+		<integer>0</integer>
 	</dict>
 	<key>StandardOutPath</key>
-	<string>/Users/max/.cron-logs/nightshift-3.log</string>
+	<string>/Users/max/.cron-logs/nightshift-8.log</string>
 	<key>StandardErrorPath</key>
-	<string>/Users/max/.cron-logs/nightshift-3.log</string>
+	<string>/Users/max/.cron-logs/nightshift-8.log</string>
 </dict>
 </plist>

@@ -2,14 +2,15 @@
 # Night Shift — Launch a coding agent in non-interactive mode for a scheduled task.
 #
 # Usage:
-#   nightshift.sh <hour-index> [timeout_min]   Run one phase (0-7)
+#   nightshift.sh <slot-index> [timeout_min]   Run one phase (0-8)
 #   nightshift.sh --all                        Deprecated; exits without running
 #
-# Launchd should schedule eight independent jobs, one per hour:
+# Launchd should schedule nine independent jobs, one every 30 minutes:
 #   com.max.nightshift-0 at 00:00 -> Phase 1
-#   com.max.nightshift-1 at 01:00 -> Phase 2
+#   com.max.nightshift-1 at 00:30 -> Phase 2
+#   com.max.nightshift-2 at 01:00 -> Phase 3
 #   ...
-#   com.max.nightshift-7 at 07:00 -> Phase 8
+#   com.max.nightshift-8 at 04:00 -> Phase 9
 #
 # Each phase runs in a fresh agent session directory. Do not use --continue:
 # fresh context avoids cross-phase and cross-night context-window growth.
@@ -36,15 +37,15 @@ fi
 
 # ── Deprecated batch mode guard ─────────────────────────────
 if [[ "${1:-}" == "--all" ]]; then
-  echo "[$(date '+%H:%M:%S')] ERROR: --all mode is disabled. Use the hourly launchd jobs (com.max.nightshift-0..7) or run a single hour index." >&2
+  echo "[$(date '+%H:%M:%S')] ERROR: --all mode is disabled. Use the half-hour launchd jobs (com.max.nightshift-0..8) or run a single slot index." >&2
   exit 64
 fi
 
 HOUR_INDEX="${1:?Usage: $0 <hour-index> [timeout_minutes]}"
 TIMEOUT_MIN="${2:-${NIGHT_SHIFT_TIMEOUT:-45}}"
 
-if ! [[ "$HOUR_INDEX" =~ ^[0-7]$ ]]; then
-  echo "[$(date '+%H:%M:%S')] ERROR: hour index must be 0-7; got '$HOUR_INDEX'." >&2
+if ! [[ "$HOUR_INDEX" =~ ^[0-8]$ ]]; then
+  echo "[$(date '+%H:%M:%S')] ERROR: slot index must be 0-8; got '$HOUR_INDEX'." >&2
   exit 64
 fi
 
@@ -74,26 +75,6 @@ if [[ -f "$SKIP_FILE" ]]; then
   echo "[$(date '+%H:%M:%S')] Night shift skipped (sentinel present)." | tee -a "$LOG_FILE"
   exit 0
 fi
-
-# ── Overlap guard ─────────────────────────────────────────────
-# Phases are scheduled hourly with a default 45m timeout. This lock prevents
-# accidental parallel agent runs if a phase overruns or is started manually.
-LOCK_DIR="$LOG_DIR/nightshift-active.lock"
-if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-  LOCK_MTIME="$(stat -f %m "$LOCK_DIR" 2>/dev/null || echo 0)"
-  LOCK_AGE_MIN=$(( ( $(date +%s) - LOCK_MTIME ) / 60 ))
-
-  if [[ "$LOCK_AGE_MIN" -gt 120 ]]; then
-    echo "[$(date '+%H:%M:%S')] Removing stale night shift lock (${LOCK_AGE_MIN}m old)." | tee -a "$LOG_FILE"
-    rm -rf "$LOCK_DIR"
-    mkdir "$LOCK_DIR"
-  else
-    echo "[$(date '+%H:%M:%S')] Hour $HOUR_INDEX skipped — another night shift phase is still running (${LOCK_AGE_MIN}m old lock)." | tee -a "$LOG_FILE"
-    exit 0
-  fi
-fi
-printf '%s\n' "$$" > "$LOCK_DIR/pid"
-trap 'rm -rf "$LOCK_DIR"' EXIT
 
 # ── Resolve agent binary ─────────────────────────────────────
 case "$AGENT" in
@@ -131,7 +112,7 @@ case "$AGENT" in
 esac
 
 RUN_DATE="$(date +%Y%m%d)"
-RUN_SESSION_DIR="$SESSION_ROOT/$RUN_DATE/hour-$HOUR_INDEX"
+RUN_SESSION_DIR="$SESSION_ROOT/$RUN_DATE/slot-$HOUR_INDEX"
 mkdir -p "$RUN_SESSION_DIR"
 
 # ── Resolve task ──────────────────────────────────────────────
@@ -166,7 +147,7 @@ TASK="$(echo "$TASK" | awk '
 TASK="${TASK//\`/\\\`}"
 
 if [[ -z "$TASK" ]]; then
-  echo "[$(date '+%H:%M:%S')] Hour $HOUR_INDEX (Phase $TASK_N): no phase defined — skipping." | tee -a "$LOG_FILE"
+  echo "[$(date '+%H:%M:%S')] Slot $HOUR_INDEX (Phase $TASK_N): no phase defined — skipping." | tee -a "$LOG_FILE"
   exit 0
 fi
 
@@ -175,7 +156,7 @@ TASK_ONELINE="$(echo "$TASK" | head -1)"
 
 echo "" >> "$LOG_FILE"
 echo "══════════════════════════════════════════════════════════════" >> "$LOG_FILE"
-echo "  Night Shift — Hour $HOUR_INDEX ($(date '+%Y-%m-%d %H:%M:%S'))" >> "$LOG_FILE"
+echo "  Night Shift — Slot $HOUR_INDEX ($(date '+%Y-%m-%d %H:%M:%S'))" >> "$LOG_FILE"
 echo "  Agent:   $AGENT_LABEL" >> "$LOG_FILE"
 echo "  Project: $PROJECT_DIR" >> "$LOG_FILE"
 echo "  Session: $RUN_SESSION_DIR" >> "$LOG_FILE"
@@ -195,7 +176,7 @@ $PREAMBLE
 
 ---
 
-Your task (Phase $TASK_N, scheduled hour $HOUR_INDEX): $TASK
+Your task (Phase $TASK_N, scheduled slot $HOUR_INDEX): $TASK
 
 Guidelines:
 - This is a fresh, isolated phase. Do not rely on earlier phase chat context.
@@ -270,14 +251,14 @@ wait "$WATCHDOG_PID" 2>/dev/null || true
 # ── Log result ────────────────────────────────────────────────
 echo "" >> "$LOG_FILE"
 if [[ $AGENT_EXIT -eq 0 ]]; then
-  echo "[$(date '+%H:%M:%S')] ✅ Hour $HOUR_INDEX completed successfully." | tee -a "$LOG_FILE"
-  osascript -e "display notification \"Hour $HOUR_INDEX completed\" with title \"✅ $AGENT_LABEL Night Shift Done\" sound name \"Glass\"" 2>/dev/null || true
+  echo "[$(date '+%H:%M:%S')] ✅ Slot $HOUR_INDEX completed successfully." | tee -a "$LOG_FILE"
+  osascript -e "display notification \"Slot $HOUR_INDEX completed\" with title \"✅ $AGENT_LABEL Night Shift Done\" sound name \"Glass\"" 2>/dev/null || true
 elif [[ $AGENT_EXIT -eq 143 ]] || [[ $AGENT_EXIT -eq 137 ]]; then
-  echo "[$(date '+%H:%M:%S')] ⏰ Hour $HOUR_INDEX timed out after ${TIMEOUT_MIN}m (exit $AGENT_EXIT)." | tee -a "$LOG_FILE"
-  osascript -e "display notification \"Hour $HOUR_INDEX timed out\" with title \"⏰ $AGENT_LABEL Night Shift Timeout\" sound name \"Basso\"" 2>/dev/null || true
+  echo "[$(date '+%H:%M:%S')] ⏰ Slot $HOUR_INDEX timed out after ${TIMEOUT_MIN}m (exit $AGENT_EXIT)." | tee -a "$LOG_FILE"
+  osascript -e "display notification \"Slot $HOUR_INDEX timed out\" with title \"⏰ $AGENT_LABEL Night Shift Timeout\" sound name \"Basso\"" 2>/dev/null || true
 else
-  echo "[$(date '+%H:%M:%S')] ❌ Hour $HOUR_INDEX failed with exit code $AGENT_EXIT." | tee -a "$LOG_FILE"
-  osascript -e "display notification \"Hour $HOUR_INDEX failed (exit $AGENT_EXIT)\" with title \"❌ $AGENT_LABEL Night Shift Failed\" sound name \"Basso\"" 2>/dev/null || true
+  echo "[$(date '+%H:%M:%S')] ❌ Slot $HOUR_INDEX failed with exit code $AGENT_EXIT." | tee -a "$LOG_FILE"
+  osascript -e "display notification \"Slot $HOUR_INDEX failed (exit $AGENT_EXIT)\" with title \"❌ $AGENT_LABEL Night Shift Failed\" sound name \"Basso\"" 2>/dev/null || true
 fi
 
 echo "" >> "$LOG_FILE"
