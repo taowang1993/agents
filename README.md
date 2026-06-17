@@ -20,10 +20,6 @@ Play a system sound (`Funk.aiff`) when the agent finishes a turn.
 
 Custom prompt editor with model selection, provider switching, and thinking-level settings.
 
-### review
-
-Code review via `/review` — supports PRs, commits, branches, uncommitted changes, and custom instructions.
-
 ### screenshot
 
 Capture and attach screenshots for the agent to analyze.

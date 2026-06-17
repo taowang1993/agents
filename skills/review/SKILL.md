@@ -85,6 +85,27 @@ For every meaningful change, ask:
 - Is this logic living in the canonical layer, or did the diff leak details across a boundary?
 - Is this orchestration more sequential or less atomic than it needs to be?
 
+## Finding Bar and Scope Discipline
+
+When reviewing a diff, branch, PR, commit, or uncommitted changes:
+
+- Focus on issues introduced by the reviewed change. Do not flag pre-existing code unless the diff makes it newly dangerous, newly confusing, or materially harder to maintain.
+- Flag only issues that meaningfully affect correctness, performance, security, operability, or maintainability.
+- Make every finding discrete, actionable, and backed by code evidence. Avoid broad design complaints unless you can point to a concrete changed location and a concrete remedy.
+- Avoid findings that rely on unstated assumptions about the codebase, runtime environment, or author's intent.
+- Explain the scenario where the issue matters. If you cannot identify a plausible affected path, keep investigating instead of speculating.
+- For snapshot/folder reviews, you may comment on existing code in the requested paths, but state that it is a snapshot review and prioritize high-leverage issues.
+
+## Security and Operational Checks
+
+Apply these checks in addition to the structural review bar:
+
+- Check untrusted input paths carefully. Flag open redirects that do not restrict destinations to trusted domains, non-parameterized SQL, user-supplied URL fetches without SSRF/local-resource protection, and sanitization where escaping should be used instead.
+- Call out newly added dependencies when reviewing a diff. Verify that each dependency is necessary, does not duplicate canonical codebase capability, and is worth its operational or supply-chain cost.
+- Prefer fail-fast behavior over logging-and-continuing when continuing would hide errors or create unpredictable production state.
+- Treat backpressure, retry, queue, stream, and fan-out behavior as system-stability concerns, not micro-optimizations.
+- Prefer stable error codes or identifiers over matching human-readable error messages.
+
 ## What to Flag Aggressively
 
 Escalate findings when you see:
@@ -150,6 +171,15 @@ Good phrases:
 - `i think there's a code-judo move here that makes this much simpler. can we reframe this so these branches disappear?`
 - `this refactor moves complexity around, but doesn't really delete it. is there a way to make the model itself simpler?`
 
+## Priority Levels
+
+Use these priority tags in finding titles:
+
+- `[P0]` — Drop everything to fix. Use only for universal issues that block release or operations.
+- `[P1]` — Urgent. Address in the next cycle because the issue can seriously break users, production, security, or maintainability.
+- `[P2]` — Normal. Worth fixing because it materially improves correctness, maintainability, or quality.
+- `[P3]` — Low. Nice to have; include sparingly and only when it meaningfully improves the code.
+
 ## Output Expectations
 
 Prioritize findings in this order:
@@ -157,13 +187,25 @@ Prioritize findings in this order:
 1. Structural code-quality regressions
 2. Missed opportunities for dramatic simplification / code-judo restructuring
 3. Spaghetti / branching complexity increases
-4. Boundary / abstraction / type-contract problems that make the code harder to reason about
-5. File-size and decomposition concerns
-6. Modularity and abstraction issues
-7. Legibility and maintainability concerns
+4. Security, operational, and production-stability risks
+5. Boundary / abstraction / type-contract problems that make the code harder to reason about
+6. File-size and decomposition concerns
+7. Modularity and abstraction issues
+8. Legibility and maintainability concerns
+
+For each finding:
+
+- Start the title with a priority tag, for example `[P1] Stop swallowing checkout failures`.
+- Include the shortest useful file and line location. For diff reviews, choose a location that overlaps the changed lines.
+- Keep the explanation brief and concrete: why this is a problem, which scenario triggers it, and what kind of fix would address it.
+- Keep code snippets under 3 lines unless the extra context is essential.
+- Use `suggestion` fenced code blocks only for concrete replacement code, with no commentary inside the block.
+- Do not generate a full PR fix. Review the code and optionally provide small, targeted replacement snippets.
 
 Do not flood the review with low-value nits if there are larger structural issues.
 Prefer a smaller number of high-conviction comments over a long list of cosmetic notes.
+If there are no qualifying findings, explicitly say the code looks good.
+End with an overall verdict: `correct` when there are no findings that should block or materially change approval, or `needs attention` when there are.
 
 ## Approval Bar
 
