@@ -1,7 +1,6 @@
 ---
 name: review
-description: Run an extremely strict maintainability review for abstraction quality, giant files, and spaghetti-condition growth. Use for a thermo-nuclear code quality review, thermonuclear review, deep code quality audit, or especially harsh maintainability review.
-disable-model-invocation: true
+description: Strict human-style code review for the current branch, PR, diff, file, or recent changes. Use when the user asks to review code or changes and wants maintainability feedback, abstraction-quality critique, spaghetti-condition detection, decomposition advice, or ambitious structural simplification without running an automated repo-wide audit tool. Also use for thermo-nuclear/thermonuclear code quality reviews, deep code quality audits, and especially harsh maintainability reviews.
 ---
 
 # Thermo-Nuclear Code Quality Review

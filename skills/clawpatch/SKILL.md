@@ -1,6 +1,6 @@
 ---
 name: clawpatch
-description: Automated code review that maps a repo into semantic feature slices, reviews each slice with an AI provider, persists findings, and can run an explicit fix loop for one finding at a time. Use this skill whenever the user wants to review code, audit a codebase for bugs or security issues, find test gaps, clean up AI-generated slop, run automated code fixes, or mentions clawpatch, code review, automated review, deslopify, or finding/fix loops.
+description: Automated repo-wide review workflow using the clawpatch CLI. Use when the user wants a broad audit that maps the repository into feature slices, runs provider-backed bug/security/test-gap/deslopify reviews, persists findings under .clawpatch/, generates reports, revalidates findings, or fixes a specific recorded finding. Do not use for ordinary PR/current-branch review feedback focused on maintainability, abstraction quality, or code structure; use the review skill for that.
 ---
 
 # clawpatch

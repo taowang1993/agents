@@ -5,22 +5,24 @@
 			"path": ".."
 		},
 		{
-			"name": "resources",
-			"path": "/Users/max/projects/resources"
-		},
-		{
-			"name": "tockbot",
-			"path": "/Users/max/projects/tockbot"
-		},
-		{
-			"name": "worktrees",
-			"path": "/Users/max/projects/worktrees"
-		},
-		{
+			"name": ".pi",
 			"path": "../../.pi"
 		},
 		{
-			"path": "../../.codex"
+			"name": "resources",
+			"path": "../../projects/resources"
+		},
+		{
+			"name": "tockbot",
+			"path": "../../projects/tockbot"
+		},
+		{
+			"name": "worktrees",
+			"path": "../../projects/worktrees"
+		},
+		{
+			"name": "tockdocs",
+			"path": "../../projects/tockdocs"
 		}
 	],
 	"settings": {
