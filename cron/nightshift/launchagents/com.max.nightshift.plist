@@ -3,31 +3,31 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.max.nightshift-3</string>
+	<string>com.max.nightshift</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/Users/max/.agents/cron/nightshift/nightshift.sh</string>
-		<string>3</string>
+		<string>--orchestrate</string>
 	</array>
 	<key>EnvironmentVariables</key>
 	<dict>
 		<key>HOME</key>
 		<string>/Users/max</string>
 		<key>PATH</key>
-		<string>/Users/max/Library/pnpm:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+		<string>/Users/max/Library/pnpm:/Users/max/.nvm/versions/node/v22.22.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
 	</dict>
 	<key>RunAtLoad</key>
 	<false/>
 	<key>StartCalendarInterval</key>
 	<dict>
 		<key>Hour</key>
-		<integer>1</integer>
+		<integer>0</integer>
 		<key>Minute</key>
-		<integer>30</integer>
+		<integer>0</integer>
 	</dict>
 	<key>StandardOutPath</key>
-	<string>/Users/max/.cron-logs/nightshift-3.log</string>
+	<string>/Users/max/.cron-logs/nightshift-orchestrator.log</string>
 	<key>StandardErrorPath</key>
-	<string>/Users/max/.cron-logs/nightshift-3.log</string>
+	<string>/Users/max/.cron-logs/nightshift-orchestrator.log</string>
 </dict>
 </plist>

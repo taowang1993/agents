@@ -13,22 +13,22 @@ description: >-
 
 # Night Shift
 
-You are the interface to the user's Pi Night Shift system — a set of 9 half-hourly launchd jobs (midnight–4 AM) that run `pi` headlessly against a project.
+You are the interface to the user's Pi Night Shift system — one nightly launchd job that runs a single headless Pi parent orchestrator against a project. The parent reads `review.md`, uses the Dynamic Clean-State Ledger to skip unchanged clean scopes, and delegates dirty-scope triage/fixes to Pi subagents when useful.
 
 ## Key files
 
 | File | Purpose |
 |------|---------|
 | `~/.agents/cron/nightshift/nightshift.sh` | The runner script |
-| `~/.agents/cron/nightshift/review.md` | Phase definitions (`## Phase N` headings). Symlink to `<project>/.agents/reference/review.md`. |
-| `~/.agents/cron/nightshift/.env` | Project config (`NIGHT_SHIFT_PROJECT`, `NIGHT_SHIFT_AGENT`, `NIGHT_SHIFT_ENABLED`) |
-| `~/.agents/cron/nightshift/.night-shift-skip` | Sentinel — if present, all jobs skip |
-| `~/.cron-logs/nightshift-YYYYMMDD.log` | Combined daily log (status lines from all hours) |
-| `~/.cron-logs/nightshift-<SLOT>.log` | Per-slot stdout log (full agent output for that scheduled slot) |
-| `~/.agents/cron/nightshift/launchagents/com.max.nightshift-*.plist` | Versioned launchd job definitions (one per 30-minute slot 0–8) |
-| `~/Library/LaunchAgents/com.max.nightshift-*.plist` | Symlinks to the versioned launchd job definitions |
+| `~/.agents/cron/nightshift/review.md` | Phase definitions plus Dynamic Clean-State Ledger. Symlink to `<project>/.agents/reference/review.md`. |
+| `~/.agents/cron/nightshift/.env` | Project config (`NIGHT_SHIFT_PROJECT`, `NIGHT_SHIFT_AGENT`, `NIGHT_SHIFT_ENABLED`, optional `NIGHT_SHIFT_ORCHESTRATOR_TIMEOUT`) |
+| `~/.agents/cron/nightshift/.night-shift-skip` | Sentinel — if present, the nightly orchestrator skips |
+| `~/.cron-logs/nightshift-YYYYMMDD.log` | Combined daily status log |
+| `~/.cron-logs/nightshift-orchestrator.log` | Full stdout/stderr log for the single orchestrator job |
+| `~/.agents/cron/nightshift/launchagents/com.max.nightshift.plist` | Versioned launchd job definition for the single orchestrator |
+| `~/Library/LaunchAgents/com.max.nightshift.plist` | Symlink to the active orchestrator launchd definition |
 
-When the user refers to a "phase number," they mean the `## Phase N` heading number, not the launch slot index. Phase 1 runs at midnight (slot 0), Phase 2 at 12:30 AM (slot 1), Phase 3 at 1 AM (slot 2), etc.; Phase 9 runs at 4 AM (slot 8).
+When the user refers to a "phase number," they mean the `## Phase N` heading number in `review.md`. The active launchd setup no longer schedules separate slots per phase; one parent Pi session owns all dirty phases/scopes for the night. Legacy slot mode (`nightshift.sh <slot-index>`) remains supported by the script for manual fallback, but no per-slot launchd jobs are installed or versioned.
 
 ## Operations
 
@@ -39,10 +39,11 @@ Determine which operation the user wants, then follow the corresponding section 
 Read and summarize what the night shift did.
 
 - **Finding the log:** Default to today (`date +%Y%m%d`). If today's log doesn't exist or is empty, fall back to yesterday (`date -v-1d +%Y%m%d`). Respect explicit dates ("Tuesday", "May 12").
-  - The combined log: `~/.cron-logs/nightshift-YYYYMMDD.log` — summary status per scheduled slot.
-  - Per-slot logs: `~/.cron-logs/nightshift-<SLOT>.log` — full agent output for that scheduled slot.
-- **Extracting the project:** Each run header in the per-slot log has a `Project:` line. Use that path for blockers and git checks. If missing (older logs), fall back to the project from `.env`.
-- **Parsing:** Each slot block in the combined log begins with a `═══` header or a status line like `[HH:MM:SS] Slot N …`; older logs may say `Hour N`. Extract slot number, phase one-liner (from header in the per-slot log), and result (`✅` completed, `⏰` timed out, `❌` failed). An incomplete block (header but no result) means "interrupted."
+  - The combined log: `~/.cron-logs/nightshift-YYYYMMDD.log` — summary status for the orchestrator run.
+  - Full orchestrator output: `~/.cron-logs/nightshift-orchestrator.log`.
+  - Legacy per-slot logs may still exist as `~/.cron-logs/nightshift-<SLOT>.log`; read them only for older runs or manual slot-mode invocations.
+- **Extracting the project:** The run header has a `Project:` line. Use that path for blockers and git checks. If missing (older logs), fall back to the project from `.env`.
+- **Parsing:** Current logs use an `Orchestrator` header and a final status line like `Night Shift orchestrator completed/timed out/failed`. Legacy logs may contain slot blocks (`Slot N` or `Hour N`). Extract orchestrator result first; only build a slot table for old logs that actually contain slot blocks. An incomplete block/header with no result means "interrupted."
 - **Supporting evidence:**
   1. `<project>/.pi/night-shift-blockers.md` — if modified since the night shift ran, read it.
   2. `git -C <project> log --since="YYYY-MM-DD 00:00" --until="YYYY-MM-DD 05:00" --oneline` — drop `--author` if no results.
@@ -53,14 +54,15 @@ Read and summarize what the night shift did.
 # Night Shift Report — [date]
 
 ## Summary
-[One sentence: X of Y phases completed, Z timed out, W failed.]
+[One sentence: orchestrator completed/timed out/failed/skipped; include dirty scopes/fixes if visible in logs.]
 
 ## Results
 
-| Slot | Phase | Result |
-|------|-------|--------|
-| 0    | [first ~60 chars] | ✅ completed |
-| ...  | ...   | ...    |
+| Run | Scope | Result |
+|-----|-------|--------|
+| orchestrator | all dirty ledger scopes | ✅ completed |
+
+For legacy logs, use the old slot table only when slot blocks are present.
 
 ## Commits Made
 [list, or "No commits found."]
@@ -69,7 +71,7 @@ Read and summarize what the night shift did.
 [list, or "No blockers documented."]
 ```
 
-If all phases were skipped (`no phase defined`), say "Night shift was skipped — no phases were defined."
+If the orchestrator was skipped because `NIGHT_SHIFT_ENABLED=false` or `.night-shift-skip` exists, say so directly. If a legacy slot log says `no phase defined`, say "Night shift legacy slot was skipped — no phase was defined."
 
 ### 2. List phases
 
@@ -78,11 +80,11 @@ Read the phase file (resolve the `review.md` symlink first) and display the curr
 ```
 # Night Shift Phases
 
-| # | Slot | Phase |
-|---|------|-------|
-| 1 | 0 (midnight) | [first ~60 chars] |
-| 2 | 1 (12:30 AM) | [first ~60 chars] |
-| ... | ... | ... |
+| # | Phase |
+|---|-------|
+| 1 | [first ~60 chars] |
+| 2 | [first ~60 chars] |
+| ... | ... |
 ```
 
 If the file has no phase content under any `## Phase N` heading, say "No phases defined."
@@ -93,7 +95,7 @@ Append a new `## Phase N` section to the phase file (resolve the `review.md` sym
 
 Always re-read the file before appending to confirm the current highest phase number.
 
-**Important:** Preserve the preamble (everything before `## Phase 1`) — the script sends it as context to the agent. Do not remove or overwrite it.
+**Important:** Preserve the preamble (everything before `## Phase 1`) and the Dynamic Clean-State Ledger — the orchestrator sends the full document as context to the parent agent. Do not remove or overwrite it.
 
 ### 4. Update a phase
 
@@ -126,4 +128,5 @@ Read `~/.agents/cron/nightshift/.env` and display the current settings:
 NIGHT_SHIFT_AGENT=pi
 NIGHT_SHIFT_ENABLED=false
 NIGHT_SHIFT_PROJECT=~/projects/tockbot
+NIGHT_SHIFT_ORCHESTRATOR_TIMEOUT=300
 ```
