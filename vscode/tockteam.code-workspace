@@ -23,6 +23,9 @@
 		{
 			"name": "tockdocs",
 			"path": "../../projects/tockdocs"
+		},
+		{
+			"path": "../../.codex"
 		}
 	],
 	"settings": {

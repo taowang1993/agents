@@ -7,12 +7,9 @@ description: |
   Use for any x.com or twitter.com URL or lookup (e.g. summarize this tweet, recent posts by @vitalikbuterin, search $SOL min_faves:50).
 delivery: script
 metadata:
-  starchild:
-    emoji: "🐦"
-    skillKey: twitter
-    requires:
-      env:
-        - TWITTER_API_KEY
+  emoji: "🐦"
+  skillKey: twitter
+  delivery: script
 
 user-invocable: false
 disable-model-invocation: false
@@ -28,6 +25,8 @@ Core Twitter API requests go through sc-proxy via `core.http_client.proxied_get`
 `TWITTER_API_KEY` env var is auto-injected server-side, no local key needed
 on the agent machine. Article-to-Markdown mode can optionally call Jina for
 clean Markdown extraction and can download `pbs.twimg.com` images to local attachments.
+
+Bundled asset: `assets/logo.png` is package branding for catalog display; do not load it for normal Twitter data tasks.
 
 ## Script Usage
 

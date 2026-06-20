@@ -19,7 +19,13 @@ function isImagePart(part: unknown): part is ImagePart {
 	return Boolean(part && typeof part === "object" && "type" in part && part.type === "image");
 }
 
-function extractPromptText(content: unknown): string {
+export type PromptChoice = {
+	index: number;
+	label: string;
+	prompt: string;
+};
+
+export function extractPromptText(content: unknown): string {
 	if (typeof content === "string") {
 		return content;
 	}
@@ -44,33 +50,60 @@ function extractPromptText(content: unknown): string {
 	return parts.join("\n");
 }
 
-function getInitialUserPrompt(ctx: ExtensionContext): string | undefined {
+export function firstWords(text: string, maxWords = 15): string {
+	const words = text.trim().split(/\s+/).filter(Boolean);
+	const snippet = words.slice(0, maxWords).join(" ");
+	return words.length > maxWords ? `${snippet}…` : snippet;
+}
+
+export function getUserPromptChoices(ctx: Pick<ExtensionContext, "sessionManager">): PromptChoice[] {
+	const prompts: string[] = [];
+
 	for (const entry of ctx.sessionManager.getBranch()) {
 		if (entry.type !== "message") continue;
 		if (entry.message.role !== "user") continue;
 
 		const prompt = extractPromptText(entry.message.content).trim();
 		if (prompt) {
-			return prompt;
+			prompts.push(prompt);
 		}
 	}
 
-	return undefined;
+	return prompts.map((prompt, index) => ({
+		index: index + 1,
+		label: `${index + 1}. ${firstWords(prompt)}`,
+		prompt,
+	}));
 }
 
 export default function (pi: ExtensionAPI) {
 	pi.registerCommand("copy-prompt", {
-		description: "Copy the first user prompt in the current session to the clipboard",
+		description: "Copy a user prompt from the current session to the clipboard",
 		handler: async (_args, ctx) => {
-			const prompt = getInitialUserPrompt(ctx);
-			if (!prompt) {
-				ctx.ui.notify("No initial user prompt found to copy.", "warning");
+			const choices = getUserPromptChoices(ctx);
+			if (choices.length === 0) {
+				ctx.ui.notify("No user prompts found to copy.", "warning");
+				return;
+			}
+
+			const selectedLabel = await ctx.ui.select(
+				"Copy Which Prompt?",
+				choices.map((choice) => choice.label),
+			);
+			if (!selectedLabel) {
+				ctx.ui.notify("No prompt copied.", "info");
+				return;
+			}
+
+			const choice = choices.find((choice) => choice.label === selectedLabel);
+			if (!choice) {
+				ctx.ui.notify("Selected prompt was not found.", "error");
 				return;
 			}
 
 			try {
-				await copyToClipboard(prompt);
-				ctx.ui.notify("Copied initial user prompt to clipboard", "info");
+				await copyToClipboard(choice.prompt);
+				ctx.ui.notify(`Copied prompt ${choice.index} to clipboard.`, "info");
 			} catch (error) {
 				ctx.ui.notify(error instanceof Error ? error.message : String(error), "error");
 			}

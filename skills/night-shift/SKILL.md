@@ -2,25 +2,25 @@
 name: night-shift
 description: >-
   Manage the Pi Night Shift system end-to-end — review overnight results,
-  create/update/delete/reorder phases, skip a night, and change the target
-  project. Use whenever the user mentions night shift in any context:
-  reviewing logs ("what did night shift do?"), managing phases ("add a
-  phase to night shift", "update night shift phase 3", "remove phase 4"),
-  skipping ("skip night shift tonight"), configuration ("change night
-  shift project"), or asking about the system ("how is night shift
-  configured?", "show night shift phases").
+  inspect or update feature lanes and the clean-state ledger, skip a night,
+  and change the target project. Use whenever the user mentions night shift
+  in any context: reviewing logs ("what did night shift do?"), managing
+  feature lanes ("show night shift lanes", "defer Calls", "reactivate
+  TockDesigner", "update the TockCoder lane"), skipping ("skip night shift
+  tonight"), configuration ("change night shift project"), or asking about
+  the system ("how is night shift configured?", "show night shift lanes").
 ---
 
 # Night Shift
 
-You are the interface to the user's Pi Night Shift system — one nightly launchd job that runs a single headless Pi parent orchestrator against a project. The parent reads `review.md`, uses the Dynamic Clean-State Ledger to skip unchanged clean scopes, and delegates dirty-scope triage/fixes to Pi subagents when useful.
+You are the interface to the user's Pi Night Shift system — one nightly launchd job that runs a single headless Pi parent orchestrator against a project. The parent reads `review.md`, uses the Dynamic Clean-State Ledger to skip unchanged clean feature lanes, and delegates dirty feature-lane triage/fixes to Pi subagents when useful.
 
 ## Key files
 
 | File | Purpose |
 |------|---------|
 | `~/.agents/cron/nightshift/nightshift.sh` | The runner script |
-| `~/.agents/cron/nightshift/review.md` | Phase definitions plus Dynamic Clean-State Ledger. Symlink to `<project>/.agents/reference/review.md`. |
+| `~/.agents/cron/nightshift/review.md` | Feature-oriented review standard plus Dynamic Clean-State Ledger. Symlink to `<project>/.agents/reference/review.md`. |
 | `~/.agents/cron/nightshift/.env` | Project config (`NIGHT_SHIFT_PROJECT`, `NIGHT_SHIFT_AGENT`, `NIGHT_SHIFT_ENABLED`, optional `NIGHT_SHIFT_ORCHESTRATOR_TIMEOUT`) |
 | `~/.agents/cron/nightshift/.night-shift-skip` | Sentinel — if present, the nightly orchestrator skips |
 | `~/.cron-logs/nightshift-YYYYMMDD.log` | Combined daily status log |
@@ -28,7 +28,7 @@ You are the interface to the user's Pi Night Shift system — one nightly launch
 | `~/.agents/cron/nightshift/launchagents/com.max.nightshift.plist` | Versioned launchd job definition for the single orchestrator |
 | `~/Library/LaunchAgents/com.max.nightshift.plist` | Symlink to the active orchestrator launchd definition |
 
-When the user refers to a "phase number," they mean the `## Phase N` heading number in `review.md`. The active launchd setup no longer schedules separate slots per phase; one parent Pi session owns all dirty phases/scopes for the night. Legacy slot mode (`nightshift.sh <slot-index>`) remains supported by the script for manual fallback, but no per-slot launchd jobs are installed or versioned.
+When the user refers to a "feature lane," they mean the active/deferred feature lanes and matching ledger rows in `review.md`. The active launchd setup runs one parent Pi session that owns all dirty feature lanes for the night. Legacy slot mode (`nightshift.sh <slot-index>`) remains supported by the script only for manual fallback against old `## Phase N` review docs; no per-slot launchd jobs are installed or versioned.
 
 ## Operations
 
@@ -54,13 +54,13 @@ Read and summarize what the night shift did.
 # Night Shift Report — [date]
 
 ## Summary
-[One sentence: orchestrator completed/timed out/failed/skipped; include dirty scopes/fixes if visible in logs.]
+[One sentence: orchestrator completed/timed out/failed/skipped; include dirty feature lanes/fixes if visible in logs.]
 
 ## Results
 
-| Run | Scope | Result |
-|-----|-------|--------|
-| orchestrator | all dirty ledger scopes | ✅ completed |
+| Run | Feature Lane | Result |
+|-----|--------------|--------|
+| orchestrator | all dirty feature ledger lanes | ✅ completed |
 
 For legacy logs, use the old slot table only when slot blocks are present.
 
@@ -73,37 +73,52 @@ For legacy logs, use the old slot table only when slot blocks are present.
 
 If the orchestrator was skipped because `NIGHT_SHIFT_ENABLED=false` or `.night-shift-skip` exists, say so directly. If a legacy slot log says `no phase defined`, say "Night shift legacy slot was skipped — no phase was defined."
 
-### 2. List phases
+### 2. List feature lanes
 
-Read the phase file (resolve the `review.md` symlink first) and display the current roster:
+Read the review file (resolve the `review.md` symlink first) and display the current roster from `### Active Feature Lanes`, `### Deferred Feature Lanes`, and the Dynamic Clean-State Ledger:
 
 ```
-# Night Shift Phases
+# Night Shift Feature Lanes
 
-| # | Phase |
-|---|-------|
-| 1 | [first ~60 chars] |
-| 2 | [first ~60 chars] |
-| ... | ... |
+## Active
+| Lane | Ledger Key | Status |
+|------|------------|--------|
+| Tockbot Agent — Memory System | agent-memory | pending |
+| TockCoder | tockcoder | pending |
+
+## Deferred
+| Lane | Ledger Key | Reason |
+|------|------------|--------|
+| TockDesigner | tockdesigner-deferred | deferred |
+| Calls | calls-deferred | deferred |
 ```
 
-If the file has no phase content under any `## Phase N` heading, say "No phases defined."
+If the file is still an old `## Phase N` review doc, say it is a legacy phase-based review file and show the phase roster instead.
 
-### 3. Add a phase
+### 3. Add or update a feature lane
 
-Append a new `## Phase N` section to the phase file (resolve the `review.md` symlink to find the real file), where N is the next number after the last existing phase. Use the user's description as the content — keep it as-is (they may include specific commands or instructions).
+Resolve the `review.md` symlink to find the real file, then update all three places that define a lane:
 
-Always re-read the file before appending to confirm the current highest phase number.
+1. The **Active Feature Lanes** or **Deferred Feature Lanes** roster.
+2. The **Dynamic Clean-State Ledger** row (`Key`, `Feature`, `Path filter`, `Clean through`, `Date`, `Evidence`, `Reopen trigger`).
+3. The matching detailed section under **Feature Review Lanes**.
 
-**Important:** Preserve the preamble (everything before `## Phase 1`) and the Dynamic Clean-State Ledger — the orchestrator sends the full document as context to the parent agent. Do not remove or overwrite it.
+Keep the user's requested behavior and commands as-is when adding lane-specific review instructions. Prefer stable ledger keys such as `agent-memory`, `tockcoder`, or `voice-notes`. Use `pending` for new active lane baseline fields unless the user explicitly provides a clean baseline.
 
-### 4. Update a phase
+**Important:** Preserve the preamble and Dynamic Clean-State Ledger. The orchestrator sends the full document as context to the parent agent. Do not remove or overwrite unrelated lanes.
 
-Replace the content under a specific `## Phase N` heading with the user's new description. Read the file, locate the heading, replace everything between it and the next `## Phase` heading (or end of file), then write back.
+### 4. Defer or reactivate a feature lane
 
-### 5. Delete a phase
+Resolve the `review.md` symlink and edit the real file.
 
-Remove a `## Phase N` section entirely. After deletion, **renumber** all subsequent phases so there are no gaps. For example, deleting Phase 3 from an 8-phase roster renumbers phases 4→3, 5→4, ..., 8→7.
+- **Defer:** move or list the lane under **Deferred Feature Lanes**, set its ledger `Clean through` and `Date` fields to `deferred`, and set Evidence to a short reason such as `Deferred by owner; do not audit now`. Keep a detailed deferred section so future agents know not to audit it.
+- **Reactivate:** move or list the lane under **Active Feature Lanes**, change deferred ledger fields back to `pending` unless the user provides a clean baseline, and restore active review instructions.
+
+Always preserve any existing implementation notes, path filters, and validation commands unless the user asks to remove them.
+
+### 5. Delete a feature lane
+
+Only delete a lane when the user explicitly asks to remove it, not merely defer it. Delete the roster entry, ledger row, and detailed section for that lane. There is no renumbering requirement for feature lanes.
 
 Always confirm with the user before deleting.
 

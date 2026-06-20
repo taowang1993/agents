@@ -14,8 +14,11 @@
 
 ### Copy
 
-**Title Case** applies to all UI surface text that is not a full sentence:
+**Title Case** applies to all UI surface text that is not a full sentence. Use standard title case, not every-word capitalization:
 
+- Capitalize the first and last word.
+- Capitalize nouns, pronouns, verbs, adjectives, adverbs, and subordinating conjunctions.
+- Lowercase articles (`a`, `an`, `the`), coordinating conjunctions (`and`, `but`, `for`, `nor`, `or`, `so`, `yet`), and short prepositions (`as`, `at`, `by`, `in`, `of`, `on`, `to`, `up`, `via`) unless they are the first or last word.
 - UI labels and button text
 - Menu items, menu group labels, and dropdown options
 - Section headers, panel names, and card titles
