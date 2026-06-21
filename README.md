@@ -128,10 +128,6 @@ Convert URLs, PDFs, DOCX, HTML, and other files into Markdown using `uvx markitd
 
 List, configure, authenticate, call, and inspect MCP servers/tools over HTTP or stdio.
 
-### night-shift
-
-Manage the Pi Night Shift system — review overnight results, create/update/delete tasks, skip nights, and configure the target project.
-
 ### playwright-cli
 
 Default browser automation tool. Page nav, click/type/fill, screenshots, snapshots, multi-tab, keyboard/mouse, drag-drop, file upload, dialogs. Sessions with state persistence. Network mocking. DevTools tracing and video. Test authoring and debugging.
