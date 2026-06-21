@@ -20,6 +20,7 @@ Use `dedao-dl` to help the user log in to 得到, inspect their library, search 
 - Distinguish numeric IDs from URL `id` strings (`enid` / `topic_id_str`). Numeric IDs usually require a prior list command to build a mapping; URL `id` strings can usually be passed directly.
 - If the user is not logged in, start with `dedao-dl login -q` or `dedao-dl login -c "<cookie>"`, then verify with `dedao-dl who`.
 - Explain `-t` download formats whenever you provide download commands.
+- When the user asks for `每天听本书` book summaries, apply the book summary title spec below by default: exclude `大望局`, include Chinese book titles, English books, and book-like `章鱼书场` entries.
 - When the user provides an error, restate the key error briefly, then give concrete checks and commands.
 
 ## Core Commands
@@ -186,6 +187,35 @@ Explain formats:
 - `dle -t 4`: Markdown notes
 
 Use `dedao-dl ebook notes -i <ebookID>` before notes export when the user needs to inspect available notes.
+
+### `每天听本书` Book Summary Title Spec
+
+Apply this spec by default when the user asks to download `每天听本书` book summaries, `听书` summaries, or new book-summary Markdown after a marker title.
+
+Include only these content types:
+
+- Chinese book summaries: include titles containing Chinese book brackets, such as `《...》`.
+- English book summaries: include titles marked `英文原版` or `英文新书`, and English-title entries that look like `<English Title> | <讲者>解读` or `<English Title>｜<讲者>解读`, such as `The Power Broker | 刘怡解读` or `Everest Inc. | 吴晨解读`.
+- Book-like `章鱼书场` entries: include entries that clearly look like books, named works, or book/IP title discussions, such as `陈章鱼解读` book entries and `谭苗解读` entries like `沙丘与科幻电影`, `金庸小说与武侠片`, or `哈利·波特与魔幻类型电影`.
+
+Exclude these content types:
+
+- `播客大望局` / `大望局`, even when the title contains `《...》`.
+- Interview, chat, special-topic, and numbered podcast-style entries that are not book summaries.
+
+Use `id_out` as the preferred `dlo` ID when a prepared list contains it:
+
+```bash
+dedao-dl dlo <id_out> -t 3
+```
+
+For Max's resources workspace, prefer this prepared list when it exists:
+
+```text
+/Users/max/projects/resources/dedao/odob_download_list_no_dawangju_newer_than_xianfazhiren.json
+```
+
+When you regenerate a list from the public `每天听本书` catalog, keep the marker exclusive: stop before the marker title, do not include the marker itself, and save a download-ready JSON/CSV with `id_out`, `alias_id`, `name`, `date`, `article_title`, and the inclusion reason.
 
 ## URL to Command Mapping
 
