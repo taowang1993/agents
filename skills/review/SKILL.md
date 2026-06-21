@@ -1,11 +1,11 @@
 ---
 name: review
-description: Strict human-style review before merging code or after human/agent implementation. Use for PR/diff/branch/file review plus quality audits, security hardening review, performance regression review, and simplification/refactoring critique. Produces maintainability findings across correctness/tests/architecture/security/performance/dependencies/verification and pushes ambitious code-judo restructuring without a repo-wide audit tool.
+description: Strict human-style review for own changes and uncommitted/current diffs before merge. Use when the user says “review your own changes” or “review the uncommitted changes”; also use for PR, branch, file, or recent human/agent implementation reviews plus quality, security, performance, and simplification critiques. Produces actionable findings across correctness/tests/architecture/security/performance/dependencies/verification and code-judo simplification.
 ---
 
 # Strict Multi-Axis Code Review
 
-Use this skill for an unusually rigorous human-style review of a branch, PR, diff, file, commit, or recent change. Review the change as a quality gate across correctness, tests, maintainability, architecture, security, performance, operability, and verification.
+Use this skill for an unusually rigorous human-style review of your own changes, uncommitted changes, the current diff, a branch, PR, file, commit, or recent change. Review the change as a quality gate across correctness, tests, maintainability, architecture, security, performance, operability, and verification.
 
 Above all, be **ambitious** about code structure. Do not merely identify local cleanup opportunities. Actively search for "code judo" moves: restructurings that preserve behavior while making the implementation dramatically simpler, smaller, more direct, and more elegant.
 

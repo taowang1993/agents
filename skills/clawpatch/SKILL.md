@@ -1,6 +1,6 @@
 ---
 name: clawpatch
-description: Automated repo-wide review workflow using the clawpatch CLI. Use when the user wants a broad audit that maps the repository into feature slices, runs provider-backed bug/security/test-gap/deslopify reviews, persists findings under .clawpatch/, generates reports, revalidates findings, or fixes a specific recorded finding. Do not use for ordinary PR/current-branch review feedback focused on maintainability, abstraction quality, or code structure; use the review skill for that.
+description: Automated repo-wide review workflow using the clawpatch CLI. Use when the user wants a broad audit that maps the repository into feature slices, runs provider-backed bug/security/test-gap/deslopify reviews, persists findings under .clawpatch/, generates reports, revalidates findings, or fixes a specific recorded finding. Do not use for ordinary PR/current-branch/uncommitted-change review feedback focused on maintainability, abstraction quality, or code structure.
 ---
 
 # clawpatch
@@ -19,6 +19,8 @@ Use clawpatch when the user asks for:
 - Running an automated fix for a specific finding
 - Checking whether previous findings are still valid (revalidate)
 - A structured report of code quality issues
+
+Do **not** use clawpatch for ordinary review of your own changes, uncommitted changes, current diffs, PRs, or current-branch feedback focused on maintainability, abstraction quality, or code structure.
 
 Do **not** use clawpatch for quick, single-file linting or formatting — use the project's existing lint/format commands for that.
 
