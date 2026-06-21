@@ -62,6 +62,12 @@ All-in-one web search for AI agents. Pre-extracted, token-budgeted web content, 
 
 Automated code review that maps a repo into semantic feature slices, reviews each slice with an AI provider, persists findings, and can run explicit fix loops. Use for code review, auditing, test gap analysis, or cleaning up AI-generated slop.
 
+### dedao
+
+Use `dedao-dl` for 得到 App workflows — login, cookies, account switching, purchased courses, audiobooks, ebooks, articles, notes, search results, URL-to-ID mapping, downloads, JSON output for agents, and troubleshooting.
+
+Origin: https://github.com/yann0917/dedao-dl/tree/main/skills
+
 ### diagnose
 
 Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test.

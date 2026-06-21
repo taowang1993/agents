@@ -77,6 +77,7 @@
 | `copilot`           | GitHub Copilot CLI             |
 | `corepack`          | Node.js PM manager             |
 | `cursor`            | Cursor editor                  |
+| `dedao-dl`          | 得到 App content download CLI  |
 | `docker`            | Docker CLI                     |
 | `docker-compose`    | Docker Compose                 |
 | `docsee`            | AGENTS.md doc index sync       |
