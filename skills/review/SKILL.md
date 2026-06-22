@@ -21,13 +21,19 @@ Review with high standards and good judgment:
 
 ## Always Load Review References
 
-Before reviewing code, read all three references from this skill directory:
+Before reviewing code or fixing code as part of a review, read all three references from this skill directory:
 
 - [Code Simplification Reference](references/code-simplification.md)
 - [Security and Hardening Reference](references/security-and-hardening.md)
 - [Performance Optimization Reference](references/performance-optimization.md)
 
+Treat this as mandatory review setup, not optional background reading. Do not approve, reject, or fix code from this skill body alone. If a reference cannot be read, state that the review is blocked or explicitly limited and name the missing reference.
+
 Use all three perspectives in every review, even when the user asks for a general review. Apply each reference proportionally to the diff: do not force speculative security or performance findings, but do use the checklists to avoid missing relevant risks.
+
+When a review leads to code changes, re-review the changed files with all three reference perspectives before calling the work complete. If Ponytail mode or another simplification mode is active, use it only after the reference pass to choose the smallest safe remedy; do not let it skip security, performance, verification, or boundary checks.
+
+In the final review or handoff, state whether all three references were applied. If any review reference, verification gate, or relevant validation was skipped, name it and explain why.
 
 ## Core Prompt
 
