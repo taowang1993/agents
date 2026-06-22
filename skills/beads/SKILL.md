@@ -6,7 +6,7 @@ description: >
   or needs context recovery after compaction. Trigger with "create task", "what's
   ready", "track this work", "resume after compaction". Make sure to use this skill
   whenever managing multi-session work, tracking dependencies, or recovering context.
-allowed-tools: "Read,Bash(bd:*)"
+allowed-tools: "Read,Write,Bash(bd:*),Bash(mkdir:*)"
 version: "0.60.0"
 author: "Steve Yegge <steve.yegge@gmail.com>"
 license: "MIT"
@@ -55,6 +55,19 @@ Essential commands: `bd ready`, `bd create`, `bd show`, `bd update`, `bd close`,
 5. `bd close <id> --reason "..."` — Complete task
 6. `bd dolt push` — Push to Dolt remote (if configured)
 
+## Planning Protocol
+
+When the user asks you to write a plan, create both artifacts:
+
+1. A markdown plan file in the repository's `.beads/plans/` directory. For Tockbot, use `/Users/max/projects/tockbot/.beads/plans/`.
+2. A beads epic plus child issues that mirror the plan's work breakdown.
+
+For non-trivial/spec-based plans, read [planning.md](references/planning.md) before drafting.
+
+Use a stable filename: `YYYY-MM-DD-short-slug.md`. Create `.beads/plans/` if it is missing. Keep the plan practical: goal, non-goals, phases/tasks, acceptance checks, risks, and the beads epic/issue IDs. After creating the epic, link it to the plan with `--spec-id .beads/plans/<file>.md` or include the plan path in the epic description/notes if `--spec-id` is not suitable.
+
+Skip the plan file only for tiny single-session tasks where an epic would also be overkill; say so explicitly.
+
 ## Output
 
 Append `--json` to any command for structured output. Use `bd show <id> --long` for extended metadata. Status icons: `○` open `◐` in_progress `●` blocked `✓` closed `❄` deferred.
@@ -102,6 +115,7 @@ bd close <id> --reason "Implemented with refresh tokens" --json
 | **Getting Started** | [BOUNDARIES.md](resources/BOUNDARIES.md), [CLI_REFERENCE.md](resources/CLI_REFERENCE.md) (live reference pointers), [WORKFLOWS.md](resources/WORKFLOWS.md) |
 | **Core Concepts** | [DEPENDENCIES.md](resources/DEPENDENCIES.md), [ISSUE_CREATION.md](resources/ISSUE_CREATION.md), [PATTERNS.md](resources/PATTERNS.md) |
 | **Resilience** | [RESUMABILITY.md](resources/RESUMABILITY.md), [TROUBLESHOOTING.md](resources/TROUBLESHOOTING.md) |
+| **Planning** | [planning.md](references/planning.md) |
 | **Advanced** | [MOLECULES.md](resources/MOLECULES.md), [CHEMISTRY_PATTERNS.md](resources/CHEMISTRY_PATTERNS.md), [AGENTS.md](resources/AGENTS.md), [ASYNC_GATES.md](resources/ASYNC_GATES.md), [WORKTREES.md](resources/WORKTREES.md) |
 | **Reference** | [STATIC_DATA.md](resources/STATIC_DATA.md), [INTEGRATION_PATTERNS.md](resources/INTEGRATION_PATTERNS.md) |
 

@@ -1,166 +1,129 @@
 ---
 name: tdd
-description: Test-driven development with red-green-refactor loop using Playwright for behavioral E2E tests. Use when the user wants to build features or fix bugs using TDD, mentions "red-green-refactor", "test-first", wants E2E or integration tests, or asks for test-driven development. Use this skill for ANY feature work — it is the default development workflow. When a feature request arrives, write a failing behavioral test BEFORE writing any implementation code. Do NOT write tests after the code.
+description: Test-driven development with a red-green-refactor loop. Use when the user asks for TDD, test-first, red-green-refactor, E2E or integration tests, or when implementing a non-trivial feature or bug fix that needs a regression check. Aim for 100% meaningful coverage of touched behavior with the smallest useful test type; use Playwright/E2E only for browser flows that require the real app.
 ---
 
 # Test-Driven Development
 
 ## Philosophy
 
-**Core principle**: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't.
-
-**Good tests** are integration-style: they exercise real code paths through public APIs. They describe _what_ the system does, not _how_ it does it. A good test reads like a specification - "user can checkout with valid cart" tells you exactly what capability exists. These tests survive refactors because they don't care about internal structure.
-
-**Bad tests** are coupled to implementation. They mock internal collaborators, test private methods, or verify through external means (like querying a database directly instead of using the interface). The warning sign: your test breaks when you refactor, but behavior hasn't changed. If you rename an internal function and tests fail, those tests were testing implementation, not behavior.
+Use tests to buy confidence, not coverage theater. Verify behavior through public interfaces, not implementation details. Good tests describe what the system does and survive refactors; bad tests know private methods, mocks, or file shapes that users never see.
 
 See [tests.md](references/tests.md) for examples and [mocking.md](references/mocking.md) for mocking guidelines.
 
-## Feature-Triggered TDD
+## Default Stance
 
-In the age of AI agents, the trigger for writing a test is **not** adding a new method to a class — it is receiving a **feature request**. When a feature request arrives (from the user, a task, or a spec):
+Start with the smallest test that can fail for the behavior you are changing:
 
-1. Immediately write a failing behavioral test that describes the feature.
-2. Run the AI to generate minimal code to make the test pass.
-3. Then **you** (the human/agent reviewer) focus on the refactor phase — improving the generated code's quality.
+1. Use a unit or pure-function test for isolated logic.
+2. Use a component or integration test when behavior crosses modules, hooks, storage, API handlers, or UI state.
+3. Use Playwright/E2E only when the real browser/app boundary matters: routing, auth, forms, navigation, persistence, accessibility-visible flows, or a bug that only reproduces end-to-end.
+4. Skip a new test for docs-only changes, config-only changes, generated files, mechanical renames, or trivial one-liners; say why in one sentence.
 
-AI makes the RED and GREEN phases fast. The REFACTOR phase is where developers should spend the most time, reviewing and improving the AI-generated code.
+Do not add a new test framework unless the project already uses it or the user asks. Prefer the existing test stack.
 
-## Playwright for Behavioral E2E Tests
+## Coverage Policy
 
-Use Playwright for browser-based behavioral E2E testing. Set up Playwright agents before writing tests:
+Aim for 100% meaningful coverage of the behavior you touch. This means changed lines, branches, and user-visible paths should be protected by tests unless they are non-behavioral, generated, unreachable, or defensive code that would require brittle tests.
+
+Use coverage to find gaps after behavior is protected. Add tests for:
+
+- Changed behavior
+- Regressions from reported bugs
+- Critical user flows
+- Error paths that can lose data, money, security, or accessibility
+- Complex branching logic that is easy to break
+
+Do not interpret 100% as "write E2E tests for everything" or "clean up the whole repo's historical coverage." Keep the scope to the touched feature/package unless the user or CI asks for broader coverage. If coverage tooling is unavailable or too slow, approximate it by listing the changed branches and paths and covering each meaningful one.
+
+## Red-Green-Refactor Loop
+
+Work in vertical slices. Do not write all tests first and all implementation later.
+
+1. **RED**: Write one failing behavior test for one scenario.
+2. **GREEN**: Write the minimum code that makes that test pass.
+3. **REFACTOR**: Improve the code while keeping the test green.
+4. Repeat only for the next meaningful behavior.
+
+If you cannot run the test, still leave the smallest runnable check and report the exact command you would run.
+
+## Planning
+
+Before coding, read the relevant spec, issue, or design note. If requirements are ambiguous, ask the minimum question needed to choose the public behavior. Otherwise proceed.
+
+List only the scenarios you intend to cover now. Keep it short:
+
+- Main happy path
+- One important failure/edge path, if risky
+- Known regression, if fixing a bug
+
+Do not ask the user to approve a full test matrix unless the task is large or ambiguous.
+
+## Red Phase — Write the Failing Test
+
+Write one test that would fail before the change:
+
+- Name the test as a user-visible behavior: `user can save edited profile`, `rejects invalid invite token`.
+- Exercise public APIs, rendered UI, CLI commands, or browser interactions.
+- Assert visible outcomes, returned values, persisted effects, or emitted errors.
+- Avoid assertions on private functions, internal call counts, generated component trees, or incidental class names.
+
+Run the narrowest command for that test. A passing RED test means the test does not prove the new behavior; tighten it or skip TDD with a note if the behavior already exists.
+
+## Green Phase — Make It Pass
+
+Write the least code needed for the current test:
+
+- Handle only the tested scenario.
+- Do not add speculative options, abstractions, or future-proofing.
+- Use existing project helpers and patterns.
+- Run the same narrow test until it passes.
+
+Commit after GREEN when the repo workflow expects checkpoints or before any risky automated healing/refactor step.
+
+## Refactor Phase — Improve Quality
+
+After the test passes, improve the implementation without changing behavior:
+
+- Remove duplication.
+- Deepen modules behind small interfaces; see [deep-modules.md](references/deep-modules.md).
+- Adjust interfaces for testability; see [interface-design.md](references/interface-design.md).
+- Replace awkward AI-generated code with project idioms.
+- Re-run the narrow test after each meaningful refactor.
+
+See [refactoring.md](references/refactoring.md) for refactor candidates.
+
+## Playwright/E2E When Needed
+
+Use Playwright for browser-based behavioral E2E only when the browser is the public interface or the failure crosses app boundaries.
+
+Good E2E targets:
+
+- Sign-in, checkout, onboarding, or other critical flows
+- Route transitions and browser navigation
+- Form validation visible to users
+- Client/server integration that cannot be trusted with a smaller test
+- Reproductions of bugs observed only in the app
+
+Avoid E2E for pure formatting, isolated utilities, simple component rendering, or logic that a fast integration/unit test covers.
+
+If Playwright agents are useful and the project supports them, set them up only when needed:
 
 ```bash
 npx playwright init-agents --loop=vscode
 ```
 
-This creates three agent definitions that work with coding agents:
-
-| Agent | Purpose |
-|---|---|
-| **Planner** | Explores the app and writes a markdown test plan in `specs/` |
-| **Generator** | Converts the plan into Playwright test files in `tests/` |
-| **Healer** | Runs failing tests and auto-repairs locators and waits |
-
-Use a `seed.spec.ts` to bootstrap the test context with auth, fixtures, and setup. Every generated test references this seed file.
-
-### Commit Before Healing
-
-Before letting the healer agent fix failing tests, **commit your current code first**. The healer may make destructive changes, and you need a checkpoint to revert to if the healing goes wrong.
-
-### One Feature, One Test File
-
-Generate one test file per feature, not a bulk test suite. Each feature test should describe a complete user scenario from start to finish.
-
-### Screenshots in PRs
-
-Playwright captures screenshots during test runs. Attach these screenshots to your PR description as visual evidence that the feature works correctly.
-
-### Avoid Self-Affirming Tests
-
-AI-generated unit tests can pass while the system behavior is broken. This happens when tests assert on the shape of code rather than user-visible behavior. Prefer behavioral E2E tests that simulate real user interactions: navigating to pages, clicking buttons, typing input, and asserting on visible outcomes.
-
-## AI-Assisted TDD in Practice
-
-1. **Feature request arrives** → the user describes a UI feature.
-2. **RED**: Write a Playwright test that navigates to the route, interacts with the component, and asserts the expected behavior. Run it — it fails because the feature doesn't exist yet.
-3. **GREEN**: Let the AI agent generate the minimal implementation to make the test pass. Do not worry about code quality in this phase — focus on speed.
-4. **REFACTOR**: Review the AI-generated code. Extract duplication, deepen modules, apply design tokens. Run the test after each refactor to confirm behavior is preserved.
-5. **COMMIT**: Commit before running the healer on any remaining failures.
-
-## Anti-Pattern: Horizontal Slices
-
-**DO NOT write all tests first, then all implementation.** This is "horizontal slicing" - treating RED as "write all tests" and GREEN as "write all code."
-
-This produces **crap tests**:
-
-- Tests written in bulk test _imagined_ behavior, not _actual_ behavior
-- You end up testing the _shape_ of things (data structures, function signatures) rather than user-facing behavior
-- Tests become insensitive to real changes - they pass when behavior breaks, fail when behavior is fine
-- You outrun your headlights, committing to test structure before understanding the implementation
-
-**Correct approach**: Vertical slices via tracer bullets. One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you just wrote the code, you know exactly what behavior matters and how to verify it.
-
-```
-WRONG (horizontal):
-  RED:   test1, test2, test3, test4, test5
-  GREEN: impl1, impl2, impl3, impl4, impl5
-
-RIGHT (vertical):
-  RED→GREEN: test1→impl1
-  RED→GREEN: test2→impl2
-  RED→GREEN: test3→impl3
-  ...
-```
-
-## Workflow
-
-### 1. Planning
-
-When a feature request arrives, **start by reading any specs or design docs** relevant to the feature. If the project has an architecture.md, consult it — but proceed without it if it doesn't exist.
-
-Before writing any code:
-
-- [ ] Read the feature request or spec in full
-- [ ] Confirm with user what interface changes are needed
-- [ ] Confirm with user which behaviors to test (prioritize)
-- [ ] Identify opportunities for [deep modules](references/deep-modules.md) (small interface, deep implementation)
-- [ ] Design interfaces for [testability](references/interface-design.md)
-- [ ] List the behaviors to test as user scenarios ("user can X" → "user sees Y")
-- [ ] Set up Playwright agents if not already installed: `npx playwright init-agents --loop=vscode`
-- [ ] Get user approval on the plan
-
-Ask: "What should the public interface look like? Which user scenarios are most important to test?"
-
-**You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical user flows and complex logic, not every possible edge case.
-
-### 2. RED Phase — Write the Failing Test
-
-Write ONE behavioral test that describes ONE user scenario. For UI features, write a **Playwright E2E test**:
-
-- Navigate to the route or surface being tested
-- Interact with the component (click, type, select)
-- Assert on the visible outcome (text, visibility, state)
-
-Run the test — it must fail because the feature doesn't exist yet. A passing test at this stage means the test is not actually testing the new feature.
-
-### 3. GREEN Phase — Make It Pass
-
-Write the minimal implementation to make the test pass. Use AI agents to generate code quickly in this phase. Do not optimize for code quality — optimize for speed. The goal is to see the test turn green with the least amount of code possible.
-
-Rules during GREEN:
-- One test at a time
-- Only enough code to pass the current test
-- Don't anticipate future tests
-- Don't refactor yet — just make it work
-- **Commit your code after GREEN** before moving to REFACTOR
-
-### 4. REFACTOR Phase — Improve Quality
-
-After the test passes and code is committed, look for [refactor candidates](references/refactoring.md):
-
-- [ ] Replace AI-generated patterns with project design tokens and shared recipes
-- [ ] Extract duplication
-- [ ] Deepen modules (move complexity behind simple interfaces)
-- [ ] Apply SOLID principles where natural
-- [ ] Consider what new code reveals about existing code
-- [ ] Run the test after each refactor step to confirm behavior is preserved
-
-**Never refactor while RED.** Get to GREEN and commit first.
-
-### 5. HEAL — Fix Remaining Issues
-
-If tests still fail after implementation, use the Playwright healer agent to auto-repair locators and waits. **Always commit before healing** so you can revert if the healer makes destructive changes.
+Before using a healer agent, commit your current code first. Healers can make broad locator/wait changes.
 
 ## Checklist Per Cycle
 
-```
-[ ] Feature request or spec has been read in full
-[ ] Test describes user-visible behavior, not implementation
-[ ] Test uses public interface or browser interactions only
-[ ] Test would survive internal refactor (rename functions, move files)
-[ ] Code is minimal for this test — no speculative features
-[ ] Committed after GREEN, before REFACTOR
-[ ] Committed before running the healer agent
-[ ] Screenshots attached to PR if using Playwright
-[ ] Refactored to use project design tokens and shared recipes
+```text
+[ ] One behavior is selected for this slice
+[ ] The chosen test level is the smallest useful one
+[ ] The test fails before implementation, or you explained why TDD is not useful here
+[ ] The test uses public behavior, not implementation details
+[ ] The implementation is minimal for this test
+[ ] The narrow test command passes
+[ ] Refactor kept the test green
+[ ] Touched behavior has 100% meaningful coverage, or uncovered code is explicitly justified
 ```
