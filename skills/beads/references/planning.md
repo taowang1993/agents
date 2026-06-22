@@ -71,7 +71,21 @@ Task 4: User can view task list (query + API + UI for list view)
 
 Each vertical slice delivers working, testable functionality.
 
-### Step 4: Write Tasks
+### Step 4: Check System Coherence
+
+Before task breakdown, choose the smallest implementation that fits the surrounding system, not just the smallest local patch.
+
+Answer briefly:
+
+- What is the source of truth before and after this change?
+- Which component owns the state, lifecycle, and side effects?
+- What failure, retry, resume, and cleanup paths matter?
+- Would a direct patch duplicate state, logic, or protocol decisions?
+- Is there a more coherent existing boundary or abstraction for this work?
+
+Expand scope only when it removes duplicated state, fragile coupling, lifecycle mismatch, or recurring complexity. Do not use this as permission to gold-plate.
+
+### Step 5: Write Tasks
 
 Each task follows this structure:
 
@@ -98,7 +112,7 @@ Each task follows this structure:
 **Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5+ files]
 ```
 
-### Step 5: Order and Checkpoint
+### Step 6: Order and Checkpoint
 
 Arrange tasks so that:
 
@@ -152,7 +166,8 @@ After drafting, self-review once:
 1. Spec coverage: every requirement maps to a task or a stated non-goal.
 2. Placeholder scan: remove vague instructions and missing commands.
 3. Interface consistency: names, types, routes, and file paths match across dependent tasks.
-4. Scope check: split XL tasks before creating beads children.
+4. System coherence: source of truth, lifecycle, and boundaries are explicit.
+5. Scope check: split XL tasks before creating beads children.
 
 ## Plan Document Template
 
@@ -165,6 +180,11 @@ After drafting, self-review once:
 ## Architecture Decisions
 - [Key decision 1 and rationale]
 - [Key decision 2 and rationale]
+
+## System Impact
+- Source of truth: [what owns this state/data before and after]
+- Lifecycle: [trigger, processing, completion, failure/cleanup]
+- Boundaries: [interfaces or subsystems affected]
 
 ## Task List
 
