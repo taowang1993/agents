@@ -12,84 +12,13 @@
       "logs": ["~/Library/Logs/cleanup-processes.log"]
     },
     {
-      "id": "nightshift-0",
-      "label": "com.max.nightshift-0",
+      "id": "nightshift",
+      "label": "com.max.nightshift",
       "group": "nightshift",
-      "description": "Night Shift Phase 1.",
+      "description": "Run Nightshift review tasks back-to-back during the configured window.",
       "script": "nightshift/nightshift.sh",
-      "args": ["0"],
-      "plist": "nightshift/launchagents/com.max.nightshift-0.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-1",
-      "label": "com.max.nightshift-1",
-      "group": "nightshift",
-      "description": "Night Shift Phase 2.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["1"],
-      "plist": "nightshift/launchagents/com.max.nightshift-1.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-2",
-      "label": "com.max.nightshift-2",
-      "group": "nightshift",
-      "description": "Night Shift Phase 3.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["2"],
-      "plist": "nightshift/launchagents/com.max.nightshift-2.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-3",
-      "label": "com.max.nightshift-3",
-      "group": "nightshift",
-      "description": "Night Shift Phase 4.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["3"],
-      "plist": "nightshift/launchagents/com.max.nightshift-3.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-4",
-      "label": "com.max.nightshift-4",
-      "group": "nightshift",
-      "description": "Night Shift Phase 5.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["4"],
-      "plist": "nightshift/launchagents/com.max.nightshift-4.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-5",
-      "label": "com.max.nightshift-5",
-      "group": "nightshift",
-      "description": "Night Shift Phase 6.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["5"],
-      "plist": "nightshift/launchagents/com.max.nightshift-5.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-6",
-      "label": "com.max.nightshift-6",
-      "group": "nightshift",
-      "description": "Night Shift Phase 7.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["6"],
-      "plist": "nightshift/launchagents/com.max.nightshift-6.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
-    },
-    {
-      "id": "nightshift-7",
-      "label": "com.max.nightshift-7",
-      "group": "nightshift",
-      "description": "Night Shift Phase 8.",
-      "script": "nightshift/nightshift.sh",
-      "args": ["7"],
-      "plist": "nightshift/launchagents/com.max.nightshift-7.plist",
-      "logs": ["~/.cron-logs/nightshift-*.log"]
+      "plist": "nightshift/com.max.nightshift.plist",
+      "logs": ["~/.cron-logs/nightshift.log", "~/.cron-logs/nightshift/*.log"]
     },
     {
       "id": "update-packages",

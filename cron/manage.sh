@@ -310,9 +310,9 @@ def validate_job(job: dict[str, Any]) -> list[str]:
         issues.append(f"plist label mismatch: expected {job['label']}, got {data.get('Label')}")
 
     if job.get("group") == "nightshift":
-        for required in (ROOT / "nightshift/.env", ROOT / "nightshift/review.md"):
+        for required in (ROOT / "nightshift/.env", ROOT / "nightshift/progress.md", ROOT / "nightshift/tasks"):
             if not required.exists():
-                issues.append(f"missing Night Shift file: {required}")
+                issues.append(f"missing Nightshift file: {required}")
 
     program = data.get("Program")
     program_args = data.get("ProgramArguments")
