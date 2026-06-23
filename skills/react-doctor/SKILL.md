@@ -24,6 +24,16 @@ If the score dropped, fix the regressions before committing.
 
 Run `npx -y react-doctor@latest . --verbose` (without `--diff`) to scan the full codebase. Fix issues by severity — errors first, then warnings.
 
+## Triage before fixing
+
+Treat findings as candidates, not commands. Before editing, classify each warning as:
+
+- **Real, safe fix**: small behavior-preserving change with a runnable check.
+- **Needs triage**: ordering, transactions, async sequencing, security boundaries, filesystem paths, raw SQL, or migration-scale rules.
+- **False positive / accepted tradeoff**: document why and leave it alone.
+
+Scope migration-scale findings by package or feature area. Do not sweep broad rules repo-wide, do not globally disable rules, and do not change sequencing-sensitive code just to satisfy React Doctor. Prefer one small section, verify it, then continue.
+
 ## Command
 
 ```bash
