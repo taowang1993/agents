@@ -62,6 +62,10 @@ GUESS: <your hypothesis for the answer, with the reasoning that produced it>
 
 Wait for the user to react before asking the next question.
 
+If the answer is available in the codebase, docs, or existing artifacts, read them instead of asking. Use questions for intent, trade-offs, and decisions no file can answer.
+
+For plan or design stress tests, walk dependent decisions one at a time: settle the parent decision before branching into consequences. Include your recommended answer as the `GUESS` so the user can accept or correct it.
+
 **Why one at a time, not a batch:**
 
 - The user can't react to your hypotheses if you bury them in a list
