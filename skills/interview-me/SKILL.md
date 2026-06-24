@@ -252,14 +252,6 @@ Agent: <continues>
 
 Two questions in, the agent has discovered the actual ask isn't "a dashboard." It's "a list." Different artifact, different scope, different work. The dashboard would have been wrong.
 
-## Interaction with Other Skills
-
-- **Former `idea-refine` work**: now included as the optional post-confirmation refinement add-on. Use it only after the user confirms intent, and keep the output tied to that intent rather than the original underspecified ask.
-- **`spec-driven-development`**: downstream. If the confirmed intent is concrete ("I want X for Y users with Z success criteria"), hand off to `spec-driven-development` to write it down.
-- **`planning-and-task-breakdown`**: two hops downstream of this skill (after the spec).
-- **`doubt-driven-development`**: opposite end of the timeline. Interview-me is pre-decision intent extraction; doubt-driven is post-decision artifact review. Both catch divergence, but at different moments.
-- **`source-driven-development`**: orthogonal. Interview-me clarifies what the user wants; SDD verifies framework facts. They don't compete.
-
 ## Common Rationalizations
 
 | Rationalization | Reality |
@@ -306,4 +298,4 @@ After applying interview-me:
 - [ ] At the stop point, the agent could predict reactions to the next three questions it would ask
 - [ ] If refinement ran, variations were generated only after explicit intent confirmation
 - [ ] If refinement ran, the one-pager included assumptions, MVP scope, and a Not Doing list
-- [ ] Any handoff to a downstream skill (`spec-driven-development`) was framed in terms of the confirmed intent, not the original underspecified ask
+- [ ] Any downstream handoff was framed in terms of the confirmed intent, not the original underspecified ask
