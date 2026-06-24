@@ -11,7 +11,7 @@ What people ask for and what they actually want are different things. They ask f
 
 The cheapest moment to find this gap is before any plan, spec, or code exists. Once you've started building, switching costs are real, and the user will rationalize the wrong thing into a "good enough" thing. The misfit gets locked in.
 
-This skill closes the gap before it costs anything. The other Define-phase skills assume you already know roughly what you want: `idea-refine` generates variations from an idea, `spec-driven-development` writes the requirements down, `doubt-driven-development` stress-tests a plan after you've drafted one. Interview-me is the part before all of those, where you ask one question at a time, with your best guess attached, until you can predict what the user is going to say before they say it.
+This skill closes the gap before it costs anything. Interview-me is the part before specs, plans, and code where you ask one question at a time, with your best guess attached, until you can predict what the user is going to say before they say it. Once intent is confirmed, you may optionally refine the idea into possible directions; keep that downstream of confirmation so ideation does not launder guesses into scope.
 
 ## When to Use
 
@@ -22,6 +22,7 @@ Apply this skill when:
 - You're tempted to start with assumptions you haven't surfaced
 - The user hasn't said which value they're optimizing for when two reasonable ones are in tension (simplicity vs. flexibility, cost vs. speed)
 - The user explicitly invokes: "interview me", "grill me", "before we start, are we sure?", "stress-test my thinking"
+- The user asks to refine, ideate on, or stress-test a raw idea before planning; first confirm intent, then optionally run the refinement add-on
 
 **When NOT to use:**
 
@@ -121,6 +122,66 @@ The gate is an explicit "yes." The following are **not** yes:
 
 If they correct you, fold the correction in and restate. Loop until you get an explicit yes.
 
+### Optional Step 6: Refine directions after intent is confirmed
+
+Run this only after Step 5 produces an explicit yes. The refinement phase consumes the confirmed intent; it does not replace the interview.
+
+Use this when the user says the intent is right but they still need help choosing a direction, scope, or MVP.
+
+1. **Frame the opportunity.** Turn the confirmed intent into one crisp How Might We statement:
+
+   ```
+   How might we <outcome> for <specific user> without <binding constraint>?
+   ```
+
+2. **Generate 5–8 considered variations, not 20 shallow ones.** Pick only the lenses that fit:
+   - **Inversion:** What if we did the opposite?
+   - **Simplification:** What is the 10x simpler version?
+   - **Constraint shift:** What changes if time, budget, tech, or scale changes?
+   - **Audience shift:** What if this served a different user?
+   - **Combination:** What adjacent idea makes this stronger?
+   - **Expert lens:** What would domain experts find obvious?
+   - **10x version:** What would this look like at massive scale?
+
+   If you are inside a codebase, scan relevant files first and ground variations in existing architecture, patterns, and constraints.
+
+3. **Converge on 2–3 directions.** Cluster what resonated, then stress-test each direction against:
+   - **User value:** painkiller or vitamin, current workaround, frequency, switching reason
+   - **Feasibility:** hardest technical/resource problem, dependencies, time-to-value
+   - **Differentiation:** new capability, 10x improvement, new audience/context, better UX, or only cheaper
+
+4. **Surface assumptions.** For each serious direction, name:
+   - **Must be true:** wrong = idea dies
+   - **Should be true:** wrong = approach changes
+   - **Might be true:** nice-to-have, not worth validating yet
+   - **Could kill it:** the most likely failure mode
+
+5. **Recommend the smallest useful direction.** Produce a one-pager, then ask whether to save it:
+
+   ```markdown
+   # [Idea Name]
+
+   ## Problem Statement
+   [One-sentence How Might We framing]
+
+   ## Recommended Direction
+   [Chosen direction and why, 2–3 short paragraphs max]
+
+   ## Key Assumptions to Validate
+   - [ ] [Assumption — smallest validation]
+
+   ## MVP Scope
+   [The minimum version that tests the core assumption]
+
+   ## Not Doing (and Why)
+   - [Cut scope] — [reason]
+
+   ## Open Questions
+   - [Question blocking build/planning]
+   ```
+
+The Not Doing list is mandatory. Focus is mostly deciding which good ideas to ignore.
+
 ### The 95% Confidence Stop
 
 You're done when you can answer yes to this:
@@ -133,7 +194,9 @@ This is a checkable test, not a vibe. It also has a floor: if you've gone severa
 
 ## Output
 
-The output of this skill is a **confirmed statement of intent**: the restate from Step 4, with an explicit yes from Step 5. That's the deliverable. Specs, plans, and task lists are downstream; they consume the intent this skill produces.
+The required output is a **confirmed statement of intent**: the restate from Step 4, with an explicit yes from Step 5. Specs, plans, task lists, and idea refinement are downstream; they consume the intent this skill produces.
+
+If the optional refinement add-on runs, its output is the one-pager from Step 6. Offer to save it to `docs/ideas/[idea-name].md` only after the user confirms the direction.
 
 If the user wants the intent to persist (a multi-session project, a handoff to another collaborator), offer to save it to `docs/intent/[topic].md`. Only save if they confirm.
 
@@ -179,7 +242,7 @@ Two questions in, the agent has discovered the actual ask isn't "a dashboard." I
 
 ## Interaction with Other Skills
 
-- **`idea-refine`**: downstream. If the confirmed intent is "I want X but I don't know how to scope it," hand off to `idea-refine` to generate variations against the now-explicit intent.
+- **Former `idea-refine` work**: now included as the optional post-confirmation refinement add-on. Use it only after the user confirms intent, and keep the output tied to that intent rather than the original underspecified ask.
 - **`spec-driven-development`**: downstream. If the confirmed intent is concrete ("I want X for Y users with Z success criteria"), hand off to `spec-driven-development` to write it down.
 - **`planning-and-task-breakdown`**: two hops downstream of this skill (after the spec).
 - **`doubt-driven-development`**: opposite end of the timeline. Interview-me is pre-decision intent extraction; doubt-driven is post-decision artifact review. Both catch divergence, but at different moments.
@@ -210,6 +273,8 @@ Two questions in, the agent has discovered the actual ask isn't "a dashboard." I
 - A confidence number below ~70% with no reason attached: the user can't help close the gap if they don't know what's missing
 - Saving the intent doc before the user has confirmed (the doc itself implies a yes the user didn't give)
 - Skipping the "Out of scope" line in the restate (silent disagreement about non-goals is half of misalignment)
+- Generating variations before the user has confirmed intent
+- Producing a refinement one-pager without assumptions, MVP scope, and a Not Doing list
 
 ## Verification
 
@@ -222,4 +287,6 @@ After applying interview-me:
 - [ ] A concrete restate (Outcome / User / Why now / Success / Constraint / Out of scope) was written back to the user
 - [ ] The user confirmed the restate with an explicit yes (not "whatever you think," not "sounds good," not silence)
 - [ ] At the stop point, the agent could predict reactions to the next three questions it would ask
-- [ ] Any handoff to a downstream skill (`idea-refine`, `spec-driven-development`) was framed in terms of the confirmed intent, not the original underspecified ask
+- [ ] If refinement ran, variations were generated only after explicit intent confirmation
+- [ ] If refinement ran, the one-pager included assumptions, MVP scope, and a Not Doing list
+- [ ] Any handoff to a downstream skill (`spec-driven-development`) was framed in terms of the confirmed intent, not the original underspecified ask
