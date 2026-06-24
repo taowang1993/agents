@@ -5,11 +5,11 @@
 - If a file looks different after your work, it means the user modified it. Never delete, revert, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your mental model of the desired state. If you notice something the user did that you didn't, ask before touching it.
 - When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
 - After creating or modifing an agent skill, use the skill-validator skill to audit it.
+- Before importing or installing third-party agent skills, scan them with SkillSpector.
 
 ### Git
 
 - Make small and frequent commits to prevent accidental work loss.
-- PR summary scrope must include all committed changes.
 - Commit all files in the working tree when asked to open a PR. 
 
 ### Copy
@@ -33,7 +33,7 @@
 - Descriptions, helper text, and field hints
 - Full sentences in tooltips, dialogs, or alerts
 
-**ASCII and text diagrams:**
+**ASCII and Text Diagrams:**
 
 - Box labels and diagram titles are standalone phrases — apply Title Case
 - Arrow text and flow descriptions are body copy — use sentence case

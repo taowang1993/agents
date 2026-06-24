@@ -1,6 +1,6 @@
 ---
 name: bx
-description: USE FOR web search, research, RAG, grounding, browse, find, lookups, fact-checking, documentation, agentic AI. All-in-one, optimized for AI agents. Pre-extracted, token-budgeted web content, deep research, news, images, videos, places, custom ranking
+description: Use when Brave is stronger than Exa: AI-synthesized answers (bx answers), news/images/videos/places search, Goggles custom ranking/domain filtering, deep research (--enable-research), strict fact-checking, spellcheck/autocomplete.
 ---
 
 # bx — Brave Search CLI

@@ -1,5 +1,5 @@
 ---
-name: interview-me
+name: interview
 description: Proactively interview the user when intent is ambiguous, even if they sound confident. Use before planning/spec/code when the agent would otherwise guess about the target user or motivation; success criteria or constraints; terminology or trade-offs; or the code seam to change. Ask one question at a time with a concrete guess until ~95% confidence. Also trigger on interview/grill/stress-test requests and raw idea refinement.
 ---
 

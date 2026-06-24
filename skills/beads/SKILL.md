@@ -3,8 +3,8 @@ name: beads
 description: >
   Dolt-powered issue tracker for multi-session work with dependencies and persistent
   memory across conversation compaction. Use when work spans sessions, has blockers,
-  or needs context recovery after compaction. Trigger with "create task", "what's
-  ready", "track this work", "resume after compaction". Make sure to use this skill
+  or needs context recovery after compaction. Trigger with "write a plan", "create task",
+  "what's ready", "track this work", "resume after compaction". Make sure to use this skill
   whenever managing multi-session work, tracking dependencies, or recovering context.
 allowed-tools: "Read,Write,Bash(bd:*),Bash(mkdir:*)"
 version: "0.60.0"
@@ -57,14 +57,18 @@ Essential commands: `bd ready`, `bd create`, `bd show`, `bd update`, `bd close`,
 
 ## Planning Protocol
 
-When the user asks you to write a plan, create both artifacts:
+When the user asks you to "write a plan", create both artifacts:
 
 1. A markdown plan file in the repository's `.beads/plans/` directory. For Tockbot, use `/Users/max/projects/tockbot/.beads/plans/`.
-2. A beads epic plus child issues that mirror the plan's work breakdown.
+2. A beads epic plus child issues that mirror the plan's vertical-slice work breakdown.
 
-For non-trivial/spec-based plans, read [planning.md](references/planning.md) before drafting.
+Read [planning.md](references/planning.md) before drafting any non-trivial plan.
 
-Use a stable filename: `YYYY-MM-DD-short-slug.md`. Create `.beads/plans/` if it is missing. Keep the plan practical: goal, non-goals, phases/tasks, acceptance checks, risks, and the beads epic/issue IDs. After creating the epic, link it to the plan with `--spec-id .beads/plans/<file>.md` or include the plan path in the epic description/notes if `--spec-id` is not suitable.
+Use a stable filename: `YYYY-MM-DD-short-slug.md`. Create `.beads/plans/` if it is missing. Synthesize from the existing conversation and codebase context first; ask only blocking questions. Keep the plan practical: problem, solution, non-goals, implementation/testing decisions, vertical slices, acceptance checks, risks, and the beads epic/issue IDs.
+
+Each child issue should be a tracer-bullet slice: a narrow, demoable path through the necessary layers, not a horizontal "database/API/UI" chunk. Publish blockers before dependents so their IDs can be referenced in dependent issues.
+
+After creating the epic, attach the plan path if the CLI supports it (`--spec-id .beads/plans/<file>.md` in current bd versions), or include the plan path in the epic description/notes.
 
 Skip the plan file only for tiny single-session tasks where an epic would also be overkill; say so explicitly.
 

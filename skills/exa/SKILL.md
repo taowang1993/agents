@@ -1,9 +1,6 @@
 ---
 name: exa
-description: Free AI search via Exa MCP. Web search for news/info, code search for docs/examples from GitHub/StackOverflow, company research for business intel. No API key needed.
-metadata:
-  clawdbot-emoji: "🔍"
-  clawdbot-requires-bins: "mcporter"
+description: DEFAULT web search. Neural search for web pages, code examples (GitHub/Stack Overflow), and company research — free, no API key. Use first for all web search, code lookup, and business research. Fall back to bx only for: AI-synthesized answers, news/images/videos/places, Goggles custom ranking, or deep fact-checking. Accessed through mcporter MCP.
 ---
 
 # Exa Web Search (Free)

@@ -2,36 +2,61 @@
 
 ## Overview
 
-Decompose work into small, verifiable tasks with explicit acceptance criteria. Good task breakdown is the difference between an agent that completes work reliably and one that produces a tangled mess. Every task should be small enough to implement, test, and verify in a single focused session.
+Turn an existing request or conversation into a practical plan, then decompose the work into small, verifiable tasks with explicit acceptance criteria. Good task breakdown is the difference between an agent that completes work reliably and one that produces a tangled mess. Every task should be small enough to implement, test, and verify in a single focused session.
+
+Call the artifact a plan. Do not introduce alternate product-document labels unless the user used them first.
 
 ## When to Use
 
-- You have a spec and need to break it into implementable units
+- The user says "write a plan"
+- You have a request, issue, prototype, or conversation that needs implementable units
 - A task feels too large or vague to start
 - Work needs to be parallelized across multiple agents or sessions
 - You need to communicate scope to a human
-- The implementation order isn't obvious
+- The implementation order is not obvious
 
-**When NOT to use:** Single-file changes with obvious scope, or when the spec already contains well-defined tasks.
+**When NOT to use:** Single-file changes with obvious scope, or when the source already contains well-defined tasks.
 
 ## The Planning Process
 
-### Step 1: Enter Plan Mode
+### Step 1: Gather the Plan Source
 
 Before writing any code, operate in read-only mode:
 
-- Read the spec and relevant codebase sections
-- Identify existing patterns and conventions
-- Map dependencies between components
-- Note risks and unknowns
+- Work from the existing conversation context first.
+- If the user passes a beads issue ID or path, read the full body and comments/notes.
+- Explore the repo enough to understand current behavior, domain vocabulary, ADRs, and existing patterns.
+- Ask only blocking questions. If you can make a safe assumption, state it in the plan and continue.
 
-**Do NOT write code during planning.** The output is a plan document, not implementation.
+**Do NOT write code during planning.** The output is a plan document plus beads issues, not implementation.
 
-### Step 2: Identify the Dependency Graph
+### Step 2: State the Problem, Solution, and Scope
+
+Write the plan from the user's perspective:
+
+- **Problem:** what the user is trying to fix or accomplish.
+- **Solution:** the user-visible behavior you plan to deliver.
+- **Out of scope:** adjacent work you are intentionally not doing.
+- **Assumptions:** decisions you made because the conversation did not pin them down.
+- **User stories:** include them only when they clarify coverage or slice boundaries.
+
+### Step 3: Choose Testing Seams
+
+Sketch where the feature will be tested before breaking down work:
+
+- Prefer existing seams to new ones.
+- Use the highest seam that verifies user-visible behavior.
+- The fewer seams across the codebase, the better; one good seam is ideal.
+- If a new seam is needed, propose it at the highest practical boundary.
+- Include verification commands or manual checks for each slice.
+
+For large, risky, or fuzzy plans, show the proposed seams and slice list to the user before creating child issues. For clear plans, create them directly and record assumptions.
+
+### Step 4: Identify the Dependency Graph
 
 Map what depends on what:
 
-```
+```text
 Database schema
     │
     ├── API models/types
@@ -49,12 +74,13 @@ Database schema
 
 Implementation order follows the dependency graph bottom-up: build foundations first.
 
-### Step 3: Slice Vertically
+### Step 5: Slice Vertically
 
-Instead of building all the database, then all the API, then all the UI — build one complete feature path at a time:
+Instead of building all the database, then all the API, then all the UI, build one complete feature path at a time.
 
 **Bad (horizontal slicing):**
-```
+
+```text
 Task 1: Build entire database schema
 Task 2: Build all API endpoints
 Task 3: Build all UI components
@@ -62,16 +88,22 @@ Task 4: Connect everything
 ```
 
 **Good (vertical slicing):**
-```
+
+```text
 Task 1: User can create an account (schema + API + UI for registration)
 Task 2: User can log in (auth schema + API + UI for login)
 Task 3: User can create a task (task schema + API + UI for creation)
 Task 4: User can view task list (query + API + UI for list view)
 ```
 
-Each vertical slice delivers working, testable functionality.
+Each vertical slice should be a tracer bullet:
 
-### Step 4: Check System Coherence
+- It delivers a narrow but complete path through the required layers.
+- It is demoable or verifiable on its own.
+- It includes its own acceptance checks.
+- Any prefactoring that makes the slice easy should come first.
+
+### Step 6: Check System Coherence
 
 Before task breakdown, choose the smallest implementation that fits the surrounding system, not just the smallest local patch.
 
@@ -85,18 +117,18 @@ Answer briefly:
 
 Expand scope only when it removes duplicated state, fragile coupling, lifecycle mismatch, or recurring complexity. Do not use this as permission to gold-plate.
 
-### Step 5: Write Tasks
+### Step 7: Write Tasks and Beads Issues
 
 Each task follows this structure:
 
 ```markdown
-## Task [N]: [Short descriptive title]
+## Task [N]: [Short Descriptive Title]
 
-**Description:** One paragraph explaining what this task accomplishes.
+**Description:** One paragraph explaining what this task accomplishes as an end-to-end behavior.
 
 **Acceptance criteria:**
-- [ ] [Specific, testable condition]
-- [ ] [Specific, testable condition]
+- [ ] [Specific, testable outcome]
+- [ ] [Specific, testable outcome]
 
 **Verification:**
 - [ ] Tests pass: `npm test -- --grep "feature-name"`
@@ -105,31 +137,40 @@ Each task follows this structure:
 
 **Dependencies:** [Task numbers this depends on, or "None"]
 
-**Files likely touched:**
+**Files likely touched:** [Optional; include only when useful and reasonably stable]
 - `src/path/to/file.ts`
 - `tests/path/to/test.ts`
 
 **Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5+ files]
 ```
 
-### Step 6: Order and Checkpoint
-
-Arrange tasks so that:
-
-1. Dependencies are satisfied (build foundation first)
-2. Each task leaves the system in a working state
-3. Verification checkpoints occur after every 2-3 tasks
-4. High-risk tasks are early (fail fast)
-
-Add explicit checkpoints:
+When creating beads child issues, keep the issue body behavior-first:
 
 ```markdown
-## Checkpoint: After Tasks 1-3
-- [ ] All tests pass
-- [ ] Application builds without errors
-- [ ] Core user flow works end-to-end
-- [ ] Review with human before proceeding
+## Parent
+
+[Parent epic ID or source issue, if any]
+
+## What to Build
+
+A concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation.
+
+Avoid brittle file paths or long code snippets. Exception: if a prototype produced a small snippet that captures a decision more precisely than prose can, inline only the decision-rich part and note that it came from a prototype.
+
+## Acceptance Criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Criterion 3
+
+## Blocked By
+
+- [Blocking beads issue ID]
+
+Or "None - can start immediately" if no blockers.
 ```
+
+Publish blockers before dependents so real issue IDs are available. Do not close or modify a parent issue just because you created children.
 
 ## Task Sizing Guidelines
 
@@ -141,9 +182,10 @@ Add explicit checkpoints:
 | **L** | 5-8 | Multi-component feature | Search with filtering and pagination |
 | **XL** | 8+ | **Too large — break it down further** | — |
 
-If a task is L or larger, it should be broken into smaller tasks. An agent performs best on S and M tasks.
+If a task is L or larger, break it into smaller tasks. An agent performs best on S and M tasks.
 
 **When to break a task down further:**
+
 - It would take more than one focused session (roughly 2+ hours of agent work)
 - You cannot describe the acceptance criteria in 3 or fewer bullet points
 - It touches two or more independent subsystems (e.g., auth and billing)
@@ -155,7 +197,7 @@ Before defining tasks, map the files or modules likely involved and what each is
 
 Each task must be implementable without rereading the whole plan:
 
-- Name exact files likely created, modified, and tested when known.
+- Name likely files or modules when known.
 - State the public interface it consumes or produces when another task depends on it.
 - Include acceptance criteria and at least one verification command or manual check.
 - Fold setup, config, migrations, and docs into the task whose deliverable needs them.
@@ -163,7 +205,7 @@ Each task must be implementable without rereading the whole plan:
 
 After drafting, self-review once:
 
-1. Spec coverage: every requirement maps to a task or a stated non-goal.
+1. Source coverage: every stated requirement maps to a task or a stated non-goal.
 2. Placeholder scan: remove vague instructions and missing commands.
 3. Interface consistency: names, types, routes, and file paths match across dependent tasks.
 4. System coherence: source of truth, lifecycle, and boundaries are explicit.
@@ -172,19 +214,29 @@ After drafting, self-review once:
 ## Plan Document Template
 
 ```markdown
-# Implementation Plan: [Feature/Project Name]
+# Plan: [Feature/Project Name]
 
-## Overview
-[One paragraph summary of what we're building]
+## Problem
+[The problem from the user's perspective]
 
-## Architecture Decisions
-- [Key decision 1 and rationale]
-- [Key decision 2 and rationale]
+## Solution
+[The solution from the user's perspective]
 
-## System Impact
-- Source of truth: [what owns this state/data before and after]
-- Lifecycle: [trigger, processing, completion, failure/cleanup]
-- Boundaries: [interfaces or subsystems affected]
+## User Stories
+[Optional; include when useful]
+1. As a [actor], I want [feature], so that [benefit].
+
+## Implementation Decisions
+- [Module, interface, schema, API, or interaction decision]
+- [Architectural decision or trade-off]
+
+## Testing Decisions
+- Highest useful seam: [existing seam or proposed seam]
+- Prior art: [similar tests or checks in the codebase]
+- Verification: [commands or manual checks]
+
+## Out of Scope
+- [Explicit non-goal]
 
 ## Task List
 
@@ -215,8 +267,12 @@ After drafting, self-review once:
 |------|--------|------------|
 | [Risk] | [High/Med/Low] | [Strategy] |
 
-## Open Questions
-- [Question needing human input]
+## Beads
+- Epic: [ID]
+- Child issues: [IDs]
+
+## Further Notes
+[Any useful context that helps future sessions resume]
 ```
 
 ## Parallelization Opportunities

@@ -6,6 +6,7 @@ Guidance on when and how to create bd issues for maximum effectiveness.
 
 - [When to Ask First vs Create Directly](#when-to-ask)
 - [Issue Quality](#quality)
+- [Plan Child Issues](#plan-children)
 - [Making Issues Resumable](#resumable)
 - [Design vs Acceptance Criteria](#design-vs-acceptance)
 
@@ -40,6 +41,54 @@ Use clear, specific titles and include sufficient context in descriptions to res
 - Definition of done
 - Testing requirements
 - Success metrics
+
+## Plan Child Issues {#plan-children}
+
+When turning a plan into child issues, prefer vertical tracer-bullet slices over horizontal layer work.
+
+A good child issue:
+
+- Delivers a narrow but complete path through the necessary layers
+- Is demoable or verifiable on its own
+- Has stable, outcome-focused acceptance criteria
+- Names blockers clearly
+- Avoids brittle file paths unless they are stable and useful for handoff
+
+Before creating child issues for large or fuzzy plans, present the proposed breakdown as a numbered list:
+
+- **Title:** short descriptive name
+- **Blocked by:** which other slices must complete first, if any
+- **User stories covered:** only when the plan uses user stories
+
+Ask whether the granularity and dependency relationships look right. For clear plans, create issues directly and record assumptions.
+
+Use this body shape for each child issue:
+
+```markdown
+## Parent
+
+[Parent epic ID or source issue, if any]
+
+## What to Build
+
+A concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation.
+
+Avoid long code snippets. Exception: if a prototype produced a small snippet that captures a decision more precisely than prose can, inline only the decision-rich part and note that it came from a prototype.
+
+## Acceptance Criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Criterion 3
+
+## Blocked By
+
+- [Blocking beads issue ID]
+
+Or "None - can start immediately" if no blockers.
+```
+
+Publish blockers before dependents so real issue IDs are available. Do not close or modify a parent issue just because children were created.
 
 ## Making Issues Resumable (Complex Technical Work) {#resumable}
 
