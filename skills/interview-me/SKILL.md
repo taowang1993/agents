@@ -1,6 +1,6 @@
 ---
 name: interview-me
-description: Extracts what the user actually wants instead of what they think they should want. Achieves this through one-question-at-a-time interview until ~95% confidence about the underlying intent. Use when an ask is underspecified ("build me X" without "for whom" or "why now"), when the user explicitly invokes ("interview me", "grill me", "are we sure?", "stress-test my thinking"), or when you catch yourself silently filling in ambiguous requirements before any plan, spec, or code exists.
+description: Proactively interview the user when intent is ambiguous, even if they sound confident. Use before planning/spec/code when the agent would otherwise guess about the target user or motivation; success criteria or constraints; terminology or trade-offs; or the code seam to change. Ask one question at a time with a concrete guess until ~95% confidence. Also trigger on interview/grill/stress-test requests and raw idea refinement.
 ---
 
 # Interview Me
@@ -21,6 +21,8 @@ Apply this skill when:
 - The request is conventional rather than specific ("build me X", "make it faster") and you can't unpack the convention without guessing
 - You're tempted to start with assumptions you haven't surfaced
 - The user hasn't said which value they're optimizing for when two reasonable ones are in tension (simplicity vs. flexibility, cost vs. speed)
+- Project/domain terms are fuzzy, overloaded, or being used differently from the code
+- For code changes, the module/API seam that should own the change is unclear
 - The user explicitly invokes: "interview me", "grill me", "before we start, are we sure?", "stress-test my thinking"
 - The user asks to refine, ideate on, or stress-test a raw idea before planning; first confirm intent, then optionally run the refinement add-on
 
@@ -64,6 +66,10 @@ Wait for the user to react before asking the next question.
 
 If the answer is available in the codebase, docs, or existing artifacts, read them instead of asking. Use questions for intent, trade-offs, and decisions no file can answer.
 
+When the user uses a vague or overloaded term, propose the precise meaning you think they intend. If the distinction changes behavior, ask one clarifying question before continuing. Carry resolved vocabulary into the final restate so future work uses the same words.
+
+For code changes, inspect the repo before asking where the change belongs. Identify the smallest existing module/API seam that could own the change; if multiple seams fit, ask the user to confirm the trade-off. Prefer an existing seam over inventing a new one.
+
 For plan or design stress tests, walk dependent decisions one at a time: settle the parent decision before branching into consequences. Include your recommended answer as the `GUESS` so the user can accept or correct it.
 
 **Why one at a time, not a batch:**
@@ -98,7 +104,7 @@ That single question often does more work than the previous five.
 
 ### Step 4: Restate intent in the user's own words
 
-When your confidence is high, write back what you now think the user wants. Keep it tight (5–8 lines), use their language where possible, and structure it so the user can confirm or correct line by line:
+When your confidence is high, write back what you now think the user wants. Keep it tight (5–10 lines), use their language where possible, and structure it so the user can confirm or correct line by line:
 
 ```
 Here's what I now think you want:
@@ -108,6 +114,8 @@ Here's what I now think you want:
 - Why now:      <one line — what changed>
 - Success:      <one line — how we know it worked>
 - Constraint:   <one line — the binding limit>
+- Terms:        <optional — resolved meanings for overloaded words>
+- Code seam:    <optional — smallest module/API seam to touch>
 - Out of scope: <one line — what we're explicitly not doing>
 
 Yes / no / refine?
@@ -277,6 +285,9 @@ Two questions in, the agent has discovered the actual ask isn't "a dashboard." I
 - A confidence number below ~70% with no reason attached: the user can't help close the gap if they don't know what's missing
 - Saving the intent doc before the user has confirmed (the doc itself implies a yes the user didn't give)
 - Skipping the "Out of scope" line in the restate (silent disagreement about non-goals is half of misalignment)
+- Asking codebase-answerable questions instead of inspecting the repo
+- Using fuzzy project terms without pinning down what they mean here
+- Planning a code change without naming the smallest plausible seam
 - Generating variations before the user has confirmed intent
 - Producing a refinement one-pager without assumptions, MVP scope, and a Not Doing list
 
@@ -289,6 +300,8 @@ After applying interview-me:
 - [ ] Questions were asked one at a time, each with the agent's guess attached
 - [ ] At least one "what would you actually want if you didn't have to justify it?" probe ran when the user gave a sophistication-signaling or convention-signaling answer
 - [ ] A concrete restate (Outcome / User / Why now / Success / Constraint / Out of scope) was written back to the user
+- [ ] Fuzzy or overloaded terms were clarified and carried into the restate when relevant
+- [ ] For code changes, the codebase was inspected and the smallest plausible seam was named or confirmed
 - [ ] The user confirmed the restate with an explicit yes (not "whatever you think," not "sounds good," not silence)
 - [ ] At the stop point, the agent could predict reactions to the next three questions it would ask
 - [ ] If refinement ran, variations were generated only after explicit intent confirmation
