@@ -40,7 +40,7 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | `/prflow` | Validate the branch, open a PR, and fix conflicts. |
 | `/reviewflow` | Review unmerged changes, fix issues, commit, and push. |
 | `/sandbox` | Audit and close Tockbot sandboxing gaps against Codex. |
-| `/skills` | Audit Tockbot skill system against OpenClaw and implement improvements. |
+| `/skill` | Audit Tockbot skill system against OpenClaw and implement improvements. |
 
 ## Codex Automations
 
