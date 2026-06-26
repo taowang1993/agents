@@ -5,10 +5,6 @@
 			"path": ".."
 		},
 		{
-			"name": ".pi",
-			"path": "../../.pi"
-		},
-		{
 			"name": "resources",
 			"path": "../../projects/resources"
 		},
@@ -26,9 +22,6 @@
 		},
 		{
 			"path": "../../books"
-		},
-		{
-			"path": "../../.codex/automations"
 		}
 	],
 	"settings": {

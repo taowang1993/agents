@@ -87,7 +87,7 @@ Prompt templates are global Pi slash-command snippets. Add new templates as `pro
 | `copilot`           | GitHub Copilot CLI             |
 | `corepack`          | Node.js PM manager             |
 | `cursor`            | Cursor editor                  |
-| `dedao-dl`          | 得到 App content download CLI  |
+| `dedao-dl`          | Dedao content download CLI     |
 | `docker`            | Docker CLI                     |
 | `docker-compose`    | Docker Compose                 |
 | `docsee`            | AGENTS.md doc index sync       |
@@ -134,6 +134,14 @@ Prompt templates are global Pi slash-command snippets. Add new templates as `pro
 | `pi`                | Pi coding agent                |
 | `playwright-cli`    | browser automation & testing   |
 | `pm2`               | Node.js PM (daemon)            |
+| `rustfmt`           | Rust formatter                 |
+| `rustup`            | Rust toolchain manager         |
+| `semgrep`           | multi-lang SAST & code scanner |
+| `skill-validator`   | agent skill package validator  |
+| `add-skill`         | Install an agent skill         |
+| `skills`            | agent skill manager            |
+| `stripe`            | Stripe CLI                     |
+| `swift`             | Apple Swift compiler           |
 | `pm2-dev`           | PM2 development mode           |
 | `pm2-docker`        | PM2 Docker integration         |
 | `pm2-runtime`       | PM2 container runtime          |
@@ -146,14 +154,6 @@ Prompt templates are global Pi slash-command snippets. Add new templates as `pro
 | `rust-analyzer`     | Rust LSP server                |
 | `rustc`             | Rust compiler                  |
 | `rustdoc`           | Rust doc generator             |
-| `rustfmt`           | Rust formatter                 |
-| `rustup`            | Rust toolchain manager         |
-| `semgrep`           | multi-lang SAST & code scanner |
-| `skill-validator`   | agent skill package validator  |
-| `add-skill`         | Install an agent skill         |
-| `skills`            | agent skill manager            |
-| `stripe`            | Stripe CLI                     |
-| `swift`             | Apple Swift compiler           |
 | `terminal-notifier` | macOS notification sender      |
 | `tldx`              | domain name checker            |
 | `tokei`             | code line counter              |
