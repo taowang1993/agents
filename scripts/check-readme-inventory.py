@@ -16,14 +16,15 @@ def has_heading(name: str) -> bool:
     return re.search(rf"^###\s+{re.escape(name)}\s*$", README, re.MULTILINE) is not None
 
 
-def has_prompt_row(name: str) -> bool:
-    return re.search(rf"^\|\s*`/{re.escape(name)}`\s*\|", README, re.MULTILINE) is not None
+def has_table_item(name: str) -> bool:
+    return re.search(rf"^\|\s*`{re.escape(name)}`\s*\|", README, re.MULTILINE) is not None
 
 
 checks: dict[str, list[str]] = {
     "skills": [p.parent.name for p in sorted((ROOT / "skills").glob("*/SKILL.md")) if not has_heading(p.parent.name)],
     "cron jobs": [j["id"] for j in json.loads((ROOT / "cron/jobs.json").read_text())["jobs"] if not has_heading(j["id"])],
-    "prompt templates": [p.stem for p in sorted((ROOT / "prompts").glob("*.md")) if not has_prompt_row(p.stem)],
+    "prompt templates": [p.stem for p in sorted((ROOT / "prompts").glob("*.md")) if not has_table_item(f"/{p.stem}")],
+    "automations": [p.parent.name for p in sorted((ROOT / "automations").glob("*/automation.toml")) if not has_table_item(p.parent.name)],
     "extensions": [p.stem for p in sorted(ROOT.glob("extensions/*")) if p.suffix in {".ts", ".js"} and not has_heading(p.stem)],
 }
 

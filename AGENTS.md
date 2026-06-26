@@ -4,14 +4,15 @@
 
 - If a file looks different after your work, it means the user modified it. Never delete, revert, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your mental model of the desired state. If you notice something the user did that you didn't, ask before touching it.
 - When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
-- After creating or modifing an agent skill, use the skill-validator skill to audit it.
+- After creating or modifying an agent skill, use the skill-validator skill to audit it.
 - Before importing or installing third-party agent skills, scan them with SkillSpector.
+- When changing repo structure, workflows, scripts, skills, prompt templates, automations, extensions, or launch agents, update `README.md`, `AGENTS.md`, and any relevant docs in the same change.
 
 ### Git
 
 - Make small and frequent commits to prevent accidental work loss.
 - Commit all files in the working tree when asked to open a PR.
-- Keep `README.md` inventory in sync when adding or removing skills, cron jobs, prompt templates, or extensions. Run `python3 scripts/check-readme-inventory.py`; the same check lives in `.githooks/pre-commit`.
+- Keep `README.md` inventory in sync when adding or removing skills, cron jobs, prompt templates, Codex automations, or extensions. Run `python3 scripts/check-readme-inventory.py`; the same check lives in `.githooks/pre-commit`.
 
 ### Copy
 
@@ -41,14 +42,15 @@
 
 **Preserve exact on-screen capitalization** when writing markdown reports, plans, and docs.
 
-## Versioned Pi Assets
+## Versioned Local Agent Assets
 
-| Asset | Versioned Path | Pi Path |
-| ----- | -------------- | ------- |
-| Extensions | `/Users/max/.agents/extensions` | `/Users/max/.pi/agent/extensions` symlink |
-| Prompt Templates | `/Users/max/.agents/prompts` | `/Users/max/.pi/agent/prompts` symlink |
+| Asset             | Versioned Path                   | Pi Path                                   |
+| ----------------- | -------------------------------- | ----------------------------------------- |
+| Extensions        | `/Users/max/.agents/extensions`  | `/Users/max/.pi/agent/extensions` symlink |
+| Prompt Templates  | `/Users/max/.agents/prompts`     | `/Users/max/.pi/agent/prompts` symlink    |
+| Codex Automations | `/Users/max/.agents/automations` | `/Users/max/.codex/automations` symlink   |
 
-Prompt templates are global Pi slash-command snippets. Add new templates as `prompts/<name>.md`; Pi loads the directory non-recursively.
+Prompt templates are global Pi slash-command snippets. Add new templates as `prompts/<name>.md`; Pi loads the directory non-recursively. Codex automation runtime state such as `.run-jitter-salt` stays ignored.
 
 ## Package Managers
 
@@ -164,23 +166,17 @@ Prompt templates are global Pi slash-command snippets. Add new templates as `pro
 | `vercel` / `vc`     | Vercel deployment CLI          |
 | `wrangler`          | Cloudflare Workers CLI         |
 | `mise`              | polyglot runtime manager       |
-
-| `beads` | Memory upgrade for your coding agent |
-
-| `codegraph` | Local-first code intelligence for AI agents (MCP). Self-contained — bundles its own runtime. |
-
-| `clawpatch` | Automated code review that lands fixes. |
-
-| `node` | Open-source, cross-platform JavaScript runtime environment |
+| `beads`             | Memory for your coding agent   |
+| `codegraph`         | Cde intelligence for AI agents |
+| `clawpatch`         | Code review that lands fixes   |
 
 ## Launch Agents
 
-| Agent                       | Script                                           |
-| --------------------------- | ------------------------------------------------ |
+| Agent                       | Script                                                |
+| --------------------------- | ----------------------------------------------------- |
 | `com.max.cleanup-processes` | `.agents/cron/cleanup-processes/cleanup-processes.sh` |
-| `com.max.codex-relay`       | `.agents/cron/codex-relay/codex-relay.sh`       |
-| `com.max.nightshift`        | `.agents/cron/nightshift/nightshift.sh`         |
-| `com.max.tailscale`         | `.agents/cron/tailscale/tailscale.sh`           |
-| `com.max.update-packages`   | `.agents/cron/update-packages/update-packages.sh` |
-| `com.max.update-repos`      | `.agents/cron/update-repos/update-repos.sh`     |
-
+| `com.max.codex-relay`       | `.agents/cron/codex-relay/codex-relay.sh`             |
+| `com.max.nightshift`        | `.agents/cron/nightshift/nightshift.sh`               |
+| `com.max.tailscale`         | `.agents/cron/tailscale/tailscale.sh`                 |
+| `com.max.update-packages`   | `.agents/cron/update-packages/update-packages.sh`     |
+| `com.max.update-repos`      | `.agents/cron/update-repos/update-repos.sh`           |

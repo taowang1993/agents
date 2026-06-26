@@ -42,9 +42,18 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | `/sandbox` | Audit and close Tockbot sandboxing gaps against Codex. |
 | `/skills` | Audit Tockbot skill system against OpenClaw and implement improvements. |
 
+## Codex Automations
+
+Codex automation configs are versioned in `~/.agents/automations/`. Codex reads them through the symlink at `~/.codex/automations`. Local runtime state such as `.run-jitter-salt` is ignored.
+
+| Automation | Status | Schedule | Purpose |
+| ---------- | ------ | -------- | ------- |
+| `tockbot` | Paused | Every 30 minutes | Run the current-slot Tockbot task from `tasks.md`. |
+| `tockbot-docs` | Active | Mondays at 3:00 AM | Keep Tockbot `AGENTS.md` and `architecture.md` fresh. |
+
 ## Inventory Check
 
-Run `python3 scripts/check-readme-inventory.py` to verify `README.md` lists every skill, cron job, prompt template, and extension. The versioned hook in `.githooks/pre-commit` runs the same check; enable it with `git config core.hooksPath .githooks`.
+Run `python3 scripts/check-readme-inventory.py` to verify `README.md` lists every skill, cron job, prompt template, Codex automation, and extension. The versioned hook in `.githooks/pre-commit` runs the same check; enable it with `git config core.hooksPath .githooks`.
 
 ## Agent Skills
 
