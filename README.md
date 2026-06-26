@@ -42,6 +42,10 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | `/sandbox` | Audit and close Tockbot sandboxing gaps against Codex. |
 | `/skills` | Audit Tockbot skill system against OpenClaw and implement improvements. |
 
+## Inventory Check
+
+Run `python3 scripts/check-readme-inventory.py` to verify `README.md` lists every skill, cron job, prompt template, and extension. The versioned hook in `.githooks/pre-commit` runs the same check; enable it with `git config core.hooksPath .githooks`.
+
 ## Agent Skills
 
 ### agent-browser
@@ -80,11 +84,23 @@ All-in-one web search for AI agents. Pre-extracted, token-budgeted web content, 
 
 Automated code review that maps a repo into semantic feature slices, reviews each slice with an AI provider, persists findings, and can run explicit fix loops. Use for code review, auditing, test gap analysis, or cleaning up AI-generated slop.
 
+### cleanmac
+
+Find and safely clean large macOS developer/tooling junk.
+
+### cyber
+
+Run a temporary security-focused codebase audit with the pinned cybersecurity skill pack.
+
 ### dedao
 
 Use `dedao-dl` for 得到 App workflows — login, cookies, account switching, purchased courses, audiobooks, ebooks, articles, notes, search results, URL-to-ID mapping, downloads, JSON output for agents, and troubleshooting.
 
 Origin: https://github.com/yann0917/dedao-dl/tree/main/skills
+
+### deepsec
+
+Run, configure, and extend the deepsec AI vulnerability scanner.
 
 ### diagnose
 
@@ -103,6 +119,10 @@ Brainstorm and check availability of domain names using tldx CLI.
 ### e2e-setup
 
 Set up system-level end-to-end test suites with real flows, reusable auth/session helpers, and trace/video evidence.
+
+### ebook
+
+Convert EPUB, MOBI, AZW, and AZW3 books into split Markdown folders.
 
 ### exa
 
@@ -133,6 +153,10 @@ Interact with GitHub using the `gh` CLI — issues, PRs, CI runs, and advanced q
 Hugging Face Hub CLI — download, upload, manage models, datasets, spaces, papers, and inference endpoints.
 
 Origin: https://github.com/huggingface/skills/tree/main/skills/hf-cli
+
+### interview
+
+Ask one focused question at a time when intent, constraints, or the code seam is ambiguous.
 
 ### knip
 
@@ -178,6 +202,14 @@ Origin: https://github.com/millionco/react-doctor/tree/main/skills/react-doctor
 
 Generate Vitest + React Testing Library tests for React components, hooks, and utilities.
 
+### resolve
+
+Resolve in-progress git merge or rebase conflicts.
+
+### review
+
+Review uncommitted, branch, PR, or recent implementation diffs for correctness, security, performance, tests, and simplification opportunities.
+
 ### skill-creator
 
 Create new skills, modify existing ones, run evals, and optimize descriptions for better triggering.
@@ -209,6 +241,10 @@ Remote control tmux sessions for interactive CLIs by sending keystrokes and scra
 Turborepo monorepo build system — task pipelines, caching, CI optimization, workspace filtering.
 
 Origin: https://github.com/vercel/turborepo/tree/main/skills/turborepo
+
+### twitter
+
+Fetch Twitter/X tweets, searches, profiles, replies, trends, and X Articles as Markdown.
 
 ### uv
 

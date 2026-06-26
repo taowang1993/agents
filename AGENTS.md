@@ -10,7 +10,8 @@
 ### Git
 
 - Make small and frequent commits to prevent accidental work loss.
-- Commit all files in the working tree when asked to open a PR. 
+- Commit all files in the working tree when asked to open a PR.
+- Keep `README.md` inventory in sync when adding or removing skills, cron jobs, prompt templates, or extensions. Run `python3 scripts/check-readme-inventory.py`; the same check lives in `.githooks/pre-commit`.
 
 ### Copy
 
