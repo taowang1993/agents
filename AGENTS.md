@@ -40,6 +40,15 @@
 
 **Preserve exact on-screen capitalization** when writing markdown reports, plans, and docs.
 
+## Versioned Pi Assets
+
+| Asset | Versioned Path | Pi Path |
+| ----- | -------------- | ------- |
+| Extensions | `/Users/max/.agents/extensions` | `/Users/max/.pi/agent/extensions` symlink |
+| Prompt Templates | `/Users/max/.agents/prompts` | `/Users/max/.pi/agent/prompts` symlink |
+
+Prompt templates are global Pi slash-command snippets. Add new templates as `prompts/<name>.md`; Pi loads the directory non-recursively.
+
 ## Package Managers
 
 | Manager        | Path                                         |
