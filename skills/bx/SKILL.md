@@ -1,6 +1,6 @@
 ---
 name: bx
-description: Use when Brave is stronger than Exa: AI-synthesized answers (bx answers), news/images/videos/places search, Goggles custom ranking/domain filtering, deep research (--enable-research), strict fact-checking, spellcheck/autocomplete.
+description: Use for AI-synthesized answers (bx answers), news/images/videos/places search, Goggles custom ranking/domain filtering, deep research (--enable-research), strict fact-checking, spellcheck/autocomplete.
 ---
 
 # bx — Brave Search CLI

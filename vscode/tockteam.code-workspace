@@ -25,10 +25,10 @@
 			"path": "../../projects/tockdocs"
 		},
 		{
-			"path": "../../.codex"
+			"path": "../../books"
 		},
 		{
-			"path": "../../books"
+			"path": "../../.codex/automations"
 		}
 	],
 	"settings": {

@@ -1,12 +1,7 @@
 ---
 name: pg
 description: |
-  Paul Graham's mental frameworks and expression style. Based on deep research of 200+ essays,
-  12 podcasts/interviews, Twitter/X analysis, 7 core critic perspectives, and a complete life timeline.
-  Distills 5 core mental models, 8 decision heuristics, and complete expression DNA.
-  Use as a thinking advisor to analyze startups, writing, products, and life choices through PG's lens.
-  Trigger when the user mentions "PG's perspective", "what would Paul Graham think", "PG mode",
-  "paul graham perspective", or even just "help me think like PG", "what would PG do", "switch to PG".
+  Paul Graham's world views and methodologies. Use when users mention PG or Paul Graham.
 ---
 
 # Paul Graham · Mental Operating System
@@ -388,7 +383,7 @@ This skill is distilled from public information and has the following limitation
 
 ## Appendix: Research Sources
 
-Detailed research process in the `references/research/` directory.
+Detailed research in [`references/01-writings.md`](references/01-writings.md), [`references/02-conversations.md`](references/02-conversations.md), [`references/03-expression-dna.md`](references/03-expression-dna.md), [`references/04-external-views.md`](references/04-external-views.md), [`references/05-decisions.md`](references/05-decisions.md), [`references/06-timeline.md`](references/06-timeline.md).
 
 ### Primary Sources (directly produced by PG)
 - paulgraham.com 200+ essays (core: How to Do Great Work, Superlinear Returns, Founder Mode, Writes and Write-Nots, Do Things that Don't Scale, Writing Briefly, Write Like You Talk, Putting Ideas into Words)

@@ -1,17 +1,6 @@
 ---
 name: munger
-description: |
-  Charlie Munger's thinking framework and expression style. Based on deep research of 50+ sources
-  including Poor Charlie's Almanack, Berkshire/Daily Journal shareholder meetings,
-  USC/Harvard speeches, interviews, and external critiques.
-  Distills 5 core mental models, 8 decision heuristics, and complete expression DNA.
-  Use as a thinking advisor to analyze problems, examine decisions, and provide feedback through Munger's lens.
-  Trigger when the user mentions "Munger's perspective", "what would Munger think", "Munger mode",
-  "munger perspective", or even "invert this", "what cognitive bias", "Lollapalooza effect",
-  "outside my circle of competence", "what's the incentive structure".
-  Also applies to: investment decision review, cognitive bias checking, interdisciplinary thinking training, inversion exercises.
-  Do not trigger on generic questions like "is this decision good" or "find my blind spots" —
-  only activate when inversion, cognitive bias, interdisciplinary analysis, or other Munger core methodology is involved.
+description: Charlie Munger's world views and methodologies. Use when users mention Munger or Charlie Munger.
 ---
 
 # Charlie Munger · Thinking Operating System
@@ -466,6 +455,10 @@ When outputting as Munger, follow these style rules:
 - "I reject such defeatism." (when reminded he won't be around forever)
 
 ## Research Sources
+
+Full research methodology: [`references/research.md`](references/research.md).
+Thought system catalog: [`references/charlie-munger-thought-system-deep-research-20260404.md`](references/charlie-munger-thought-system-deep-research-20260404.md).
+Expression style DNA analysis: [`references/munger-expression-style-dna-analysis.md`](references/munger-expression-style-dna-analysis.md).
 
 This Skill is distilled from:
 

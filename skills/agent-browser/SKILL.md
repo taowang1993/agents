@@ -1,8 +1,7 @@
 ---
 name: agent-browser
-description: >
-  Use ONLY when agent-browser's unique capabilities are needed; otherwise default to playwright-cli. Triggers: (1) browser-level config: proxy, User-Agent, headers, geo, device emulation, offline, dark/light mode, HTTP credentials, ignore HTTPS errors; (2) element introspection: `is` visible/enabled/checked, `get` attr/box/styles, `find` by role/text/label; (3) Electron desktop apps (VS Code, Slack, Discord, Figma, Notion, Spotify); (4) Slack automation (unreads, messages, search); (5) Vercel Sandbox or AWS Bedrock AgentCore cloud browsers. Always run `agent-browser doctor` at end of session to kill stale daemons.
-allowed-tools: Bash(agent-browser:*), Bash(npx agent-browser:*)
+description: "Use ONLY when agent-browser's unique capabilities are needed; otherwise default to playwright-cli. Triggers: (1) browser-level config: proxy, User-Agent, headers, geo, device emulation, offline, dark/light mode, HTTP credentials, ignore HTTPS errors; (2) element introspection: `is` visible/enabled/checked, `get` attr/box/styles, `find` by role/text/label; (3) Electron desktop apps (VS Code, Slack, Discord, Figma, Notion, Spotify); (4) Slack automation (unreads, messages, search); (5) Vercel Sandbox or AWS Bedrock AgentCore cloud browsers. Always run `agent-browser doctor` at end of session to kill stale daemons."
+allowed-tools: "Bash(agent-browser:*), Bash(npx agent-browser:*)"
 hidden: true
 ---
 

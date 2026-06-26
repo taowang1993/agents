@@ -37,6 +37,24 @@
       "script": "update-repos/update-repos.sh",
       "plist": "update-repos/com.max.update-repos.plist",
       "logs": ["~/.cron-logs/update-repos-*.log"]
+    },
+    {
+      "id": "tailscale",
+      "label": "com.max.tailscale",
+      "group": "tailscale",
+      "description": "Tailscale daemon in userspace-networking mode.",
+      "script": "tailscale/tailscale.sh",
+      "plist": "tailscale/com.max.tailscale.plist",
+      "logs": ["~/Library/Logs/tailscale.log"]
+    },
+    {
+      "id": "codex-relay",
+      "label": "com.max.codex-relay",
+      "group": "codex-relay",
+      "description": "Persistent Codex Relay server for the mobile client.",
+      "script": "codex-relay/codex-relay.sh",
+      "plist": "codex-relay/com.max.codex-relay.plist",
+      "logs": ["~/Library/Logs/codex-relay.log"]
     }
   ]
 }

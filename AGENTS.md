@@ -168,7 +168,9 @@
 | Agent                       | Script                                           |
 | --------------------------- | ------------------------------------------------ |
 | `com.max.cleanup-processes` | `.agents/cron/cleanup-processes/cleanup-processes.sh` |
-| `com.max.nightshift-0..7`   | `.agents/cron/nightshift/nightshift.sh`          |
+| `com.max.codex-relay`       | `.agents/cron/codex-relay/codex-relay.sh`       |
+| `com.max.nightshift`        | `.agents/cron/nightshift/nightshift.sh`         |
+| `com.max.tailscale`         | `.agents/cron/tailscale/tailscale.sh`           |
 | `com.max.update-packages`   | `.agents/cron/update-packages/update-packages.sh` |
-| `com.max.update-repos`      | `.agents/cron/update-repos/update-repos.sh`      |
+| `com.max.update-repos`      | `.agents/cron/update-repos/update-repos.sh`     |
 

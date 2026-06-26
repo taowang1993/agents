@@ -1,13 +1,13 @@
 ---
 name: exa
-description: DEFAULT web search. Neural search for web pages, code examples (GitHub/Stack Overflow), and company research — free, no API key. Use first for all web search, code lookup, and business research. Fall back to bx only for: AI-synthesized answers, news/images/videos/places, Goggles custom ranking, or deep fact-checking. Accessed through mcporter MCP.
+description: Neural web search for web, code, and company research via Exa MCP. No API key required. Default web search.
 ---
 
 # Exa Web Search (Free)
 
 Neural search for web, code, and company research. No API key required.
 Exa is accessed through the mcporter MCP runtime — ensure mcporter's
-[pre-flight auto-update](../mcporter/SKILL.md) has run first.
+pre-flight auto-update has run first.
 
 ## Setup
 

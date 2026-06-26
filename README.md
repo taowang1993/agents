@@ -50,6 +50,10 @@ Find deepening opportunities in a codebase, informed by the project's `architect
 
 Explain complex concepts with live ASCII art animations in markdown files during tutoring sessions.
 
+### automation
+
+Create, inspect, and update Codex automation directories with `automation.toml`, `instructions.md`, and `tasks.md`.
+
 ### beads
 
 Durable project task tracking with `bd` or Beads. Issue dependencies, blocker management, multi-session handoff, and shared work memory. Use for finding ready work, claiming/closing tasks, creating follow-up work, or planning features.
@@ -81,6 +85,10 @@ Origin: https://github.com/taowang1993/docsee/tree/main/skill/docsee
 ### domain
 
 Brainstorm and check availability of domain names using tldx CLI.
+
+### e2e-setup
+
+Set up system-level end-to-end test suites with real flows, reusable auth/session helpers, and trace/video evidence.
 
 ### exa
 
@@ -128,11 +136,23 @@ Convert URLs, PDFs, DOCX, HTML, and other files into Markdown using `uvx markitd
 
 List, configure, authenticate, call, and inspect MCP servers/tools over HTTP or stdio.
 
+### munger
+
+Analyze decisions through Charlie Munger's worldview and mental-model methodology.
+
+### pg
+
+Analyze startups, writing, products, and decisions through Paul Graham's worldview and methodology.
+
 ### playwright-cli
 
 Default browser automation tool. Page nav, click/type/fill, screenshots, snapshots, multi-tab, keyboard/mouse, drag-drop, file upload, dialogs. Sessions with state persistence. Network mocking. DevTools tracing and video. Test authoring and debugging.
 
 Origin: https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli
+
+### pr
+
+Verify a finished change with an independent app-driving check, run regression guardrails, then open a pull request with proof.
 
 ### react-doctor
 
@@ -232,17 +252,35 @@ Manage jobs with:
 - **Log:** `~/.cron-logs/update-repos-YYYYMMDD.log`
 - **What it does:** Runs `git pull --prune` on all repositories under `~/projects/resources/` and removes stale temporary git repos.
 
+### tailscale
+
+- **Label:** `com.max.tailscale`
+- **Schedule:** Run at load, keep alive
+- **Script:** `~/.agents/cron/tailscale/tailscale.sh`
+- **Plist:** `~/.agents/cron/tailscale/com.max.tailscale.plist`
+- **Log:** `~/Library/Logs/tailscale.log`
+- **What it does:** Runs the Tailscale daemon in userspace-networking mode with a custom socket under `~/Library/Application Support/tailscale/`.
+
+### codex-relay
+
+- **Label:** `com.max.codex-relay`
+- **Schedule:** Run at load, keep alive
+- **Script:** `~/.agents/cron/codex-relay/codex-relay.sh`
+- **Plist:** `~/.agents/cron/codex-relay/com.max.codex-relay.plist`
+- **Working Directory:** `~/projects/resources/.ide/codex-relay`
+- **Log:** `~/Library/Logs/codex-relay.log`
+- **What it does:** Runs the Codex Relay mobile server via `npx --yes codex-relay@latest`; uses Tailscale for remote access.
+
 ### nightshift
 
-- **Labels:** `com.max.nightshift-0` through `com.max.nightshift-7`
-- **Schedule:** Hourly from midnight through 7:00 AM (8 jobs, one phase per hour)
-- **Script:** `~/.agents/cron/nightshift/nightshift.sh <hour-index> [timeout_minutes]`
-- **Plists:** `~/.agents/cron/nightshift/launchagents/com.max.nightshift-*.plist`
+- **Label:** `com.max.nightshift`
+- **Schedule:** Run at load, then every 20 minutes; exits outside the configured window
+- **Script:** `~/.agents/cron/nightshift/nightshift.sh`
+- **Plist:** `~/.agents/cron/nightshift/com.max.nightshift.plist`
 - **Config:** `~/.agents/cron/nightshift/.env`
-- **Phase File:** `~/.agents/cron/nightshift/review.md`
-- **Logs:** `~/.cron-logs/nightshift-YYYYMMDD.log` and `~/.cron-logs/nightshift-<HOUR>.log`
-- **What it does:** Launches the configured agent in non-interactive headless mode to autonomously work on a project overnight. Each hour maps to the matching `## Phase N` section in `review.md`.
-- **Skip a Night:** Create `~/.agents/cron/nightshift/.night-shift-skip`; remove it to resume.
+- **Task Directory:** `~/.agents/cron/nightshift/tasks/`
+- **Logs:** `~/.cron-logs/nightshift.log` and per-task logs under `~/.cron-logs/nightshift/`
+- **What it does:** Launches the configured agent in non-interactive headless mode to work through unfinished task files during the configured window.
 
 ## Other
 
