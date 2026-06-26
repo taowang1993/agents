@@ -10,54 +10,108 @@
 
 ## 02:00
 
-
 ## 02:30
 
 ## 03:00
-
-Add support for 繁体中文 (Traditional Chinese) as a new locale.
 
 ## 03:30
 
 ## 04:00
 
-Add support for Spanish as a new locale.
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
 
 ## 04:30
 
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
+
 ## 05:00
 
-Add support for Japanese as a new locale.
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
 
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
 
 ## 05:30
 
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
+
 ## 06:00
 
-Add support for Korean as a new locale.
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
 
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
 
 ## 06:30
 
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
+
 ## 07:00
 
-Add support for Vietnamese as a new locale.
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
 
 ## 07:30
 
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
+
 ## 08:00
 
-Add support for German as a new locale.
+1. Choose a random feature from the codebase to review. Run `git log` to see the last 10 commits and ensure the chosen feature hasn't been reviewed yet. 
+
+2. Review the chosen feature, run React Doctor on it, and fix all the findings that are not false positive. 
+
+3. Update the related docs in the `.agents/reference` folder. Commit and push all changes.
 
 ## 08:30
 
+1. Review `native.md` against the codebase to see if it is oudated or missing important details. Update it if needed. 
+
+2. Review the entire design system using the tamagui skill. Fix bad code if any. 
+
+3. Update `native.md`. Then, commit and push all changes. 
+
 ## 09:00
 
-Add support for French as a new locale.
+1. Review `web.md` against the codebase to see if it is oudated or missing important details. Update it if needed. 
+
+2. Review the entire design system using the design-system skill. Fix bad code if any. 
+
+3. Update `web.md`. Then, commit and push all changes. 
 
 ## 09:30
 
+Use the clawpatch skill to review the entire codebase. Fix all the findings that are not false positive. Commit and push all changes.
+
+
 ## 10:00
+
+
 
 ## 10:30
 
