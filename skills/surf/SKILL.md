@@ -1,7 +1,6 @@
 ---
 name: surf
-description: >
-  Chrome-only secondary browser CLI. Use ONLY when playwright-cli cannot do the task: AI queries via browser cookies (ChatGPT, Gemini with image gen/edit, Perplexity, Grok, AI Studio, AI Studio App Builder — no API keys), multi-step workflows with loops/variables/exit conditions, iframe interaction, window isolation (agent in separate window while user browses), semantic locators (role/text/label), element style inspection, health/smoke testing, or browser history/bookmarks. Do NOT use for core browser automation (navigation, click, type, screenshot, tabs, storage, request mocking, test authoring) — playwright-cli handles those.
+description: "Chrome-only secondary browser CLI. Use ONLY when playwright-cli cannot do the task: AI queries via browser cookies (ChatGPT, Gemini with image gen/edit, Perplexity, Grok, AI Studio, AI Studio App Builder — no API keys), multi-step workflows with loops/variables/exit conditions, iframe interaction, window isolation (agent in separate window while user browses), semantic locators (role/text/label), element style inspection, health/smoke testing, or browser history/bookmarks. Do NOT use for core browser automation (navigation, click, type, screenshot, tabs, storage, request mocking, test authoring) — playwright-cli handles those."
 ---
 
 # Surf Browser Automation

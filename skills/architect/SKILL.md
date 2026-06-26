@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Find deepening opportunities in a codebase, informed by the project's architecture.md. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-navigable.
+description: Find deepening opportunities in a codebase, informed by the project's `architecture.md`. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-navigable.
 ---
 
 # Architect

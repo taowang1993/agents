@@ -97,10 +97,6 @@ Automated code review that maps a repo into semantic feature slices, reviews eac
 
 Find and safely clean large macOS developer/tooling junk.
 
-### cyber
-
-Run a temporary security-focused codebase audit with the pinned cybersecurity skill pack.
-
 ### dedao
 
 Use `dedao-dl` for 得到 App workflows — login, cookies, account switching, purchased courses, audiobooks, ebooks, articles, notes, search results, URL-to-ID mapping, downloads, JSON output for agents, and troubleshooting.
@@ -110,6 +106,10 @@ Origin: https://github.com/yann0917/dedao-dl/tree/main/skills
 ### deepsec
 
 Run, configure, and extend the deepsec AI vulnerability scanner.
+
+### design-system
+
+Token architecture, component specifications, and slide generation for systematic design work.
 
 ### diagnose
 
