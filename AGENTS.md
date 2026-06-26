@@ -2,17 +2,15 @@
 
 ## Development Guidelines
 
-- If a file looks different after your work, it means the user modified it. Never delete, revert, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your mental model of the desired state. If you notice something the user did that you didn't, ask before touching it.
+- **Hard rule: user changes are sacred.** If a file or directory looks different after your work, assume the user changed it. Never delete, revert, restore, overwrite, stage, commit, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your plan or prior edits. If you notice an unexpected change, stop and ask before touching that path.
 - When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
 - After creating or modifying an agent skill, use the skill-validator skill to audit it.
 - Before importing or installing third-party agent skills, scan them with SkillSpector.
-- When changing repo structure, workflows, scripts, skills, prompt templates, automations, extensions, or launch agents, update `README.md`, `AGENTS.md`, and any relevant docs in the same change.
 
 ### Git
 
 - Make small and frequent commits to prevent accidental work loss.
 - Commit all files in the working tree when asked to open a PR.
-- Keep `README.md` inventory in sync when adding or removing skills, cron jobs, prompt templates, Codex automations, or extensions. Run `python3 scripts/check-readme-inventory.py`; the same check lives in `.githooks/pre-commit`.
 
 ### Copy
 
