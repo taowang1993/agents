@@ -1,0 +1,13 @@
+version = 1
+id = "daily"
+kind = "cron"
+name = "Daily"
+prompt = "Read `/Users/max/.codex/automations/daily/instructions.md` and follow it exactly."
+status = "PAUSED"
+rrule = "RRULE:FREQ=DAILY;BYHOUR=0,1,2,3,4,5,6,7;BYMINUTE=0,30"
+model = "gpt-5.5"
+reasoning_effort = "xhigh"
+execution_environment = "local"
+cwds = ["/Users/max/projects/tockbot"]
+created_at = 1782443559313
+updated_at = 1782525535783

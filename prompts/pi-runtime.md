@@ -1,13 +1,34 @@
 ---
-description: Audit Tockbot Pi runtime against OpenClaw and implement learnings
+description: Plan TockDriver evolution from the Pi SDK and Tockbot architecture
 ---
 
-1. Read `.agents/research/openclaw-pi.md` to learn how OpenClaw integrates Pi. Review it against `/Users/max/projects/resources/openclaw` to see if it is outdated or missing important details. Update it if needed.
+Evolve TockDriver as Tockbot's generalist daily-driver agent. Use the Pi SDK docs and Tockbot architecture as the source of truth.
 
-2. Read `.agents/reference/architecture.md` and `.agents/reference/subagent.md` to learn how Tockbot integrates Pi.
+1. Read the Pi SDK docs from the installed Pi package:
 
-3. Write a report to document what Tockbot can learn from OpenClaw.
+   - Start with `docs/sdk.md`.
+   - Selectively read these docs when relevant to the evolution plan:
+     - `docs/rpc.md`
+     - `docs/session-format.md`
+     - `docs/sessions.md`
+     - `docs/settings.md`
+     - `docs/providers.md`
+     - `docs/models.md`
+     - `docs/custom-provider.md`
+     - `docs/extensions.md`
+     - `docs/skills.md`
+     - `docs/prompt-templates.md`
+     - `docs/packages.md`
+     - `docs/security.md`
+     - `docs/containerization.md`
+     - `docs/compaction.md`
+     - `docs/json.md`
+   - Skip TUI, theme, keybinding, and platform setup docs unless the plan touches Pi UI or platform setup.
 
-4. Write a plan for implementing those learnings. Then, implement the plan.
+2. Read `.agents/reference/architecture.md` and `.agents/reference/subagent.md`.
 
-5. Commit and push the changes.
+3. Inspect the current TockDriver/Pi integration, especially `packages/agent-service/src/service.ts`, `packages/agent-service/src/pi-runtime/run.ts`, and nearby runtime/session/subagent files.
+
+4. Write a concise evolution report in `.beads/report/` covering current capabilities, robustness gaps, generalist-agent opportunities, architecture constraints, and the smallest useful next steps.
+
+5. Write a plan for high-confidence follow-up work.

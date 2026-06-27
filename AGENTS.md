@@ -2,15 +2,14 @@
 
 ## Development Guidelines
 
-- **Hard rule: user changes are sacred.** If a file or directory looks different after your work, assume the user changed it. Never delete, revert, restore, overwrite, stage, commit, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your plan or prior edits. If you notice an unexpected change, stop and ask before touching that path.
+- If a file or directory looks different after your work, assume the user changed it. Never delete, revert, restore, overwrite, stage, commit, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your plan or prior edits. If you notice an unexpected change, stop and ask before touching that path.
 - When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
 - After creating or modifying an agent skill, use the skill-validator skill to audit it.
 - Before importing or installing third-party agent skills, scan them with SkillSpector.
 
 ### Git
 
-- Make small and frequent commits to prevent accidental work loss.
-- Commit all files in the working tree when asked to open a PR.
+- Must make small and frequent commits to prevent accidental work loss.
 
 ### Copy
 

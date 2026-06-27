@@ -36,7 +36,7 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | -------- | ------- |
 | `/cleanflow` | Delete merged branches and Beads cleanup artifacts. |
 | `/mergeflow` | Merge green PRs, update main, resolve conflicts, and sync clean worktrees to main. |
-| `/pi-runtime` | Audit Tockbot Pi runtime against OpenClaw and implement learnings. |
+| `/pi-runtime` | Plan TockDriver evolution from the Pi SDK and Tockbot architecture. |
 | `/prflow` | Validate the branch, open a PR, and fix conflicts. |
 | `/reviewflow` | Review unmerged changes, fix issues, commit, and push. |
 | `/sandbox` | Audit and close Tockbot sandboxing gaps against Codex. |
@@ -48,8 +48,8 @@ Codex automation configs are versioned in `~/.agents/automations/`. Codex reads 
 
 | Automation | Status | Schedule | Purpose |
 | ---------- | ------ | -------- | ------- |
-| `tockbot` | Paused | Every 30 minutes | Run the current-slot Tockbot task from `tasks.md`. |
-| `tockbot-docs` | Active | Mondays at 3:00 AM | Keep Tockbot `AGENTS.md` and `architecture.md` fresh. |
+| `daily` | Paused | Daily every 30 minutes from 12:00 AM through 7:30 AM | Run the current-slot Tockbot task from `tasks.md`. |
+| `weekly` | Active | Mondays at 12:00 AM, 1:00 AM, 2:00 AM, and 3:00 AM | Run the current weekly Tockbot maintenance task. |
 
 ## Inventory Check
 
