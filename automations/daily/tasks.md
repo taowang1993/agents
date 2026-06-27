@@ -8,4 +8,3 @@
 
 3. If the target has a related `.agents/reference` doc, update it. If it has no related doc, record the docs coverage gap in the run summary and file a Beads follow-up issue instead of creating a new reference doc unless the task clearly needs one. Then commit and push.
 
-
