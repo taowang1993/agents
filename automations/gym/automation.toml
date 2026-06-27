@@ -1,0 +1,13 @@
+version = 1
+id = "gym"
+kind = "cron"
+name = "Gym"
+prompt = "Read `/Users/max/.codex/automations/gym/instructions.md` and follow it exactly."
+status = "ACTIVE"
+rrule = "RRULE:FREQ=DAILY;BYHOUR=12;BYMINUTE=0"
+model = "gpt-5.5"
+reasoning_effort = "xhigh"
+execution_environment = "local"
+cwds = ["/Users/max/projects/tockbot"]
+created_at = 1782568683290
+updated_at = 1782568683290

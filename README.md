@@ -49,6 +49,7 @@ Codex automation configs are versioned in `~/.agents/automations/`. Codex reads 
 | Automation | Status | Schedule | Purpose |
 | ---------- | ------ | -------- | ------- |
 | `daily` | Paused | Daily every 30 minutes from 12:00 AM through 7:30 AM | Run the current-slot Tockbot task from `tasks.md`. |
+| `gym` | Active | Daily at 12:00 PM | Run a two-hour Tockbot review during the gym window. |
 | `weekly` | Active | Mondays at 12:00 AM, 1:00 AM, 2:00 AM, and 3:00 AM | Run the current weekly Tockbot maintenance task. |
 
 ## Inventory Check
