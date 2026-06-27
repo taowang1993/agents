@@ -35,6 +35,7 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | Template | Purpose |
 | -------- | ------- |
 | `/cleanflow` | Delete merged branches and Beads cleanup artifacts. |
+| `/commitflow` | Commit and push every dirty change in the selected repo. |
 | `/mergeflow` | Merge green PRs, update main, resolve conflicts, and sync clean worktrees to main. |
 | `/pi-runtime` | Plan TockDriver evolution from the Pi SDK and Tockbot architecture. |
 | `/prflow` | Validate the branch, open a PR, and fix conflicts. |
