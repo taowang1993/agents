@@ -48,9 +48,11 @@ cwds = ["/Users/max/projects/tockbot"]
 5. Write a short human `name` in Title Case.
 6. Set `prompt = "Read `/Users/max/.codex/automations/<id>/instructions.md` and follow it exactly."`.
 7. Set `rrule` to an RFC 5545 recurrence string such as `RRULE:FREQ=DAILY;BYHOUR=2;BYMINUTE=0`.
-   - For an overnight 30-minute timeline from midnight through 07:30, use `RRULE:FREQ=DAILY;BYHOUR=0,1,2,3,4,5,6,7;BYMINUTE=0,30`.
+   - Use `FREQ=DAILY` for one daily fire time.
+   - For multiple same-day fire times, use `FREQ=HOURLY` with `BYHOUR` and `BYMINUTE` to force Codex into a Custom Schedule; Codex can collapse RFC-valid `FREQ=DAILY` multi-time rules into a simple daily UI like “Daily at 3:00 PM”.
+   - For an overnight 30-minute timeline from midnight through 07:30, use `RRULE:FREQ=HOURLY;BYHOUR=0,1,2,3,4,5,6,7;BYMINUTE=0,30`.
    - For weekly multi-tasks that each run once per week, use exact hourly slots such as `RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=0,1,2;BYMINUTE=0`.
-   - For a 30-minute all-day timeline, use `RRULE:FREQ=DAILY;BYHOUR=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23;BYMINUTE=0,30`.
+   - For a 30-minute all-day timeline, use `RRULE:FREQ=HOURLY;BYHOUR=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23;BYMINUTE=0,30`.
 8. Set `created_at` and `updated_at` to the current Unix timestamp in milliseconds. Preserve `created_at` when updating an existing automation.
 9. Keep `instructions.md` stable and narrow enough for one scheduled run.
 10. Put the actual changing task content in `tasks.md`.
