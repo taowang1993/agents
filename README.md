@@ -8,6 +8,10 @@ Extensions for the [Pi Coding Agent](https://github.com/vercel-labs/pi).
 
 Copy prompt content (text and images) to the system clipboard.
 
+### inline-prompts
+
+Expand no-argument prompt templates inline when `/template` appears in prompt text.
+
 ### loop
 
 Start a follow-up loop with a breakout condition via `/loop`.
@@ -36,6 +40,7 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | -------- | ------- |
 | `/cleanflow` | Delete merged branches and Beads cleanup artifacts. |
 | `/commitflow` | Commit and push every dirty change in the selected repo. |
+| `/learnflow` | Learn from third-party projects, report ideas, and plan adoption. |
 | `/mergeflow` | Merge green PRs, update main, resolve conflicts, and sync clean worktrees to main. |
 | `/pi-runtime` | Plan TockDriver evolution from the Pi SDK and Tockbot architecture. |
 | `/prflow` | Validate the branch, open a PR, and fix conflicts. |
