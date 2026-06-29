@@ -84,13 +84,26 @@ For each meaningful change, evaluate these axes:
 
 Explicitly check what proof exists:
 
-- What tests were run?
+- Which tests ran fresh, and what was their exit code?
 - Did the build, typecheck, lint, and relevant checks pass?
 - Was manual verification needed, and was it documented?
 - Were before/after measurements provided for performance claims?
 - Were security-sensitive flows tested with abuse cases, not just happy paths?
+- Are agent reports, cached logs, or earlier runs being used as evidence? Verify them or mark the claim unproven.
+- Is verification partial? Name the checked scope.
 
 A missing verification story is a finding when the change is risky enough that reviewers cannot trust it by inspection.
+
+### 5. Apply the Completion Claim Gate
+
+Before `correct`, `looks good`, `ready`, `complete`, `fixed`, `passes`, or approval language:
+
+1. Identify the proving command or check.
+2. Run it fresh unless impossible or out of scope.
+3. Read the output, exit code, and failures.
+4. State evidence, or state what remains unverified.
+
+Old output, agent reports, partial checks, and "should pass" reasoning are not completion evidence.
 
 ## Non-Negotiable Standards
 
@@ -337,7 +350,7 @@ For each finding:
 
 Do not flood the review with low-value nits if there are larger structural issues. If there are no qualifying findings, explicitly say the code looks good.
 
-End with an overall verdict: `correct` when there are no findings that should block or materially change approval, or `needs attention` when there are.
+End with an overall verdict backed by fresh evidence: `correct` when there are no material findings and relevant verification passed; otherwise `needs attention`. If you skipped a relevant check, name it.
 
 ## Approval Bar
 
