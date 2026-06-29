@@ -3,11 +3,11 @@ id = "gym"
 kind = "cron"
 name = "Gym"
 prompt = "Read `/Users/max/.codex/automations/gym/instructions.md` and follow it exactly."
-status = "ACTIVE"
-rrule = "RRULE:FREQ=HOURLY;BYHOUR=15,16,17;BYMINUTE=0,30"
+status = "PAUSED"
+rrule = "RRULE:FREQ=HOURLY;BYHOUR=5,6,7;BYMINUTE=0,30"
 model = "gpt-5.5"
 reasoning_effort = "xhigh"
 execution_environment = "local"
 cwds = ["/Users/max/projects/tockbot"]
 created_at = 1782568683290
-updated_at = 1782595681845
+updated_at = 1782617006223

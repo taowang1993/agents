@@ -22,9 +22,13 @@
 		},
 		{
 			"path": "../../books"
+		},
+		{
+			"path": "../../.pi"
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "Dark Modern"
+		"workbench.colorTheme": "Dark Modern",
+		"git.ignoreLimitWarning": true
 	}
 }

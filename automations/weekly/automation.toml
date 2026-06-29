@@ -3,11 +3,11 @@ id = "weekly"
 kind = "cron"
 name = "Weekly"
 prompt = "Read `/Users/max/.codex/automations/weekly/instructions.md` and follow it exactly."
-status = "ACTIVE"
-rrule = "RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=0,1,2,3;BYMINUTE=0"
+status = "PAUSED"
+rrule = "DTSTART;TZID=America/Vancouver:20260629T000000\nRRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=0,1,2,3;BYMINUTE=0"
 model = "gpt-5.5"
 reasoning_effort = "xhigh"
 execution_environment = "local"
 cwds = ["/Users/max/projects/tockbot"]
 created_at = 1782443559313
-updated_at = 1782530978211
+updated_at = 1782617009461
