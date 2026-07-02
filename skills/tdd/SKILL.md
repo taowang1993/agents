@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development with a red-green-refactor loop. Use when the user asks for TDD, test-first, red-green-refactor, E2E or integration tests, or when implementing a non-trivial feature or bug fix that needs a regression check. Aim for 100% meaningful coverage of touched behavior with the smallest useful test type; use Playwright/E2E only for browser flows that require the real app.
+description: Test-driven development with a red-green-refactor loop. Use when the user asks for TDD, test-first, red-green-refactor, E2E or integration tests, or when implementing a non-trivial feature or bug fix that needs a regression check. Aim for 100% meaningful coverage of touched behavior with the smallest useful test type, then verify the finished work yourself before handoff.
 ---
 
 # Test-Driven Development
@@ -17,7 +17,7 @@ Start with the smallest test that can fail for the behavior you are changing:
 
 1. Use a unit or pure-function test for isolated logic.
 2. Use a component or integration test when behavior crosses modules, hooks, storage, API handlers, or UI state.
-3. Use Playwright/E2E only when the real browser/app boundary matters: routing, auth, forms, navigation, persistence, accessibility-visible flows, or a bug that only reproduces end-to-end.
+3. Use an end-to-end or real-app check only when the public app boundary matters: routing, auth, forms, navigation, persistence, accessibility-visible flows, or a bug that only reproduces end-to-end.
 4. Skip a new test for docs-only changes, config-only changes, generated files, mechanical renames, or trivial one-liners; say why in one sentence.
 
 Do not add a new test framework unless the project already uses it or the user asks. Prefer the existing test stack.
@@ -93,9 +93,19 @@ After the test passes, improve the implementation without changing behavior:
 
 See [refactoring.md](references/refactoring.md) for refactor candidates.
 
-## Playwright/E2E When Needed
+## Verification Before Handoff
 
-Use Playwright for browser-based behavioral E2E only when the browser is the public interface or the failure crosses app boundaries.
+Before claiming done:
+
+- Re-run the narrow checks after the final code change.
+- Run the required type, lint, or build check for the touched package when the project expects it.
+- Verify your own work through the smallest public interface that would catch a wrong implementation: rendered UI, CLI command, API request, persisted file or state, or app flow.
+- If verification is impossible, say exactly why and give the exact command or action that remains.
+- Report exact commands or actions and results; do not say "should work" after code changes.
+
+## End-to-End When Needed
+
+Use an end-to-end or real-app check only when the public interface or app boundary matters.
 
 Good E2E targets:
 
@@ -107,13 +117,7 @@ Good E2E targets:
 
 Avoid E2E for pure formatting, isolated utilities, simple component rendering, or logic that a fast integration/unit test covers.
 
-If Playwright agents are useful and the project supports them, set them up only when needed:
-
-```bash
-npx playwright init-agents --loop=vscode
-```
-
-Before using a healer agent, commit your current code first. Healers can make broad locator/wait changes.
+Use the project's existing command or the smallest real-app check that exercises the public behavior. Do not add or install a new E2E stack from this skill.
 
 ## Checklist Per Cycle
 
@@ -125,5 +129,7 @@ Before using a healer agent, commit your current code first. Healers can make br
 [ ] The implementation is minimal for this test
 [ ] The narrow test command passes
 [ ] Refactor kept the test green
+[ ] You verified your own final work through the smallest public interface that can catch the failure
+[ ] Handoff includes exact commands or actions and results
 [ ] Touched behavior has 100% meaningful coverage, or uncovered code is explicitly justified
 ```
