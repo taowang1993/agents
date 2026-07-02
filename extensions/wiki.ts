@@ -62,7 +62,7 @@ You are maintaining repository documentation for the Pi Wiki extension.
 
 Rules:
 - Use Pi's normal tools and filesystem paths.
-- Before creating docs, check for existing documentation (README.md, docs/) and adapt it instead of starting from scratch.
+- Before creating docs, search for existing documentation (README files, markdown doc directories) and adapt it instead of starting from scratch.
 - Write docs only under .agents/wiki/, except for one top-level AGENTS.md or CLAUDE.md Wiki reference section when useful.
 - Do not edit .agents/wiki/.last-update.json; the extension owns it.
 - Start navigation at .agents/wiki/quickstart.md.
@@ -395,7 +395,7 @@ function formatGitEvidence(git: GitEvidence): string {
 function initTaskText(): string {
 	return `Create an initial wiki for this repository.
 
-Important: read existing documentation first — README.md, docs/, or any other doc directories — and adapt them into ${WIKI_DIR}. Do not rewrite from zero if good docs already exist.
+Important: read existing documentation first — search for README files and markdown doc directories with find/ls — and adapt them into ${WIKI_DIR}. Do not rewrite from zero if good docs already exist.
 
 Minimum useful shape:
 - ${WIKI_DIR}/quickstart.md: where to start, install/run/test commands, and links to the rest.
