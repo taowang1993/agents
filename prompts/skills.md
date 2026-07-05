@@ -1,8 +1,8 @@
 ---
-description: Audit Tockbot skill system against OpenClaw and implement improvements
+description: Audit Tockbot skill system against OpenClaw and implement improvements.
 ---
 
-1. Read `.agents/research/openclaw-skills.md` to learn how OpenClaw implements the skill system. Review it against `/Users/max/projects/resources/openclaw` to see if it is outdated or missing important details. Update it if needed.
+1. Read `/Users/max/projects/resources/.generalist/openclaw-skill.md` to learn how OpenClaw implements the skill system. Review it against `/Users/max/projects/resources/openclaw` to see if it is outdated or missing important details. Update it if needed.
 
 2. Read `.agents/reference/skill.md` to learn how Tockbot implements the skill system.
 

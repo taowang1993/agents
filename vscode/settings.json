@@ -172,5 +172,9 @@
     "editor.formatOnSaveMode": "file",
     "terminal.integrated.mouseWheelScrollSensitivity": 3,
     "terminal.integrated.gpuAcceleration": "off",
-    "terminal.integrated.initialHint": false
+    "terminal.integrated.initialHint": false,
+    "workbench.editorAssociations": {
+        "*.copilotmd": "vscode.markdown.preview.editor"
+    },
+    "markdownWysiwyg.tocContentGap": 16
 }

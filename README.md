@@ -8,13 +8,13 @@ Extensions for the [Pi Coding Agent](https://github.com/vercel-labs/pi).
 
 Copy prompt content (text and images) to the system clipboard.
 
+### context
+
+Create or refresh `.agents/context` repository documentation.
+
 ### inline-prompts
 
 Expand no-argument prompt templates inline when `/template` appears in prompt text.
-
-### loop
-
-Start a follow-up loop with a breakout condition via `/loop`.
 
 ### notification
 
@@ -38,15 +38,21 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 
 | Template | Purpose |
 | -------- | ------- |
-| `/cleanflow` | Delete merged branches and Beads cleanup artifacts. |
-| `/commitflow` | Commit and push every dirty change in the selected repo. |
-| `/learnflow` | Learn from third-party projects, report ideas, and plan adoption. |
-| `/mergeflow` | Merge green PRs, update main, resolve conflicts, and sync clean worktrees to main. |
-| `/pi-runtime` | Plan TockDriver evolution from the Pi SDK and Tockbot architecture. |
-| `/prflow` | Validate the branch, open a PR, and fix conflicts. |
-| `/reviewflow` | Review unmerged changes, fix issues, commit, and push. |
+| `/clean` | Delete merged branches and Beads cleanup artifacts. |
+| `/coder` | Run the TockCoder task list. |
+| `/commit` | Commit and push all dirty git changes. |
+| `/designer` | Run the TockDesigner task list. |
+| `/driver` | Run the TockDriver task list. |
+| `/learn` | Learn from third-party projects, report ideas, and plan adoption. |
+| `/merge` | Merge green PRs, update main, and sync clean worktrees to main. |
+| `/pi` | Plan TockDriver evolution from the Pi SDK and Tockbot architecture. |
+| `/plan` | Write a plan and implement it. |
+| `/pr` | Validate the branch, open a PR, and fix conflicts. |
+| `/review` | Review unmerged changes and fix bad code. |
 | `/sandbox` | Audit and close Tockbot sandboxing gaps against Codex. |
-| `/skill` | Audit Tockbot skill system against OpenClaw and implement improvements. |
+| `/skills` | Audit Tockbot skill system against OpenClaw and implement improvements. |
+| `/slider` | Run the TockSlider task list. |
+| `/web-design` | Review the web design system and update `web.md`. |
 
 ## Codex Automations
 

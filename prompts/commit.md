@@ -1,5 +1,5 @@
 ---
-description: Commit and push all dirty git changes
+description: Commit and push all dirty git changes.
 ---
 
 Commit **ALL CHANGES** in the current git repo and push the current branch.

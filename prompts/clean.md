@@ -1,5 +1,5 @@
 ---
-description: Delete merged branches and Beads cleanup artifacts
+description: Delete merged branches and Beads cleanup artifacts.
 ---
 
 1. Delete merged local and remote branches. Preserve `main` and all worktrees. 
@@ -11,3 +11,5 @@ description: Delete merged branches and Beads cleanup artifacts
 2. Empty Beads plan and report artifacts while preserving the directories:
 
 3. Commit and push all changes. 
+
+4. Sync all worktrees to main. 
