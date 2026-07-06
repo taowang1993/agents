@@ -4,6 +4,10 @@
 
 Extensions for the [Pi Coding Agent](https://github.com/vercel-labs/pi).
 
+### clarification-suffix
+
+Append a clarification sentence to normal prompts before Pi sends them to the model.
+
 ### copy-prompt
 
 Copy prompt content (text and images) to the system clipboard.
