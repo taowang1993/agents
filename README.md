@@ -4,9 +4,9 @@
 
 Extensions for the [Pi Coding Agent](https://github.com/vercel-labs/pi).
 
-### clarification-suffix
+### clarify
 
-Append a clarification sentence to normal prompts before Pi sends them to the model.
+Add per-turn guidance that tells Pi to ask when the request is ambiguous.
 
 ### copy-prompt
 
