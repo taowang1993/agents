@@ -4,9 +4,17 @@
 
 Extensions for the [Pi Coding Agent](https://github.com/vercel-labs/pi).
 
+### auto-proceed
+
+Auto-continue implementation tasks triggered by `Implement it` or `Implement the plan` until the agent says the plan is fully implemented.
+
 ### clarify
 
 Add per-turn guidance that tells Pi to ask when the request is ambiguous.
+
+### compact-checkpoint
+
+Let the model schedule Pi conversation compaction at a natural checkpoint without context-pressure nudges.
 
 ### copy-prompt
 
