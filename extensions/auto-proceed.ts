@@ -47,8 +47,17 @@ export function hasCompletionPhrase(text: string): boolean {
 	return text.split(/\r?\n/).some((line) => normalizeCompletionLine(line) === COMPLETION_PHRASE);
 }
 
+export function hasBlockerPhrase(text: string): boolean {
+	const normalized = text.toLowerCase();
+	return normalized.includes("cannot proceed") || normalized.includes("still blocked") || normalized.includes("blocked by missing");
+}
+
 export function messagesContainCompletion(messages: MessageLike[]): boolean {
 	return messages.some((message) => hasCompletionPhrase(textFromMessage(message)));
+}
+
+export function messagesContainBlocker(messages: MessageLike[]): boolean {
+	return messages.some((message) => hasBlockerPhrase(textFromMessage(message)));
 }
 
 export default function autoProceedExtension(pi: ExtensionAPI) {
@@ -68,7 +77,7 @@ export default function autoProceedExtension(pi: ExtensionAPI) {
 	pi.on("agent_end", (event, ctx) => {
 		if (!active) return;
 
-		if (messagesContainCompletion(event.messages)) {
+		if (messagesContainCompletion(event.messages) || messagesContainBlocker(event.messages)) {
 			active = false;
 			return;
 		}
@@ -90,6 +99,8 @@ export function runAutoProceedSelfTest(): void {
 	assert.match(addAutoProceedGuidance("base"), /Proceed until the plan is fully implemented/);
 	assert.equal(hasCompletionPhrase("**The plan is fully implemented.**"), true);
 	assert.equal(hasCompletionPhrase("I will say 'The plan is fully implemented' when done."), false);
+	assert.equal(hasBlockerPhrase("Still blocked on real signed artifacts."), true);
+	assert.equal(hasBlockerPhrase("Made progress."), false);
 
 	const handlers = new Map<string, Function>();
 	const sent: Array<{ message: string; options?: unknown }> = [];
@@ -110,6 +121,11 @@ export function runAutoProceedSelfTest(): void {
 		{ messages: [{ role: "assistant", content: [{ type: "text", text: "The plan is fully implemented." }] }] },
 		{ hasPendingMessages: () => false },
 	);
+	assert.deepEqual(sent, [{ message: "Proceed.", options: { deliverAs: "followUp" } }]);
+	assert.deepEqual(before({ prompt: "Implement the plan", systemPrompt: "base" }), {
+		systemPrompt: addAutoProceedGuidance("base"),
+	});
+	end({ messages: [{ role: "assistant", content: [{ type: "text", text: "Still blocked on missing input." }] }] }, { hasPendingMessages: () => false });
 	assert.deepEqual(sent, [{ message: "Proceed.", options: { deliverAs: "followUp" } }]);
 
 	assert.deepEqual(before({ prompt: "Implement the plan", systemPrompt: "base" }), {
