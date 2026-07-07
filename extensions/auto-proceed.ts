@@ -74,7 +74,7 @@ export default function autoProceedExtension(pi: ExtensionAPI) {
 		}
 
 		if (ctx.hasPendingMessages()) return;
-		pi.sendUserMessage("Proceed.");
+		pi.sendUserMessage("Proceed.", { deliverAs: "followUp" });
 	});
 
 	pi.on("session_shutdown", () => {
@@ -92,10 +92,10 @@ export function runAutoProceedSelfTest(): void {
 	assert.equal(hasCompletionPhrase("I will say 'The plan is fully implemented' when done."), false);
 
 	const handlers = new Map<string, Function>();
-	const sent: string[] = [];
+	const sent: Array<{ message: string; options?: unknown }> = [];
 	autoProceedExtension({
 		on: (name: string, handler: Function) => handlers.set(name, handler),
-		sendUserMessage: (message: string) => sent.push(message),
+		sendUserMessage: (message: string, options?: unknown) => sent.push({ message, options }),
 	} as unknown as ExtensionAPI);
 
 	const input = handlers.get("input")!;
@@ -105,12 +105,12 @@ export function runAutoProceedSelfTest(): void {
 		systemPrompt: addAutoProceedGuidance("base"),
 	});
 	end({ messages: [{ role: "assistant", content: [{ type: "text", text: "Made progress." }] }] }, { hasPendingMessages: () => false });
-	assert.deepEqual(sent, ["Proceed."]);
+	assert.deepEqual(sent, [{ message: "Proceed.", options: { deliverAs: "followUp" } }]);
 	end(
 		{ messages: [{ role: "assistant", content: [{ type: "text", text: "The plan is fully implemented." }] }] },
 		{ hasPendingMessages: () => false },
 	);
-	assert.deepEqual(sent, ["Proceed."]);
+	assert.deepEqual(sent, [{ message: "Proceed.", options: { deliverAs: "followUp" } }]);
 
 	assert.deepEqual(before({ prompt: "Implement the plan", systemPrompt: "base" }), {
 		systemPrompt: addAutoProceedGuidance("base"),
