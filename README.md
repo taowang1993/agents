@@ -355,6 +355,15 @@ Manage jobs with:
 - **Log:** `~/Library/Logs/codex-relay.log`
 - **What it does:** Runs the Codex Relay mobile server via `npx --yes codex-relay@latest`; uses Tailscale for remote access.
 
+### shutdown-stale-simulators
+
+- **Label:** `com.max.shutdown-stale-simulators`
+- **Schedule:** Run at load, then every 5 minutes
+- **Script:** `~/.agents/cron/shutdown-stale-simulators/shutdown-stale-simulators.sh`
+- **Plist:** `~/.agents/cron/shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist`
+- **Log:** `~/Library/Logs/shutdown-stale-simulators.log`
+- **What it does:** Shuts down booted iOS simulators after they sit unattended for 30 minutes.
+
 ### nightshift
 
 - **Label:** `com.max.nightshift`

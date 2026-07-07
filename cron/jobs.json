@@ -55,6 +55,15 @@
       "script": "codex-relay/codex-relay.sh",
       "plist": "codex-relay/com.max.codex-relay.plist",
       "logs": ["~/Library/Logs/codex-relay.log"]
+    },
+    {
+      "id": "shutdown-stale-simulators",
+      "label": "com.max.shutdown-stale-simulators",
+      "group": "shutdown-stale-simulators",
+      "description": "Shut down unattended booted iOS simulators after 30 minutes.",
+      "script": "shutdown-stale-simulators/shutdown-stale-simulators.sh",
+      "plist": "shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist",
+      "logs": ["~/Library/Logs/shutdown-stale-simulators.log"]
     }
   ]
 }
