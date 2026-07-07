@@ -3,9 +3,13 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import assert from "node:assert/strict";
 import { pathToFileURL } from "node:url";
 
-export const AUTO_PROCEED_GUIDANCE =
-	"Proceed until the plan is fully implemented. Say 'The plan is fully implemented' when it is fully implemented.";
+export const AUTO_PROCEED_GUIDANCE = [
+	"Proceed until the plan is fully implemented.",
+	"Say exactly 'The plan is fully implemented' when it is fully implemented.",
+	"If the plan cannot be safely completed because of missing inputs, credentials, artifacts, permissions, or another real blocker, say exactly 'The plan is blocked' and explain what is needed.",
+].join(" ");
 export const COMPLETION_PHRASE = "the plan is fully implemented";
+export const BLOCKED_PHRASE = "the plan is blocked";
 
 function normalizePrompt(text: string): string {
 	return text.trim().toLowerCase().replace(/[.!?]+$/g, "").replace(/\s+/g, " ");
@@ -24,6 +28,7 @@ export function addAutoProceedGuidance(systemPrompt: string): string {
 type MessageLike = {
 	role: string;
 	content?: Array<{ type: string; text?: string }>;
+	stopReason?: string;
 };
 
 function textFromMessage(message: MessageLike): string {
@@ -34,7 +39,7 @@ function textFromMessage(message: MessageLike): string {
 		.join("\n");
 }
 
-function normalizeCompletionLine(line: string): string {
+function normalizeTerminalLine(line: string): string {
 	return line
 		.trim()
 		.toLowerCase()
@@ -43,21 +48,25 @@ function normalizeCompletionLine(line: string): string {
 		.replace(/\s+/g, " ");
 }
 
+function hasExactTerminalLine(text: string, phrase: string): boolean {
+	return text.split(/\r?\n/).some((line) => normalizeTerminalLine(line) === phrase);
+}
+
 export function hasCompletionPhrase(text: string): boolean {
-	return text.split(/\r?\n/).some((line) => normalizeCompletionLine(line) === COMPLETION_PHRASE);
+	return hasExactTerminalLine(text, COMPLETION_PHRASE);
 }
 
-export function hasBlockerPhrase(text: string): boolean {
-	const normalized = text.toLowerCase();
-	return normalized.includes("cannot proceed") || normalized.includes("still blocked") || normalized.includes("blocked by missing");
+export function hasBlockedPhrase(text: string): boolean {
+	return hasExactTerminalLine(text, BLOCKED_PHRASE);
 }
 
-export function messagesContainCompletion(messages: MessageLike[]): boolean {
-	return messages.some((message) => hasCompletionPhrase(textFromMessage(message)));
-}
+export function messagesContainTerminal(messages: MessageLike[]): boolean {
+	return messages.some((message) => {
+		if (message.role === "assistant" && (message.stopReason === "aborted" || message.stopReason === "error")) return true;
 
-export function messagesContainBlocker(messages: MessageLike[]): boolean {
-	return messages.some((message) => hasBlockerPhrase(textFromMessage(message)));
+		const text = textFromMessage(message);
+		return hasCompletionPhrase(text) || hasBlockedPhrase(text);
+	});
 }
 
 export default function autoProceedExtension(pi: ExtensionAPI) {
@@ -77,7 +86,7 @@ export default function autoProceedExtension(pi: ExtensionAPI) {
 	pi.on("agent_end", (event, ctx) => {
 		if (!active) return;
 
-		if (messagesContainCompletion(event.messages) || messagesContainBlocker(event.messages)) {
+		if (messagesContainTerminal(event.messages)) {
 			active = false;
 			return;
 		}
@@ -97,10 +106,11 @@ export function runAutoProceedSelfTest(): void {
 	assert.equal(shouldStartAutoProceed("Research OpenClaw to learn how it implements skill system"), false);
 	assert.equal(shouldStartAutoProceed("Implement this"), false);
 	assert.match(addAutoProceedGuidance("base"), /Proceed until the plan is fully implemented/);
+	assert.match(addAutoProceedGuidance("base"), /The plan is blocked/);
 	assert.equal(hasCompletionPhrase("**The plan is fully implemented.**"), true);
 	assert.equal(hasCompletionPhrase("I will say 'The plan is fully implemented' when done."), false);
-	assert.equal(hasBlockerPhrase("Still blocked on real signed artifacts."), true);
-	assert.equal(hasBlockerPhrase("Made progress."), false);
+	assert.equal(hasBlockedPhrase("The plan is blocked.\nNeed signed artifact URLs."), true);
+	assert.equal(hasBlockedPhrase("I will say 'The plan is blocked' if blocked."), false);
 
 	const handlers = new Map<string, Function>();
 	const sent: Array<{ message: string; options?: unknown }> = [];
@@ -125,7 +135,13 @@ export function runAutoProceedSelfTest(): void {
 	assert.deepEqual(before({ prompt: "Implement the plan", systemPrompt: "base" }), {
 		systemPrompt: addAutoProceedGuidance("base"),
 	});
-	end({ messages: [{ role: "assistant", content: [{ type: "text", text: "Still blocked on missing input." }] }] }, { hasPendingMessages: () => false });
+	end({ messages: [{ role: "assistant", content: [{ type: "text", text: "The plan is blocked.\nNeed input." }] }] }, { hasPendingMessages: () => false });
+	assert.deepEqual(sent, [{ message: "Proceed.", options: { deliverAs: "followUp" } }]);
+
+	assert.deepEqual(before({ prompt: "Implement the plan", systemPrompt: "base" }), {
+		systemPrompt: addAutoProceedGuidance("base"),
+	});
+	end({ messages: [{ role: "assistant", stopReason: "aborted", content: [{ type: "text", text: "Operation aborted" }] }] }, { hasPendingMessages: () => false });
 	assert.deepEqual(sent, [{ message: "Proceed.", options: { deliverAs: "followUp" } }]);
 
 	assert.deepEqual(before({ prompt: "Implement the plan", systemPrompt: "base" }), {
