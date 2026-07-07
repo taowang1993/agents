@@ -37,6 +37,56 @@ xcrun simctl runtime list 2>/dev/null
 xcrun simctl list devices --json 2>/dev/null
 ```
 
+## Home Dotfolder Audit
+
+Use this before deleting hidden folders directly under `$HOME`. Default to audit and classify first; only delete caches, empty leftovers, or directories the user confirms are stale.
+
+```bash
+find "$HOME" -maxdepth 1 -mindepth 1 -type d -name '.*' -print0 |
+  xargs -0 du -sh 2>/dev/null |
+  sort -hr
+
+python3 - <<'PY'
+from pathlib import Path
+import shutil, subprocess, time
+home = Path.home()
+keep = {
+    '.ssh', '.aws', '.config', '.local', '.nvm', '.npm', '.bun', '.gradle',
+    '.expo', '.android', '.codex', '.pi', '.agents', '.orbstack', '.vscode',
+    '.wakatime', '.maestro', '.gem', '.Trash', '.beads', '.swiftpm'
+}
+cache = {'.cache', '.degit', '.vite-plus'}
+app_roots = [Path('/Applications'), home / 'Applications']
+for p in sorted(d for d in home.iterdir() if d.name.startswith('.') and d.is_dir()):
+    name = p.name[1:]
+    try:
+        size = subprocess.check_output(['du', '-sh', str(p)], stderr=subprocess.DEVNULL, text=True).split()[0]
+    except Exception:
+        size = '?'
+    has_file = subprocess.run(['find', str(p), '-type', 'f', '-print', '-quit'], capture_output=True, text=True).stdout.strip()
+    age = int((time.time() - p.stat().st_mtime) / 86400)
+    cmd = shutil.which(name)
+    app = any(
+        child.suffix == '.app' and name.lower() in child.name.lower()
+        for root in app_roots if root.exists()
+        for child in root.iterdir()
+    )
+    bucket = 'keep' if p.name in keep else 'cache' if p.name in cache else 'empty?' if not has_file else 'active?' if (cmd or app) else 'review'
+    print(f'{bucket:8} {size:>8} {age:4}d {p}')
+PY
+```
+
+Deletion rules:
+
+- Never delete credential/state roots wholesale: `.ssh`, `.aws`, `.config`, `.local`, `.nvm`, `.npm`, `.bun`, `.gradle`, `.expo`, `.android`, `.codex`, `.pi`, `.agents`.
+- For candidates, inspect contents with `find "$dir" -maxdepth 2 -print`; do not print token files such as `authtoken`, `credentials`, or config JSON.
+- Confirm no open files with `lsof +D "$dir"` before deleting.
+- Empty dotfolders are safe to delete; active apps may recreate them.
+- App/tool caches such as `.cache`, `.degit`, and `.vite-plus` are safe to delete; tools recreate or redownload them.
+- If a directory contains credentials or user state, keep it unless the user explicitly confirms the app/account is gone.
+
+On 2026-07-07 this workflow removed empty leftovers (`.agentskills`, `.app-store`, `.biome`, `.hawtjni`, `.hypa`, `.iflow`, `.mcpjam`, `.sogouinput`) plus cache leftovers (`.degit`, `.vite-plus`, `.cache` children), leaving 56 hidden directories.
+
 ## Known Cleanup Targets
 
 | Path or Pattern | What It Is | Safe Cleanup |
