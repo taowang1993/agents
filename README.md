@@ -50,9 +50,9 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 
 | Template | Purpose |
 | -------- | ------- |
+| `/beads` | Read Beads epics, issues, and related plans. |
 | `/clean` | Delete merged branches and Beads cleanup artifacts. |
 | `/coder` | Run the TockCoder task list. |
-| `/commit` | Commit and push all dirty git changes. |
 | `/designer` | Run the TockDesigner task list. |
 | `/driver` | Run the TockDriver task list. |
 | `/learn` | Learn from third-party projects, report ideas, and plan adoption. |
@@ -121,6 +121,10 @@ Automated code review that maps a repo into semantic feature slices, reviews eac
 ### cleanmac
 
 Find and safely clean large macOS developer/tooling junk.
+
+### codex
+
+Check ChatGPT/Codex rate-limit reset credit expiration dates.
 
 ### dedao
 

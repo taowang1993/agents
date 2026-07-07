@@ -25,6 +25,9 @@
 		},
 		{
 			"path": "../../projects/soulart"
+		},
+		{
+			"path": "../../.pi"
 		}
 	],
 	"settings": {
