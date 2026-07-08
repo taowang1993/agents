@@ -64,6 +64,15 @@
       "script": "shutdown-stale-simulators/shutdown-stale-simulators.sh",
       "plist": "shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist",
       "logs": ["~/Library/Logs/shutdown-stale-simulators.log"]
+    },
+    {
+      "id": "browseros-bookmark-refresh",
+      "label": "com.max.browseros-bookmark-refresh",
+      "group": "browseros-bookmark-refresh",
+      "description": "Reopen BrowserOS windows after Syncthing receives remote bookmark updates.",
+      "script": "browseros-bookmark-refresh/browseros-bookmark-refresh.py",
+      "plist": "browseros-bookmark-refresh/com.max.browseros-bookmark-refresh.plist",
+      "logs": ["~/Library/Logs/browseros-bookmark-refresh.log", "~/Library/Logs/browseros-bookmark-refresh.err.log"]
     }
   ]
 }

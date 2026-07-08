@@ -368,6 +368,15 @@ Manage jobs with:
 - **Log:** `~/Library/Logs/shutdown-stale-simulators.log`
 - **What it does:** Shuts down booted iOS simulators after they sit unattended for 30 minutes.
 
+### browseros-bookmark-refresh
+
+- **Label:** `com.max.browseros-bookmark-refresh`
+- **Schedule:** Run at load, keep alive
+- **Script:** `~/.agents/cron/browseros-bookmark-refresh/browseros-bookmark-refresh.py`
+- **Plist:** `~/.agents/cron/browseros-bookmark-refresh/com.max.browseros-bookmark-refresh.plist`
+- **Log:** `~/Library/Logs/browseros-bookmark-refresh.log`
+- **What it does:** Reopens BrowserOS windows after Syncthing receives remote bookmark updates.
+
 ### nightshift
 
 - **Label:** `com.max.nightshift`

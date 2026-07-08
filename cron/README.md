@@ -15,6 +15,7 @@ This directory is the source-of-truth workspace for Max's user-created launchd j
 │   ├── progress.md
 │   └── tasks/
 ├── shutdown-stale-simulators/
+├── browseros-bookmark-refresh/
 ├── tailscale/
 ├── update-packages/
 └── update-repos/
@@ -29,6 +30,7 @@ The canonical plist files live in this directory so they can be versioned with t
 ~/.agents/cron/codex-relay/com.max.codex-relay.plist
 ~/.agents/cron/nightshift/com.max.nightshift.plist
 ~/.agents/cron/shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist
+~/.agents/cron/browseros-bookmark-refresh/com.max.browseros-bookmark-refresh.plist
 ~/.agents/cron/tailscale/com.max.tailscale.plist
 ~/.agents/cron/update-packages/com.max.update-packages.plist
 ~/.agents/cron/update-repos/com.max.update-repos.plist
@@ -58,6 +60,7 @@ The canonical plist files live in this directory so they can be versioned with t
 - `nightshift.sh` holds a lock and runs unfinished task files from `nightshift/tasks/*.md` back-to-back until the configured window closes.
 - Progress is date-scoped in `nightshift/progress.md`.
 - `shutdown-stale-simulators/` shuts down unattended booted iOS simulators after 30 minutes.
+- `browseros-bookmark-refresh/` reopens BrowserOS after Syncthing receives remote bookmark updates.
 - `tailscale/` runs the userspace-networking daemon for remote Codex Relay access.
 - `codex-relay/` runs the mobile Codex Relay server and depends on the Tailscale daemon for remote access.
 - Use `doctor` after edits to catch missing scripts, broken LaunchAgent symlinks, label mismatches, executable-bit issues, and missing Nightshift config/task files.
