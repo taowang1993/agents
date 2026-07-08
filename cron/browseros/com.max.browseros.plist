@@ -7,7 +7,9 @@
 
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/max/.agents/cron/browseros/browseros.py</string>
+      <string>/bin/sh</string>
+      <string>-lc</string>
+      <string>exec "$HOME/.agents/cron/browseros/browseros.py" >> "$HOME/Library/Logs/browseros.log" 2>> "$HOME/Library/Logs/browseros.err.log"</string>
     </array>
 
     <key>RunAtLoad</key>
@@ -22,10 +24,5 @@
     <key>ProcessType</key>
     <string>Background</string>
 
-    <key>StandardOutPath</key>
-    <string>/Users/max/Library/Logs/browseros.log</string>
-
-    <key>StandardErrorPath</key>
-    <string>/Users/max/Library/Logs/browseros.err.log</string>
   </dict>
 </plist>
