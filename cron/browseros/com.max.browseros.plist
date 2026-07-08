@@ -3,11 +3,11 @@
 <plist version="1.0">
   <dict>
     <key>Label</key>
-    <string>com.max.browseros-bookmark-refresh</string>
+    <string>com.max.browseros</string>
 
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/max/.agents/cron/browseros-bookmark-refresh/browseros-bookmark-refresh.py</string>
+      <string>/Users/max/.agents/cron/browseros/browseros.py</string>
     </array>
 
     <key>RunAtLoad</key>
@@ -23,9 +23,9 @@
     <string>Background</string>
 
     <key>StandardOutPath</key>
-    <string>/Users/max/Library/Logs/browseros-bookmark-refresh.log</string>
+    <string>/Users/max/Library/Logs/browseros.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/Users/max/Library/Logs/browseros-bookmark-refresh.err.log</string>
+    <string>/Users/max/Library/Logs/browseros.err.log</string>
   </dict>
 </plist>
