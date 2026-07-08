@@ -16,8 +16,8 @@ Treat this as file sync, not native browser sync:
   $HOME/Library/Application Support/BrowserOS/Default/Bookmarks
   ```
 - Syncthing syncs only that file through folder id `browseros-bookmarks`.
-- BrowserOS keeps bookmarks in memory. A page refresh is not enough after a remote file update; close the BrowserOS window and reopen it.
-- The `browseros` launchd job automates that close/reopen on remote Syncthing updates.
+- BrowserOS keeps bookmarks in memory. A page refresh is not enough after a remote file update; restart BrowserOS or create a fresh session.
+- The `browseros` launchd job requests `chrome://restart` on remote Syncthing updates so open tabs come back.
 
 Do not sync cookies, passwords, sessions, or the whole BrowserOS profile. Chrome/Edge can sync those safely because they own the sync and encryption layer; raw file sync does not.
 
@@ -95,9 +95,13 @@ Check it:
 "$HOME/.agents/cron/manage.sh" logs browseros -n 50
 ```
 
-The job listens for Syncthing `RemoteChangeDetected` / `ItemFinished` events for `Bookmarks`, then clicks BrowserOS window close buttons and runs `open -a BrowserOS`.
+The job listens for Syncthing `RemoteChangeDetected` / `ItemFinished` events for `Bookmarks`, then runs:
 
-macOS may ask for Accessibility permission for `python3.13`. Grant it; the script is Python and uses AppleScript/System Events to click BrowserOS's red close button.
+```bash
+open -a BrowserOS chrome://restart
+```
+
+This restarts BrowserOS and lets Chromium restore the current tabs instead of losing them by closing windows.
 
 ## Inspect Bookmarks
 
@@ -117,7 +121,7 @@ Avoid manual JSON edits. Chromium stores a checksum and may reject or rewrite ba
 
 ## Troubleshooting
 
-If a bookmark exists in the file but not in BrowserOS, close the BrowserOS window and reopen it. `Cmd+R` only refreshes `chrome://bookmarks`, not the in-memory bookmark model.
+If a bookmark exists in the file but not in BrowserOS, use `open -a BrowserOS chrome://restart` or close/reopen the BrowserOS window. `Cmd+R` only refreshes `chrome://bookmarks`, not the in-memory bookmark model.
 
 If the other Mac does not receive bookmarks:
 
@@ -130,7 +134,6 @@ If auto-refresh does not run:
 
 1. Check `manage.sh status browseros`.
 2. Check `~/Library/Logs/browseros.log` and `~/Library/Logs/browseros.err.log`.
-3. Grant Accessibility permission if `osascript` or System Events errors appear.
-4. Restart the job with `manage.sh reload browseros`.
+3. Restart the job with `manage.sh reload browseros`.
 
 Avoid adding bookmarks on both Macs at the same time. Syncthing can sync the file, but BrowserOS does not merge concurrent bookmark models.

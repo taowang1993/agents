@@ -69,7 +69,7 @@
       "id": "browseros",
       "label": "com.max.browseros",
       "group": "browseros",
-      "description": "Reopen BrowserOS windows after Syncthing receives remote bookmark updates.",
+      "description": "Restart BrowserOS after Syncthing receives remote bookmark updates.",
       "script": "browseros/browseros.py",
       "plist": "browseros/com.max.browseros.plist",
       "logs": ["~/Library/Logs/browseros.log", "~/Library/Logs/browseros.err.log"]

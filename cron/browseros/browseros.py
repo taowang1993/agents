@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reopen BrowserOS windows after Syncthing receives remote bookmark updates."""
+"""Restart BrowserOS after Syncthing receives remote bookmark updates."""
 
 from __future__ import annotations
 
@@ -69,46 +69,13 @@ def is_bookmark_update(event: dict[str, object]) -> bool:
     return event.get("type") in {"RemoteChangeDetected", "ItemFinished"}
 
 
-def close_browseros_windows() -> str:
-    script = r'''
-tell application "System Events"
-    if not (exists process "BrowserOS") then return "not running"
-    tell process "BrowserOS"
-        set windowCount to count windows
-        if windowCount is 0 then return "no windows"
-        repeat windowCount times
-            try
-                click button 1 of window 1
-                delay 0.2
-            on error errMsg
-                return "close failed: " & errMsg
-            end try
-        end repeat
-    end tell
-end tell
-return "closed"
-'''
-    proc = subprocess.run(
-        ["osascript", "-e", script],
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        timeout=15,
-    )
-    output = (proc.stdout or proc.stderr).strip()
-    if proc.returncode != 0:
-        raise RuntimeError(output or f"osascript exited {proc.returncode}")
-    return output
-
-
 def refresh_browseros() -> None:
-    result = close_browseros_windows()
-    if result != "closed":
-        log(f"BrowserOS refresh skipped: {result}")
+    running = subprocess.run(["pgrep", "-x", "BrowserOS"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if running.returncode != 0:
+        log("BrowserOS refresh skipped: not running")
         return
-    time.sleep(0.7)
-    subprocess.run(["open", "-a", "BrowserOS"], check=False, timeout=10)
-    log("BrowserOS window reopened after remote bookmark update")
+    subprocess.run(["open", "-a", "BrowserOS", "chrome://restart"], check=False, timeout=10)
+    log("BrowserOS restart requested after remote bookmark update")
 
 
 def run() -> int:

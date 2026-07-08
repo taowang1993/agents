@@ -383,7 +383,7 @@ Manage jobs with:
 - **Script:** `~/.agents/cron/browseros/browseros.py`
 - **Plist:** `~/.agents/cron/browseros/com.max.browseros.plist`
 - **Log:** `~/Library/Logs/browseros.log`
-- **What it does:** Reopens BrowserOS windows after Syncthing receives remote bookmark updates.
+- **What it does:** Restarts BrowserOS after Syncthing receives remote bookmark updates.
 
 ### nightshift
 

@@ -60,7 +60,7 @@ The canonical plist files live in this directory so they can be versioned with t
 - `nightshift.sh` holds a lock and runs unfinished task files from `nightshift/tasks/*.md` back-to-back until the configured window closes.
 - Progress is date-scoped in `nightshift/progress.md`.
 - `shutdown-stale-simulators/` shuts down unattended booted iOS simulators after 30 minutes.
-- `browseros/` reopens BrowserOS after Syncthing receives remote bookmark updates.
+- `browseros/` restarts BrowserOS after Syncthing receives remote bookmark updates.
 - `tailscale/` runs the userspace-networking daemon for remote Codex Relay access.
 - `codex-relay/` runs the mobile Codex Relay server and depends on the Tailscale daemon for remote access.
 - Use `doctor` after edits to catch missing scripts, broken LaunchAgent symlinks, label mismatches, executable-bit issues, and missing Nightshift config/task files.
