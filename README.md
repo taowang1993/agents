@@ -114,6 +114,10 @@ Durable project task tracking with `bd` or Beads. Issue dependencies, blocker ma
 
 All-in-one web search for AI agents. Pre-extracted, token-budgeted web content, deep research, news, images, videos, places, and custom ranking. Uses Brave Search API.
 
+### browseros
+
+Manage BrowserOS bookmark sync across Max and Tao's Macs using Syncthing plus the `browseros` launchd auto-refresh job.
+
 ### clawpatch
 
 Automated code review that maps a repo into semantic feature slices, reviews each slice with an AI provider, persists findings, and can run explicit fix loops. Use for code review, auditing, test gap analysis, or cleaning up AI-generated slop.
@@ -258,6 +262,10 @@ Origin: https://github.com/anthropics/skills/tree/main/skills/skill-creator
 
 Validate and score Agent Skill packages for spec compliance, content quality, contamination, and LLM scoring.
 
+### ssh-tao
+
+SSH into Tao's MacBook Air from Max's Mac, run remote commands safely, and transfer files with rsync/scp.
+
 ### surf
 
 Chrome-only secondary browser CLI. Use for AI queries via browser cookies (ChatGPT, Gemini, Perplexity, Grok, AI Studio), multi-step workflows with loops/variables, iframe interaction, window isolation, and semantic locators.
@@ -368,7 +376,7 @@ Manage jobs with:
 - **Log:** `~/Library/Logs/shutdown-stale-simulators.log`
 - **What it does:** Shuts down booted iOS simulators after they sit unattended for 30 minutes.
 
-### browseros
+### browseros LaunchAgent
 
 - **Label:** `com.max.browseros`
 - **Schedule:** Run at load, keep alive
