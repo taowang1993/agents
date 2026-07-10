@@ -140,6 +140,10 @@ Origin: https://github.com/yann0917/dedao-dl/tree/main/skills
 
 Run, configure, and extend the deepsec AI vulnerability scanner.
 
+### design
+
+Audit, redesign, and build web and product interfaces with strong design taste, system-level reasoning, and interaction craft.
+
 ### design-system
 
 Token architecture, component specifications, and slide generation for systematic design work.
