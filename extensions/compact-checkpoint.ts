@@ -1,19 +1,12 @@
-import type { ContextUsage, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 
 const TOOL_NAME = "compact_checkpoint";
-const REMINDER_MESSAGE_TYPE = "compact-checkpoint-reminder";
 const STATUS_KEY = "compact-checkpoint";
-const REMINDER_THRESHOLDS = [50, 70, 85, 95] as const;
+const REMINDER_THRESHOLDS = [80, 90, 95] as const;
 
 interface PendingCompaction {
 	instructions: string;
-}
-
-interface ContextReminder {
-	content: string;
-	percent: number;
-	threshold: number;
 }
 
 function buildCompactionInstructions(handoff: string): string {
@@ -42,29 +35,6 @@ function getReminderThreshold(percent: number): number | undefined {
 	return threshold;
 }
 
-function formatNumber(value: number): string {
-	return Math.round(value).toLocaleString("en-US");
-}
-
-function buildContextReminder(usage: ContextUsage, threshold: number): ContextReminder | undefined {
-	if (usage.percent === null || !Number.isFinite(usage.percent)) return;
-
-	const tokenSummary = usage.tokens === null
-		? ""
-		: ` (${formatNumber(usage.tokens)} of ${formatNumber(usage.contextWindow)} tokens)`;
-	const percent = Math.round(usage.percent);
-
-	return {
-		content: [
-			`Context checkpoint reminder: the active model context is about ${percent}% full${tokenSummary}, crossing the ${threshold}% reminder threshold.`,
-			`Do not compact solely because of this warning. If you are mid-edit, mid-debug, or waiting for tool output, continue working.`,
-			`At the next natural checkpoint, consider calling ${TOOL_NAME} as the only tool in the turn with a concise handoff.`,
-		].join("\n"),
-		percent,
-		threshold,
-	};
-}
-
 export default function compactCheckpointExtension(pi: ExtensionAPI) {
 	let pending: PendingCompaction | undefined;
 	let lastReminderThreshold: number | undefined;
@@ -74,7 +44,7 @@ export default function compactCheckpointExtension(pi: ExtensionAPI) {
 		if (ctx?.hasUI) ctx.ui.setStatus(STATUS_KEY, undefined);
 	}
 
-	function maybeCreateContextReminder(ctx: ExtensionContext): ContextReminder | undefined {
+	function maybeNotifyContextUsage(ctx: ExtensionContext) {
 		const usage = ctx.getContextUsage();
 		if (!usage || usage.percent === null || !Number.isFinite(usage.percent)) return;
 
@@ -84,33 +54,27 @@ export default function compactCheckpointExtension(pi: ExtensionAPI) {
 			return;
 		}
 
-		if (ctx.hasUI) ctx.ui.setStatus(STATUS_KEY, `Context ${Math.round(usage.percent)}%`);
+		const percent = Math.round(usage.percent);
+		if (ctx.hasUI) ctx.ui.setStatus(STATUS_KEY, `Context ${percent}%`);
 		if (lastReminderThreshold !== undefined && threshold <= lastReminderThreshold) return;
-
-		const reminder = buildContextReminder(usage, threshold);
-		if (!reminder) return;
 
 		lastReminderThreshold = threshold;
 		if (ctx.hasUI) {
 			ctx.ui.notify(
-				`Context is ${reminder.percent}% full. Compact at the next natural checkpoint.`,
-				threshold >= 85 ? "warning" : "info",
+				`Context is ${percent}% full. Pi will compact automatically near capacity; use a checkpoint only after task completion or an explicit pause.`,
+				threshold >= 95 ? "warning" : "info",
 			);
 		}
-		return reminder;
 	}
 
 	pi.registerTool({
 		name: TOOL_NAME,
 		label: "Compact Checkpoint",
 		description:
-			"Schedule Pi conversation compaction after the current agent run. Use only at a natural checkpoint, never mid-task.",
-		promptSnippet: "Schedule conversation compaction at a safe work checkpoint.",
+			"End the current agent run and compact the session. Use only after completing the user's task or when the user explicitly asks to pause.",
+		promptSnippet: "End the current agent run and compact only after task completion or an explicit user-requested pause.",
 		promptGuidelines: [
-			"Use compact_checkpoint only when you have reached a natural checkpoint and are about to start a new phase.",
-			"Do not use compact_checkpoint mid-edit, mid-debug, while waiting for a tool result, or just because context may be large.",
-			"When the compact-checkpoint extension warns that context is over 50% full, treat it as a reminder to checkpoint soon, not as permission to interrupt active work.",
-			"Call compact_checkpoint as the only tool in a turn and include a handoff with what should survive compaction plus the next step.",
+			"Use compact_checkpoint only after completing the user's task or when the user explicitly asks to pause; it ends the current agent run, so never use it merely to split active work into phases.",
 		],
 		parameters: Type.Object({
 			handoff: Type.String({
@@ -121,35 +85,22 @@ export default function compactCheckpointExtension(pi: ExtensionAPI) {
 			pending = { instructions: buildCompactionInstructions(params.handoff) };
 
 			return {
-				content: [{ type: "text", text: "Checkpoint compaction scheduled after this agent run ends." }],
+				content: [{ type: "text", text: "Checkpoint requested. This ends the current agent run; compaction will start after it settles." }],
 				details: { scheduled: true },
 				terminate: true,
 			};
 		},
 	});
 
-	pi.on("before_agent_start", (event, ctx) => {
-		const reminder = maybeCreateContextReminder(ctx);
-		if (!reminder) return;
-		return { systemPrompt: `${event.systemPrompt}\n\n${reminder.content}` };
+	pi.on("before_agent_start", (_event, ctx) => {
+		maybeNotifyContextUsage(ctx);
 	});
 
 	pi.on("turn_end", (_event, ctx) => {
-		const reminder = maybeCreateContextReminder(ctx);
-		if (!reminder) return;
-
-		pi.sendMessage({
-			customType: REMINDER_MESSAGE_TYPE,
-			content: reminder.content,
-			display: false,
-			details: {
-				percent: reminder.percent,
-				threshold: reminder.threshold,
-			},
-		}, { deliverAs: "steer" });
+		maybeNotifyContextUsage(ctx);
 	});
 
-	pi.on("agent_end", (_event, ctx) => {
+	pi.on("agent_settled", (_event, ctx) => {
 		const request = pending;
 		pending = undefined;
 		if (!request) return;
