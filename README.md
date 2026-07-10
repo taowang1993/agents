@@ -302,6 +302,12 @@ Deploy, manage, and troubleshoot Vercel projects from the command line.
 
 Origin: https://github.com/vercel/vercel/tree/main/skills/vercel-cli
 
+### writing-great-skills
+
+Reference for writing and editing predictable skills.
+
+Origin: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills
+
 ### youtube
 
 Fetch transcripts from YouTube videos for summarization and analysis.
