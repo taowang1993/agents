@@ -102,10 +102,6 @@ Find deepening opportunities in a codebase, informed by the project's `architect
 
 Explain complex concepts with live ASCII art animations in markdown files during tutoring sessions.
 
-### automation
-
-Create, inspect, and update Codex automation directories with `automation.toml`, `instructions.md`, and `tasks.md`.
-
 ### beads
 
 Durable project task tracking with `bd` or Beads. Issue dependencies, blocker management, multi-session handoff, and shared work memory. Use for finding ready work, claiming/closing tasks, creating follow-up work, or planning features.
@@ -219,6 +215,12 @@ List, configure, authenticate, call, and inspect MCP servers/tools over HTTP or 
 ### munger
 
 Analyze decisions through Charlie Munger's worldview and mental-model methodology.
+
+### ok
+
+Explain OpenKnowledge, install or share projects, and open loose Markdown files. In-project editing uses the project-local runtime skill installed by `ok init`.
+
+Origin: https://github.com/inkeep/open-knowledge
 
 ### pg
 
