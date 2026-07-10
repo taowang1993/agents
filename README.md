@@ -144,10 +144,6 @@ Run, configure, and extend the deepsec AI vulnerability scanner.
 
 Audit, redesign, and build web and product interfaces with strong design taste, system-level reasoning, and interaction craft.
 
-### design-system
-
-Token architecture, component specifications, and slide generation for systematic design work.
-
 ### diagnose
 
 Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test.
