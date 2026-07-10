@@ -61,7 +61,7 @@ Read only the references needed for the task:
 
 ### 3. Find the Governing Layer
 
-Trace each issue to the highest shared layer that should own the fix:
+Trace each issue to the narrowest shared layer that fully explains and can correct it:
 
 1. Brand or primitive token
 2. Semantic token
@@ -111,9 +111,9 @@ Keep feedback immediate. Make destructive actions deliberate. Preserve user inpu
 
 ### 7. Verify Rendered Reality
 
-Do not make visual claims from source alone. Inspect representative rendered surfaces at relevant viewport sizes and themes. Use browser tooling when available.
+Inspect representative rendered surfaces at relevant viewport sizes and themes whenever a runnable environment, screenshot, or other rendered artifact is available. When only source is available, make qualified source-level findings and state what remains visually unverified.
 
-Verify:
+Verify when relevant:
 
 - Visual hierarchy and alignment
 - Overflow, wrapping, truncation, and scroll behavior
@@ -151,8 +151,8 @@ Use this report structure:
 - [Specific strength with evidence]
 
 ## Findings
-| Priority | Class | Evidence | Principle | Governing Layer | Recommendation |
-| --- | --- | --- | --- | --- | --- |
+| Priority | Class | Evidence | Impact | Principle | Governing Layer | Recommendation | Verification |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## System-Level Recommendations
 [Smallest high-leverage changes in dependency order]
@@ -162,6 +162,9 @@ Use this report structure:
 
 ## Verification
 [Rendered surfaces, states, viewports, themes, and checks inspected]
+
+## Limitations and Unverified
+[Missing runtime, source, content, states, platforms, or evidence]
 ```
 
 Rank findings by user impact and system leverage, not by how visually interesting the fix would be. Cite file paths, components, tokens, or rendered surfaces whenever available.
@@ -198,10 +201,10 @@ Replace generic output with a more specific rationale, not merely a less common 
 - Keep design decisions centralized and named semantically.
 - Prefer native HTML and CSS behavior when it fully solves the interaction.
 - Keep changes focused and reviewable; avoid speculative abstractions.
-- Preserve semantic HTML, labels, focus, contrast, and reduced-motion behavior.
+- Preserve or improve validated semantic HTML, labels, focus, contrast, and reduced-motion behavior; fix known defects without introducing regressions.
 - Use real content and assets when evaluating final visual quality; label mock data and placeholders honestly.
 - Test the smallest shared change that proves the design correction works.
 
 ## Completion Standard
 
-Finish only when the interface is coherent at system scale and credible in its edge states. Explain what changed, why the governing layer was correct, what evidence was checked, and which remaining ideas are optional rather than required.
+Finish when the agreed scope is coherent with its surrounding system and credible in the relevant edge states. Require system-scale coherence only for audits, rebuilds, and cross-surface redesigns. Explain what changed, why the governing layer was correct, what evidence was checked, and which remaining ideas are optional rather than required.

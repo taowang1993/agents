@@ -38,7 +38,7 @@ Match direction and origin to the interface:
 - Keep centered modals centered unless they visibly grow from another object.
 - Enter and exit from compatible directions.
 - Preserve velocity when a gesture reverses.
-- Make shared elements travel between states rather than disappear and respawn.
+- Use shared-element travel when tracking identity materially helps; prefer a cut or crossfade when it is clearer, cheaper, or more reliable.
 - Start scale entrances near their final size; avoid making normal UI emerge from `scale(0)`.
 
 The transition should explain the layout, not contradict it.
@@ -64,7 +64,8 @@ Use ranges as starting points, then tune in context:
 
 Choose easing by behavior:
 
-- **Entering or exiting:** Use a strong ease-out so motion responds immediately.
+- **Entering:** Start promptly and decelerate into place, commonly with a strong ease-out.
+- **Exiting:** Choose a shorter curve from the spatial model; an accelerating or asymmetric exit may feel more natural than ease-out.
 - **Moving or morphing on-screen:** Use ease-in-out for acceleration and deceleration.
 - **Hover and color changes:** Use a restrained ease.
 - **Constant-rate progress or marquee:** Use linear.
@@ -78,7 +79,7 @@ Prefer project motion tokens. Add a token only when the timing or curve represen
 
 ### CSS Transitions
 
-Use transitions for state changes that can reverse or retarget rapidly: hover, press, open/closed attributes, and dynamic collections.
+Use transitions for state changes that can reverse or retarget rapidly: hover, press, open/closed attributes, and collections whose entry/exit mechanics are explicitly supported.
 
 List the properties instead of using `transition: all` in shared or high-churn components.
 
@@ -97,7 +98,7 @@ Use WAAPI when you need programmatic control without a framework dependency. Kee
 Use springs for interruptible, velocity-bearing interactions:
 
 - Drag and swipe gestures
-- Sheets and drawers
+- Draggable sheets and drawers that should preserve release velocity
 - Shared elements that reverse mid-flight
 - Decorative pointer response where momentum is part of the character
 
@@ -155,10 +156,11 @@ Prefer platform-native scrolling. Replace it only when the experience genuinely 
 
 Reduced motion means reduce vestibular movement and unnecessary travel, not necessarily remove every transition.
 
-- Remove parallax, large translation, zoom, spinning, and scroll hijacking.
+- Remove nonessential parallax, large translation, zoom, spinning, and scroll hijacking.
+- Preserve necessary progress feedback without implying that unfinished work is complete.
 - Keep brief opacity or color feedback when it aids comprehension.
 - Avoid auto-playing motion that cannot be stopped.
-- Ensure the final state appears immediately and remains operable.
+- Reveal a ready final state without decorative delay and keep it operable.
 - Test the actual reduced-motion mode rather than assuming a conditional exists.
 
 ## Performance Review

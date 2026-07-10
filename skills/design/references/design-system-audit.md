@@ -49,7 +49,8 @@ Map the design system through these layers.
 - Inputs, labels, validation, and field composition
 - Menus, selects, dialogs, drawers, popovers, and tooltips
 - Tabs, navigation, breadcrumbs, and sidebars
-- Tables, lists, cards, badges, and status indicators
+- Tables, charts, comparison views, lists, cards, badges, and status indicators
+- Editors, command surfaces, progressive disclosure, and other dense-workflow controls
 - Empty, loading, error, unavailable, and destructive states
 - Typography and content primitives
 
@@ -185,22 +186,24 @@ Use when the product has an approved new brand or interaction direction. Preserv
 
 If the user says “rebuild” but the desired outcome is unclear, ask whether they mean a new visual language, a new system architecture, or both.
 
+Before migration, record a preservation contract for critical workflows, public component APIs, routes and deep links, navigation hierarchy, form behavior, analytics events, supported platforms, and validated accessibility behavior. Use it as a before/after regression contract, not as a reason to preserve known defects.
+
 ## Rebuild Sequence
 
 Plan work in this dependency order:
 
-1. Define product principles, supported modes, and success evidence.
-2. Inventory current decisions and mark preserve, evolve, replace, or retire.
-3. Define primitive and semantic tokens.
-4. Stabilize typography, icon, focus, motion, and layout foundations.
-5. Rebuild shared primitives with complete state models.
-6. Define recipes and route templates for recurring compositions.
-7. Migrate representative surfaces and validate the direction.
-8. Migrate remaining surfaces incrementally.
-9. Add deterministic audits and rendered regression evidence.
-10. Remove deprecated paths only after usage reaches zero.
+1. Define product principles, supported modes, success evidence, and the preservation contract.
+2. Inventory current decisions and consumers; mark preserve, evolve, replace, or retire.
+3. Define old-to-new mappings, reversible migration batches, and rollback triggers.
+4. Define primitive and semantic tokens.
+5. Stabilize typography, icon, focus, motion, and layout foundations.
+6. Rebuild shared primitives with complete state models.
+7. Define recipes and route templates for recurring compositions.
+8. Migrate representative surfaces, validate the direction, and check the preservation contract.
+9. Migrate remaining surfaces incrementally and add deterministic audits plus rendered regression evidence.
+10. Remove deprecated paths only after usage reaches zero and rollback risk is retired.
 
-Avoid a flag day when an incremental compatibility layer can keep the product working.
+Avoid a flag day when an incremental compatibility layer can keep the product working. Keep each shared-token or primitive batch reversible until representative consumers pass their regression contract.
 
 ## Review Output
 
@@ -212,6 +215,7 @@ For every finding, include:
 - Correct governing layer
 - Minimum recommendation
 - Verification needed
+- Evidence limitations and unverified surfaces, states, platforms, or behavior
 
 Begin with strengths to preserve. End with optional art-direction ideas clearly separated from required corrections.
 

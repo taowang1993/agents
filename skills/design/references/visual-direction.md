@@ -20,6 +20,12 @@ Describe the result in one line:
 
 When two plausible directions would produce materially different systems, ask one concrete either/or question. Otherwise state the read and proceed.
 
+## Translate References into Principles
+
+Do not copy a reference's visible style as a package. Extract the underlying decisions: hierarchy, density, grid, type contrast, material, imagery, and motion. Connect each borrowed principle to this product's content or behavior, then recombine it with the product's own brand assets and constraints.
+
+Run a distinctiveness check: remove the logo and product name from the proposed direction. If the result could represent several unrelated competitors unchanged, strengthen the direction with product-specific content structure, interaction evidence, visual assets, or brand behavior rather than arbitrary novelty.
+
 ## Separate Product UI from Marketing
 
 ### Product UI
@@ -31,6 +37,9 @@ Optimize repeated product workflows for:
 - Scannable density matched to the task
 - Stable shells and navigation
 - Complete data, loading, empty, and error behavior
+- Tables and charts optimized for comparison, not decoration
+- Editors and command surfaces with stable focus and keyboard behavior
+- Progressive disclosure that keeps advanced detail available without flattening hierarchy
 - Low-cost motion that aids continuity
 - Reusable primitives and semantic patterns
 
@@ -135,7 +144,9 @@ Use texture, noise, mesh, or photographic atmosphere only when it supports the b
 
 Use real brand assets, product screenshots, generated art direction, or clearly labeled placeholders.
 
-- Match aspect ratio and composition to the placement.
+- Define one coherent photography or illustration language: subject, lighting, palette, perspective, texture, and level of realism.
+- Match aspect ratio, crop, focal point, and visual weight to the placement.
+- Sequence images so they advance the story rather than repeat the same composition.
 - Reserve dimensions to prevent layout shift.
 - Use meaningful alt text for informative images.
 - Avoid decorative fake product interfaces that could misrepresent functionality.
