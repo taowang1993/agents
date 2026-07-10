@@ -141,6 +141,15 @@ Design copy as interface material.
 - Keep one voice per product unless a surface has a deliberate editorial role.
 - Preserve legal, consent, and safety wording unless explicitly authorized to change it.
 
+Before handoff, run a copy self-audit across headlines, labels, CTA text, help, errors, captions, alt text, and metadata:
+
+- Fix grammar, unclear referents, unsupported metaphors, and tonal drift.
+- Remove generic filler that disguises missing product meaning.
+- Do not invent customer claims, technical specifications, testimonials, or precise metrics; label mock evidence explicitly.
+- Use one label for each CTA intent across navigation, content, and closing actions unless the context genuinely changes the action.
+- Verify important action labels remain readable and do not wrap unexpectedly at their intended viewport and localization extremes.
+- Replace placeholder brands, names, dates, and content with real or honestly labeled draft material before final evaluation.
+
 Do not rewrite product meaning as a side effect of visual redesign.
 
 ## Preserve Agency, Familiarity, and Responsibility

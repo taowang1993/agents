@@ -1,6 +1,6 @@
 ---
 name: design
-description: Audit, redesign, and build web and product interfaces with strong design taste. Use whenever the user asks to review or rebuild a design system, assess UI quality, improve visual hierarchy or polish, redesign an existing site or app, choose typography/color/layout/motion, identify an animation effect, review gesture or motion behavior, critique screenshots or components, or make an interface feel cohesive, premium, intentional, and less generic. Apply to product UI and marketing surfaces; preserve project-specific design rules and use narrower framework skills for implementation.
+description: Audit, redesign, and build web and product interfaces with strong design taste. Use whenever the user asks to review or rebuild a design system, assess UI quality, improve visual hierarchy or polish, redesign an existing site or app, choose typography/color/layout/motion, identify an animation effect, review gesture or motion behavior, translate visual references into implementation, document a design direction, critique screenshots or components, or make an interface feel cohesive, premium, intentional, and less generic. Apply to product UI and marketing surfaces; preserve project-specific design rules and use narrower framework skills for implementation.
 ---
 
 # Design
@@ -58,7 +58,7 @@ Read only the references needed for the task:
 - Read `references/principles.md` before making broad aesthetic or system decisions.
 - Read `references/design-system-audit.md` for audits, rebuilds, migrations, or cross-route consistency reviews.
 - Read `references/motion.md` for animation terminology or reviews, gestures, popovers, drawers, tooltips, transitions, or perceived performance.
-- Read `references/visual-direction.md` for greenfield direction, landing pages, portfolios, or anti-generic visual critique.
+- Read `references/visual-direction.md` for greenfield direction, landing pages, portfolios, reference-first work, semantic handoffs, or anti-generic visual critique.
 
 ### 3. Find the Governing Layer
 
@@ -217,6 +217,18 @@ Use this structure:
 ```
 
 Block only when motion materially harms responsiveness, orientation, accessibility, performance, or task completion. Treat contextual tuning and expressive alternatives as follow-up rather than correctness failures. Cite `file:line`, component, or rendered interaction whenever available.
+
+## Reference-First Mode
+
+Use a reference-first workflow when visual quality is central and image generation, screenshots, mockups, or an approved design artifact can materially reduce ambiguity. Skip it when the project already has an authoritative design or the task is a narrow technical correction.
+
+1. Create or collect references at a scale where typography, spacing, controls, and responsive intent remain legible.
+2. Extract hierarchy, type relationships, grid, spacing, color roles, component treatment, imagery, and motion cues before coding.
+3. Record ambiguities and generate or request a focused detail when guessing would change the design.
+4. Implement with the existing system and preserve behavior, content meaning, accessibility, and platform conventions.
+5. Compare the rendered result with the reference and correct design drift rather than replacing distinctive decisions with convenient defaults.
+
+Do not impose an image quota. Prefer enough focused references to support faithful implementation over one compressed board, and regenerate an unclear view rather than treating a distorted crop as authoritative.
 
 ## Anti-Generic Judgment
 

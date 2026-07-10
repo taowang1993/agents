@@ -24,7 +24,21 @@ When two plausible directions would produce materially different systems, ask on
 
 Do not copy a reference's visible style as a package. Extract the underlying decisions: hierarchy, density, grid, type contrast, material, imagery, and motion. Connect each borrowed principle to this product's content or behavior, then recombine it with the product's own brand assets and constraints.
 
+Ground brand expression in the category, audience, product action, emotional promise, trust requirements, and one useful core metaphor. Test whether that idea remains recognizable across UI, imagery, copy, and physical or campaign applications rather than relying on a logo alone.
+
 Run a distinctiveness check: remove the logo and product name from the proposed direction. If the result could represent several unrelated competitors unchanged, strengthen the direction with product-specific content structure, interaction evidence, visual assets, or brand behavior rather than arbitrary novelty.
+
+## Reference-First Direction
+
+When references can reduce ambiguity, use them as design evidence rather than decoration:
+
+1. Create or collect a legible reference for each materially different surface or composition.
+2. Inspect visible text, hierarchy, type relationships, spacing, grid, component geometry, imagery, palette, and state cues.
+3. Extract the repeated rules into a compact system contract before implementation.
+4. Generate or request a focused detail when text, controls, or spacing cannot be read confidently; do not infer from a compressed board or distorted crop.
+5. Compare the rendered implementation against the reference at the intended viewport and fix drift in hierarchy, spacing, type, color, imagery, and component treatment.
+
+Preserve the reference's logic, not accidental rendering artifacts. An authoritative project system, real behavior, accessibility, and content meaning still take precedence.
 
 ## Separate Product UI from Marketing
 
@@ -57,6 +71,23 @@ Optimize occasional narrative surfaces for:
 - Responsive storytelling and fast loading
 
 Do not make every section a new visual language. One page should still feel like one system.
+
+For marketing surfaces, give the sequence a conversion spine: establish the value, explain how it works, provide credible evidence, and make the next action clear. Each section should advance one of those jobs rather than exist only to vary the layout. Use one product-specific narrative or visual metaphor as a subtle thread, plus at most one secondary “second-read” motif that rewards attention without obscuring the first read.
+
+## Define a Multi-Surface Contract
+
+Before directing several routes, screens, or generated references, lock the decisions that must remain stable:
+
+- Dominant platform mode and navigation model
+- Palette roles and contrast behavior
+- Typography families, roles, and scale relationships
+- Spacing, grid, container, radius, and elevation logic
+- Icon and illustration language
+- Image crops, grade, texture, and framing
+- Component states and motion character
+- Voice, CTA intent, and content density
+
+Allow composition, emphasis, and visual tempo to vary by surface while preserving this contract. Track the composition anchor and background treatment used on each marketing section so repetition is deliberate rather than an unnoticed template loop.
 
 ## Control the Main Dials
 
@@ -179,6 +210,37 @@ Design the narrow layout intentionally:
 - Keep touch interactions separate from hover-only effects.
 
 A desktop composition is not complete until its narrow behavior is specified.
+
+## Produce a Semantic Handoff
+
+When the deliverable is direction rather than code, document decisions by purpose so another designer or implementation agent can apply them without copying a screenshot blindly:
+
+```markdown
+# Design Direction
+
+## Design Read
+[Audience, job, character, platform, and constraints]
+
+## Brand and Product Spine
+[Emotional promise, core metaphor, narrative or conversion sequence]
+
+## System Contract
+[Color roles, typography, grid, spacing, shape, material, imagery, and icons]
+
+## Components and States
+[Shared patterns, hierarchy, interaction states, and content behavior]
+
+## Responsive and Accessibility Behavior
+[Reflow, input modes, contrast, focus, zoom, and preference fallbacks]
+
+## Motion
+[Purpose, frequency, spatial model, tokens, and reduced-motion behavior]
+
+## Evidence, Open Decisions, and Prohibitions
+[References inspected, unresolved choices, and context-specific patterns to avoid]
+```
+
+Use semantic roles and relationships before raw values. Include exact values when approved or measured, but do not fabricate a token system from a mood alone.
 
 ## Direction Review
 

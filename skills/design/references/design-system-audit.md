@@ -11,11 +11,18 @@ Find the current sources of truth before evaluating taste:
 - Token and theme files
 - Primitive and component libraries
 - Shared recipes, templates, and layout shells
+- Official design-system packages, versions, and compatibility boundaries
 - Accessibility and design lint rules
 - Visual tests, Storybook stories, screenshots, or browser evidence
 - Compatibility zones and platform-specific exceptions
 
 Record which source wins when documentation and code disagree. Project rules override generic preferences. If no authority exists, report that as a governance gap instead of silently choosing one.
+
+## Distinguish Systems from Aesthetics
+
+Determine whether a named direction is an official external design system, an internal governed system, or an aesthetic shorthand. Use an installed official system through its supported package and theming model rather than recreating its surface styling from memory. Treat terms such as editorial, glass, brutalist, Apple-like, or cinematic as direction cues, not package contracts.
+
+Keep one governing component and token system inside each product boundary. Mix systems only when a documented compatibility boundary explains ownership, theming, accessibility, and migration; visual resemblance alone is not integration.
 
 Choose representative surfaces rather than attempting to inspect every file first:
 
@@ -24,6 +31,8 @@ Choose representative surfaces rather than attempting to inspect every file firs
 - A form with validation
 - A dialog, menu, tooltip, or popover
 - A loading, empty, and error state
+- A dead end such as 404, unavailable content, or expired access
+- Permission, consent, legal, or safety surfaces when relevant
 - A narrow viewport
 - Each supported theme
 - One expressive or marketing surface, when present
@@ -71,6 +80,7 @@ Map the design system through these layers.
 - Component documentation
 - Ownership and change process
 - Deprecation and migration strategy
+- Route, metadata, structured-data, social-preview, and favicon regression checks for public surfaces
 
 ## Trace Real Usage
 
@@ -186,7 +196,7 @@ Use when the product has an approved new brand or interaction direction. Preserv
 
 If the user says “rebuild” but the desired outcome is unclear, ask whether they mean a new visual language, a new system architecture, or both.
 
-Before migration, record a preservation contract for critical workflows, public component APIs, routes and deep links, navigation hierarchy, form behavior, analytics events, supported platforms, and validated accessibility behavior. Use it as a before/after regression contract, not as a reason to preserve known defects.
+Before migration, record a preservation contract for critical workflows, public component APIs, routes and deep links, navigation hierarchy, form behavior, analytics events, supported platforms, and validated accessibility behavior. For public products, also capture ranking routes, canonical URLs, page titles and descriptions, structured data, Open Graph assets, and favicon behavior. Use it as a before/after regression contract, not as a reason to preserve known defects.
 
 ## Rebuild Sequence
 
