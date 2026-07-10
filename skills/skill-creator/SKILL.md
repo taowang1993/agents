@@ -148,6 +148,10 @@ Output: feat(auth): implement JWT-based authentication
 
 Try to explain to the model why things are important in lieu of heavy-handed musty MUSTs. Use theory of mind and try to make the skill general and not super-narrow to specific examples. Start by writing a draft and then look at it with fresh eyes and improve it.
 
+Before testing or finalizing a skill, make its process predictable rather than its outputs identical. Give each ordered step a checkable, exhaustive-where-needed completion criterion; inline what every invocation branch needs, and put branch-specific reference behind a pointer that says when to read it.
+
+Keep each meaning in one place. Delete duplicated, stale, or empirically inert instructions; ablate uncertain lines in representative evals. State desired behavior positively, reserving prohibitions for hard guardrails and pairing them with the replacement behavior.
+
 ### Test Cases
 
 After writing the skill draft, come up with 2-3 realistic test prompts — the kind of thing a real user would actually say. Share them with the user: [you don't have to use this exact language] "Here are a few test cases I'd like to try. Do these look right, or do you want to add more?" Then run them.
