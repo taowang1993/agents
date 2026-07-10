@@ -25,6 +25,15 @@
 		},
 		{
 			"path": "../../projects/soulart"
+		},
+		{
+			"path": "../../.paseo"
+		},
+		{
+			"path": "../../.synara"
+		},
+		{
+			"path": "../../.pi"
 		}
 	],
 	"settings": {
