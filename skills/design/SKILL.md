@@ -1,6 +1,6 @@
 ---
 name: design
-description: Audit, redesign, and build web and product interfaces with strong design taste. Use whenever the user asks to review or rebuild a design system, assess UI quality, improve visual hierarchy or polish, redesign an existing site or app, choose typography/color/layout/motion, critique screenshots or components, or make an interface feel cohesive, premium, intentional, and less generic. Apply to product UI and marketing surfaces; preserve project-specific design rules and use narrower framework skills for implementation.
+description: Audit, redesign, and build web and product interfaces with strong design taste. Use whenever the user asks to review or rebuild a design system, assess UI quality, improve visual hierarchy or polish, redesign an existing site or app, choose typography/color/layout/motion, identify an animation effect, review gesture or motion behavior, critique screenshots or components, or make an interface feel cohesive, premium, intentional, and less generic. Apply to product UI and marketing surfaces; preserve project-specific design rules and use narrower framework skills for implementation.
 ---
 
 # Design
@@ -21,7 +21,8 @@ Use this skill as the design-judgment layer for:
 - Existing-site and existing-app redesigns
 - Product UI, dashboards, settings, editors, and repeated workflows
 - Landing pages, portfolios, editorial pages, and marketing surfaces
-- Component, interaction, and motion critique
+- Component and interaction critique
+- Motion terminology, animation reviews, and gesture behavior
 - Rendered visual QA
 
 Follow project-specific design rules, brand decisions, platform conventions, and accessibility requirements before generic preferences in this skill. Treat an established system as evidence, not an obstacle. Distinguish defects from optional art-direction changes.
@@ -56,7 +57,7 @@ Read only the references needed for the task:
 
 - Read `references/principles.md` before making broad aesthetic or system decisions.
 - Read `references/design-system-audit.md` for audits, rebuilds, migrations, or cross-route consistency reviews.
-- Read `references/motion.md` for animation, gestures, popovers, drawers, tooltips, transitions, or perceived performance.
+- Read `references/motion.md` for animation terminology or reviews, gestures, popovers, drawers, tooltips, transitions, or perceived performance.
 - Read `references/visual-direction.md` for greenfield direction, landing pages, portfolios, or anti-generic visual critique.
 
 ### 3. Find the Governing Layer
@@ -178,7 +179,44 @@ Before animating, decide:
 3. **Model:** Make direction, origin, and interruption agree with the interface's spatial logic.
 4. **Cost:** Keep the interaction responsive and honor reduced motion.
 
-If the only reason is “it looks cool,” remove it. Read `references/motion.md` before prescribing timing or implementation.
+If the only reason is “it looks cool,” remove it. Read `references/motion.md` before prescribing timing or implementation. Name motion precisely enough to distinguish a crossfade, morph, shared-element transition, layout animation, and origin-aware entrance rather than calling each one “smooth.”
+
+## Motion Review Mode
+
+When asked to review animation or gesture behavior, inspect both its implementation and rendered behavior when available. State when findings are source-only.
+
+Review in this order:
+
+1. Purpose and usage frequency
+2. Input latency, feedback, and user agency
+3. Spatial origin, direction, and continuity
+4. Interruption, reversal, velocity, and gesture ownership
+5. Reduced motion, alternate input, and other accessibility behavior
+6. Property cost and responsiveness under realistic load
+7. Cohesion and optional polish
+
+Prefer the smallest remedial move that works: delete unnecessary motion, reduce expensive or repetitive motion, correct the spatial model, make behavior interruptible, fix accessibility or performance, then polish.
+
+Use this structure:
+
+```markdown
+# Motion Review
+
+## Motion Read
+[Interaction, frequency, purpose, input modes, and intended character]
+
+## Findings
+| Priority | Evidence | Impact | Current Behavior | Recommendation | Why | Verification |
+| --- | --- | --- | --- | --- | --- | --- |
+
+## Verdict
+[Block, Approve with Follow-Up, or Approve, with the deciding evidence]
+
+## Limitations and Unverified
+[Missing runtime, device, input mode, reduced-motion mode, or performance evidence]
+```
+
+Block only when motion materially harms responsiveness, orientation, accessibility, performance, or task completion. Treat contextual tuning and expressive alternatives as follow-up rather than correctness failures. Cite `file:line`, component, or rendered interaction whenever available.
 
 ## Anti-Generic Judgment
 

@@ -2,6 +2,25 @@
 
 Use motion to make interfaces feel responsive, spatially coherent, and understandable. Treat motion as behavior, not garnish.
 
+## Use Precise Motion Vocabulary
+
+Name the behavior before prescribing it. Lead with the best term and briefly distinguish a close alternative when the user's description is ambiguous.
+
+| Term | Meaning | Distinguish From |
+| --- | --- | --- |
+| Origin-aware animation | An entrance or transform anchored to the control or object that caused it | A centered scale with no source relationship |
+| Continuity transition | Any transition that preserves orientation between before and after | A shared element, which is one specific continuity technique |
+| Shared-element transition | One identified object travels and transforms between states or views | Layout animation, where surrounding geometry reflows |
+| Layout animation | Position or size changes animate as layout changes | A morph, where the object's visual shape itself changes |
+| Morph | One shape or representation transforms into another | A crossfade, where two separate states overlap in opacity |
+| Reveal | Content is progressively uncovered, often with clipping or a mask | A slide, where the whole element translates |
+| Stagger | Similar elements begin in sequence with small offsets | Orchestration, which coordinates multiple kinds of motion into one event |
+| Momentum | Motion continues from input velocity after release | A spring, which is the mechanism that may carry and settle that velocity |
+| Rubber-banding | Increasing resistance and snap-back past a boundary | A hard clamp that stops movement immediately |
+| Interruptible animation | Motion can be redirected smoothly from its current visible state | An animation that must finish or restarts from its original state |
+
+Compose terms when needed: “an origin-aware scale entrance,” “a staggered reveal,” or “a momentum-driven shared-element transition.” Do not invent a specialized name when established vocabulary already explains the behavior.
+
 ## Decide Whether to Animate
 
 Evaluate four questions in order.
@@ -138,21 +157,40 @@ Use opacity plus restrained transform or scale. Keep modals spatially centered u
 
 Align geometry before adding effects. If two states still read as separate objects during a crossfade, a small amount of blur can bridge them, but measure paint cost and preserve text readability.
 
-## Gesture Craft
+## Direct Manipulation and Gesture Craft
 
 For drag and swipe interactions:
 
+- Show immediate pressed or grabbed feedback, but preserve the platform's commit and cancellation semantics.
+- Preserve the grab offset so the object does not jump under the pointer.
 - Capture the active pointer so the gesture survives leaving the element.
-- Ignore additional pointers unless multi-touch is designed.
-- Combine distance and velocity when deciding dismissal.
-- Apply resistance past natural boundaries instead of a sudden hard stop.
-- Preserve direction and velocity when the gesture is interrupted.
+- Record a short position-and-time history rather than deriving release velocity from one noisy event.
+- Begin an interruption from the current presented on-screen state, not a stale logical target.
+- Retarget from the current direction and velocity instead of restarting motion from rest.
+- Project where momentum is heading before choosing a valid snap point; do not choose from release position alone when a flick should carry.
+- Use a small intent threshold and arbitrate plausible gestures before committing to one direction.
+- Let users cancel by reversing or leaving when the platform interaction normally permits it.
+- Ignore additional pointers unless multi-touch is deliberately designed.
+- Apply increasing resistance past natural boundaries instead of a sudden hard stop.
+- Treat horizontal and vertical motion independently when their constraints or velocities differ.
 - Keep a keyboard and non-gesture path to the same action.
-- Test on physical touch hardware when the gesture matters.
+- Test important gestures on physical touch hardware.
 
 Prefer platform-native scrolling. Replace it only when the experience genuinely requires a controlled narrative and accessibility remains intact.
 
-## Reduced Motion
+## Coordinate Multimodal Feedback
+
+When motion combines with sound or haptics, check three things:
+
+1. **Causality:** Trigger feedback at the event it represents, such as a committed toggle or snapped destination.
+2. **Synchronization:** Align visual, audio, and haptic feedback closely enough to feel like one event; measure on target hardware.
+3. **Utility:** Reserve extra sensory feedback for meaningful confirmation, warning, error, or physical snap points so repetition does not dilute it.
+
+Always preserve a usable visual and semantic path when sound, vibration, or haptics are unavailable or disabled.
+
+## Accessibility Preferences
+
+### Reduced Motion
 
 Reduced motion means reduce vestibular movement and unnecessary travel, not necessarily remove every transition.
 
@@ -162,6 +200,15 @@ Reduced motion means reduce vestibular movement and unnecessary travel, not nece
 - Avoid auto-playing motion that cannot be stopped.
 - Reveal a ready final state without decorative delay and keep it operable.
 - Test the actual reduced-motion mode rather than assuming a conditional exists.
+
+### Transparency and Contrast
+
+When the target platform exposes `prefers-reduced-transparency` or `prefers-contrast`, honor them alongside reduced motion:
+
+- Replace translucent surfaces with more opaque backgrounds and remove blur when transparency is reduced.
+- Strengthen boundaries and foreground contrast without changing semantic hierarchy when contrast is increased.
+- Keep content legible over every material state; do not rely on blur or vibrancy for minimum contrast.
+- Test the fallback rather than assuming the media query or platform setting behaves consistently everywhere.
 
 ## Performance Review
 
@@ -176,6 +223,21 @@ Check:
 - Whether lower-end hardware preserves responsiveness
 
 Use the browser's performance and animation tools when motion is important. Do not optimize from folklore alone.
+
+## Review Motion Systematically
+
+Inspect every changed motion path in scope, including entry, exit, rapid retrigger, interruption, keyboard use, touch use, and accessibility preferences. Rank findings by user impact rather than by how noticeable the effect is.
+
+Use this remedial order:
+
+1. Delete motion with no useful purpose.
+2. Reduce motion that is too frequent, large, or slow.
+3. Correct origin, direction, continuity, and timing.
+4. Make repeated and gesture-driven behavior interruptible.
+5. Fix inaccessible fallbacks and measured performance problems.
+6. Add polish only after the behavior is sound.
+
+Do not block approval for a subjective curve preference. Block when the implementation delays input, loses orientation, breaks interruption, excludes an input or accessibility mode, or produces demonstrated responsiveness problems. Cite the code or rendered interaction and state how to verify each fix.
 
 ## Debugging
 

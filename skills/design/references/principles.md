@@ -15,7 +15,7 @@ Ask:
 - What will they repeat dozens of times?
 - What can go wrong, and how will they recover?
 
-A coherent flow matters more than any isolated screenshot.
+A coherent flow matters more than any isolated screenshot. Check whether the experience gives people predictability, understanding, a credible path to achievement, and appropriate moments of joy; delight should emerge from the first three rather than compensate for their absence.
 
 ## Build Hierarchy Before Decoration
 
@@ -64,6 +64,9 @@ Use typography to express order, rhythm, and voice.
 - Choose typefaces from the brand and product context, not from a generic ban or trend.
 - Keep a small semantic scale with named roles.
 - Use weight, size, line height, and contrast together; do not make size carry the entire hierarchy.
+- Use optical sizing when the chosen variable font supports it, and verify the rendered result.
+- Tune tracking and leading by text role and size rather than applying one value across the scale; large display type often needs tighter spacing than small utility text.
+- Let user-controlled text scaling reflow the layout; prefer relative units where they preserve that behavior.
 - Keep body measure readable, commonly around 45–75 characters depending on context.
 - Balance or prettify display copy when supported, but preserve natural reading order.
 - Use tabular figures where changing numeric widths would cause jitter or harm scanning.
@@ -107,7 +110,7 @@ Use material cues to explain structure.
 - Borders define adjacency and containment.
 - Shadows communicate elevation and separation.
 - Background changes establish regions and hierarchy.
-- Blur and translucency imply layered material and require a contrast fallback.
+- Blur and translucency imply layered material and require contrast plus reduced-transparency fallbacks.
 - Radius communicates softness and component family.
 
 Keep lighting direction and elevation levels coherent. Avoid stacking border, shadow, gradient, and blur when one cue would suffice.
@@ -125,7 +128,7 @@ Review:
 - Keyboard, touch, coarse pointer, and screen reader behavior
 - Theme and density variants the product actually supports
 
-Use good defaults instead of exposing options for every visual decision. Add variants only when a recurring semantic need exists.
+Use good defaults instead of exposing options for every visual decision. Add variants only when a recurring semantic need exists. For shared components, keep the common path easy to adopt and handle lifecycle, interruption, content, and input edge cases inside the component when that ownership is safe and predictable.
 
 ## Content and Copy
 
@@ -139,6 +142,20 @@ Design copy as interface material.
 - Preserve legal, consent, and safety wording unless explicitly authorized to change it.
 
 Do not rewrite product meaning as a side effect of visual redesign.
+
+## Preserve Agency, Familiarity, and Responsibility
+
+Keep people in control and build on behavior they can predict:
+
+- Provide undo or recovery for reversible mistakes; reserve confirmation dialogs for genuinely destructive or difficult-to-reverse actions.
+- Keep wayfinding clear: show where people are, what is available, where they can go, and how they can leave.
+- Place controls near what they affect and make their arrangement map to the result.
+- Honor platform conventions unless a tested alternative materially improves the task.
+- Request permissions and sensitive information when the need is clear, collect only what the task requires, and explain consequences plainly.
+- Adapt interaction depth to the platform and context rather than forcing one layout or input model everywhere.
+- Treat safety, privacy, and foreseeable misuse as design constraints, especially when automated or AI-generated output can affect people.
+
+Simplicity is not hiding everything. Show the common path first, keep advanced capability discoverable, and add context when it reduces uncertainty.
 
 ## Accessibility Is Craft
 
@@ -175,4 +192,4 @@ Evaluate at three distances:
 2. **Surface:** Is hierarchy clear and does the workflow fit its use frequency?
 3. **Detail:** Are states, alignment, timing, copy, and edge cases resolved?
 
-Polish details only after the whole and the surface are sound. Invisible details compound, but they cannot rescue the wrong information architecture.
+Polish details only after the whole and the surface are sound. Invisible details compound, but they cannot rescue the wrong information architecture. When a gesture, transition, or responsive adaptation defines the experience, prototype it interactively and test it in context; a static frame cannot prove behavior.
