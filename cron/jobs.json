@@ -64,15 +64,6 @@
       "script": "shutdown-stale-simulators/shutdown-stale-simulators.sh",
       "plist": "shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist",
       "logs": ["~/Library/Logs/shutdown-stale-simulators.log"]
-    },
-    {
-      "id": "browseros",
-      "label": "com.max.browseros",
-      "group": "browseros",
-      "description": "Restart BrowserOS after Syncthing receives remote bookmark updates.",
-      "script": "browseros/browseros.py",
-      "plist": "browseros/com.max.browseros.plist",
-      "logs": ["~/Library/Logs/browseros.log", "~/Library/Logs/browseros.err.log"]
     }
   ]
 }
