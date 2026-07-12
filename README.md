@@ -102,6 +102,10 @@ Find deepening opportunities in a codebase, informed by the project's `architect
 
 Explain complex concepts with live ASCII art animations in markdown files during tutoring sessions.
 
+### automation
+
+Create, inspect, and update Codex automation directories for scheduled Codex runs.
+
 ### beads
 
 Durable project task tracking with `bd` or Beads. Issue dependencies, blocker management, multi-session handoff, and shared work memory. Use for finding ready work, claiming/closing tasks, creating follow-up work, or planning features.
@@ -109,10 +113,6 @@ Durable project task tracking with `bd` or Beads. Issue dependencies, blocker ma
 ### bx
 
 All-in-one web search for AI agents. Pre-extracted, token-budgeted web content, deep research, news, images, videos, places, and custom ranking. Uses Brave Search API.
-
-### browseros
-
-Manage BrowserOS bookmark sync across Max and Tao's Macs using Syncthing plus the `browseros` launchd auto-refresh job.
 
 ### clawpatch
 
@@ -219,6 +219,18 @@ Analyze decisions through Charlie Munger's worldview and mental-model methodolog
 ### ok
 
 Explain OpenKnowledge, install or share projects, and open loose Markdown files. In-project editing uses the project-local runtime skill installed by `ok init`.
+
+Origin: https://github.com/inkeep/open-knowledge
+
+### open-knowledge-discovery
+
+Explain OpenKnowledge, install or share projects, and open loose Markdown files. In-project editing uses the project-local runtime skill installed by `ok init`.
+
+Origin: https://github.com/inkeep/open-knowledge
+
+### open-knowledge-write-skill
+
+Author Agent Skill packages and install them into OpenKnowledge-aware editors.
 
 Origin: https://github.com/inkeep/open-knowledge
 
@@ -383,15 +395,6 @@ Manage jobs with:
 - **Plist:** `~/.agents/cron/shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist`
 - **Log:** `~/Library/Logs/shutdown-stale-simulators.log`
 - **What it does:** Shuts down booted iOS simulators after they sit unattended for 30 minutes.
-
-### browseros LaunchAgent
-
-- **Label:** `com.max.browseros`
-- **Schedule:** Run at load, keep alive
-- **Script:** `~/.agents/cron/browseros/browseros.py`
-- **Plist:** `~/.agents/cron/browseros/com.max.browseros.plist`
-- **Log:** `~/Library/Logs/browseros.log`
-- **What it does:** Restarts BrowserOS after Syncthing receives remote bookmark updates.
 
 ### nightshift
 

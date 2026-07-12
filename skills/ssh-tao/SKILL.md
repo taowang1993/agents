@@ -83,29 +83,6 @@ rsync -av tao@MacBookAir.lan:/Users/tao/path/ ./path/
 
 Use `scp` only for one-off files; prefer `rsync` for directories and repeatable syncs.
 
-## Common Checks
-
-Check the BrowserOS bookmark refresh job on Tao's Mac:
-
-```bash
-ssh -o BatchMode=yes tao@MacBookAir.lan '$HOME/.agents/cron/manage.sh status browseros'
-ssh -o BatchMode=yes tao@MacBookAir.lan 'tail -n 50 "$HOME/Library/Logs/browseros.log"; tail -n 50 "$HOME/Library/Logs/browseros.err.log"'
-```
-
-Check Syncthing and BrowserOS bookmark file on Tao's Mac:
-
-```bash
-ssh -o BatchMode=yes tao@MacBookAir.lan 'syncthing cli config folders browseros-bookmarks path get'
-ssh -o BatchMode=yes tao@MacBookAir.lan 'python3 - <<"PY"
-import json, pathlib
-p = pathlib.Path.home() / "Library/Application Support/BrowserOS/Default/Bookmarks"
-print(p, p.exists(), p.stat().st_size if p.exists() else 0)
-if p.exists():
-    data = json.loads(p.read_text())
-    print([n.get("name") for n in data["roots"]["bookmark_bar"]["children"]])
-PY'
-```
-
 ## Safety Rules
 
 - State clearly when a result comes from Tao's Mac versus the local Mac.
