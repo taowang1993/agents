@@ -16,7 +16,6 @@ This directory is the source-of-truth workspace for Max's user-created launchd j
 │   └── tasks/
 ├── shutdown-stale-simulators/
 ├── tailscale/
-├── tockspeaker-feature-port/
 ├── update-packages/
 └── update-repos/
 ```
@@ -31,7 +30,6 @@ The canonical plist files live in this directory so they can be versioned with t
 ~/.agents/cron/nightshift/com.max.nightshift.plist
 ~/.agents/cron/shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist
 ~/.agents/cron/tailscale/com.max.tailscale.plist
-~/.agents/cron/tockspeaker-feature-port/com.max.tockspeaker-feature-port.plist
 ~/.agents/cron/update-packages/com.max.update-packages.plist
 ~/.agents/cron/update-repos/com.max.update-repos.plist
 ```
@@ -61,6 +59,5 @@ The canonical plist files live in this directory so they can be versioned with t
 - Progress is date-scoped in `nightshift/progress.md`.
 - `shutdown-stale-simulators/` shuts down unattended booted iOS simulators after 30 minutes.
 - `tailscale/` runs the userspace-networking daemon for remote Codex Relay access.
-- `tockspeaker-feature-port/` runs Pi every 15 minutes to update the TockSpeaker voice feature inventory from source projects.
 - `codex-relay/` runs the mobile Codex Relay server and depends on the Tailscale daemon for remote access.
 - Use `doctor` after edits to catch missing scripts, broken LaunchAgent symlinks, label mismatches, executable-bit issues, and missing Nightshift config/task files.

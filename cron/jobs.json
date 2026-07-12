@@ -64,15 +64,6 @@
       "script": "shutdown-stale-simulators/shutdown-stale-simulators.sh",
       "plist": "shutdown-stale-simulators/com.max.shutdown-stale-simulators.plist",
       "logs": ["~/Library/Logs/shutdown-stale-simulators.log"]
-    },
-    {
-      "id": "tockspeaker-feature-port",
-      "label": "com.max.tockspeaker-feature-port",
-      "group": "tockspeaker-feature-port",
-      "description": "Use Pi every 15 minutes to port source voice features into TockSpeaker features.md.",
-      "script": "tockspeaker-feature-port/tockspeaker-feature-port.sh",
-      "plist": "tockspeaker-feature-port/com.max.tockspeaker-feature-port.plist",
-      "logs": ["~/.cron-logs/tockspeaker-feature-port/*.log"]
     }
   ]
 }

@@ -396,16 +396,6 @@ Manage jobs with:
 - **Log:** `~/Library/Logs/shutdown-stale-simulators.log`
 - **What it does:** Shuts down booted iOS simulators after they sit unattended for 30 minutes.
 
-### tockspeaker-feature-port
-
-- **Label:** `com.max.tockspeaker-feature-port`
-- **Schedule:** Every 15 minutes
-- **Script:** `~/.agents/cron/tockspeaker-feature-port/tockspeaker-feature-port.sh`
-- **Plist:** `~/.agents/cron/tockspeaker-feature-port/com.max.tockspeaker-feature-port.plist`
-- **Prompt:** `~/.agents/cron/tockspeaker-feature-port/prompt.md`
-- **Logs:** `~/.cron-logs/tockspeaker-feature-port/*.log`
-- **What it does:** Runs Pi to update `/Users/max/projects/resources/.voice/features.md` from the Handy, OmniVoice, OpenWhispr, and Voicebox source project directories.
-
 ### nightshift
 
 - **Label:** `com.max.nightshift`
