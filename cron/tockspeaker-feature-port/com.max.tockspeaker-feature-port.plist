@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.max.tockspeaker-feature-port</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/max/.agents/cron/tockspeaker-feature-port/tockspeaker-feature-port.sh</string>
+	</array>
+	<key>StartInterval</key>
+	<integer>900</integer>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StandardOutPath</key>
+	<string>/Users/max/.cron-logs/tockspeaker-feature-port/launchd.log</string>
+	<key>StandardErrorPath</key>
+	<string>/Users/max/.cron-logs/tockspeaker-feature-port/launchd.log</string>
+	<key>WorkingDirectory</key>
+	<string>/Users/max/projects/resources/.voice</string>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/Users/max/.nvm/versions/node/v22.22.0/bin:/Users/max/Library/pnpm:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+		<key>HOME</key>
+		<string>/Users/max</string>
+		<key>PI_SKIP_VERSION_CHECK</key>
+		<string>1</string>
+		<key>PI_TELEMETRY</key>
+		<string>0</string>
+	</dict>
+</dict>
+</plist>
