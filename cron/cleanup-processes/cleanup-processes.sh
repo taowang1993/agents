@@ -1,6 +1,6 @@
 #!/bin/bash
 # cleanup-stale.sh — Kill orphaned/zombie user processes that outlived their purpose.
-# Safe to run daily via launchd. Logs to ~/Library/Logs/cleanup-processes.log
+# Safe to run hourly via launchd. Logs to ~/Library/Logs/cleanup-processes.log
 
 set -euo pipefail
 LOG="$HOME/Library/Logs/cleanup-processes.log"
@@ -11,6 +11,14 @@ echo "=== $(date) ==="
 
 KILLED=0
 declare -a PIDS_TO_KILL=()
+
+queue_process_tree() {
+    local pid="$1" child
+    while read -r child; do
+        [ -n "$child" ] && queue_process_tree "$child"
+    done < <(pgrep -P "$pid" 2>/dev/null || true)
+    PIDS_TO_KILL+=("$pid")
+}
 
 # ── 1. Superset orphans (crashpad_handler, terminal-host, host-service, pty-daemon)
 #    PPID=1 means the parent Superset.app is gone. Kill if >1 hour old.
@@ -41,7 +49,20 @@ while read -r pid etime cmd; do
 done < <(ps -eo pid,ppid,etime,command | \
     awk '$2==1 && /node/ && /listen|server|--port|\.listen\(/ {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 3. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
+# ── 3. Orphaned Vitest runs >2 hours. Queue workers before their parent.
+while read -r pid etime cmd; do
+    age_seconds=$(echo "$etime" | awk -F'[-:]' '
+        NF==2 {print $1*60+$2}
+        NF==3 {print $1*3600+$2*60+$3}
+        NF==4 {print $1*86400+$2*3600+$3*60+$4}')
+    if [ "${age_seconds:-0}" -ge 7200 ]; then
+        echo "  ORPHANED VITEST: pid=$pid age=$etime cmd=$cmd"
+        queue_process_tree "$pid"
+    fi
+done < <(ps -eo pid,ppid,etime,command | \
+    awk '$2==1 && /\/vitest[.]mjs run( |$)/ {print $1, $3, substr($0, index($0,$4))}')
+
+# ── 4. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')
     if [ "$days" -ge 1 ]; then
@@ -50,7 +71,7 @@ while read -r pid etime cmd; do
     fi
 done < <(ps -eo pid,ppid,etime,command | awk '$2==1 && /caffeinate/ {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 4. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
+# ── 5. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
 #    We target crashpad handlers, updaters, autoupdaters — not the main apps themselves.
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')
@@ -67,8 +88,8 @@ if [ ${#PIDS_TO_KILL[@]} -eq 0 ]; then
     exit 0
 fi
 
-# Deduplicate
-UNIQUE_PIDS=($(printf '%s\n' "${PIDS_TO_KILL[@]}" | sort -nu))
+# Deduplicate without changing child-before-parent order.
+UNIQUE_PIDS=($(printf '%s\n' "${PIDS_TO_KILL[@]}" | awk '!seen[$0]++'))
 
 echo "Killing ${#UNIQUE_PIDS[@]} stale process(es): ${UNIQUE_PIDS[*]}"
 for pid in "${UNIQUE_PIDS[@]}"; do
