@@ -62,7 +62,24 @@ while read -r pid etime cmd; do
 done < <(ps -eo pid,ppid,etime,command | \
     awk '$2==1 && (/\/vitest[.]mjs run( |$)/ || /(^|[ \/])pnpm( |$).* exec vitest run( |$)/) {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 4. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
+# ── 4. Orphaned pnpm audit process groups >10 minutes.
+while read -r pid etime cmd; do
+    age_seconds=$(echo "$etime" | awk -F'[-:]' '
+        NF==2 {print $1*60+$2}
+        NF==3 {print $1*3600+$2*60+$3}
+        NF==4 {print $1*86400+$2*3600+$3*60+$4}')
+    if [ "${age_seconds:-0}" -ge 600 ]; then
+        pgid=$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d '[:space:]' || true)
+        leader_ppid=$(ps -o ppid= -p "$pgid" 2>/dev/null | tr -d '[:space:]' || true)
+        if [ "$leader_ppid" = 1 ]; then
+            echo "  ORPHANED PNPM AUDIT: pid=$pid age=$etime cmd=$cmd"
+            queue_process_tree "$pgid"
+        fi
+    fi
+done < <(ps -eo pid,etime,command | \
+    awk '$3 ~ /(^|\/)node$/ && $4 ~ /(^|\/)pnpm$/ && $5=="audit" && $6=="--json" {print $1, $2, substr($0, index($0,$3))}')
+
+# ── 5. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')
     if [ "$days" -ge 1 ]; then
@@ -71,7 +88,7 @@ while read -r pid etime cmd; do
     fi
 done < <(ps -eo pid,ppid,etime,command | awk '$2==1 && /caffeinate/ {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 5. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
+# ── 6. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
 #    We target crashpad handlers, updaters, autoupdaters — not the main apps themselves.
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')
@@ -95,7 +112,7 @@ echo "Killing ${#UNIQUE_PIDS[@]} stale process(es): ${UNIQUE_PIDS[*]}"
 for pid in "${UNIQUE_PIDS[@]}"; do
     if kill "$pid" 2>/dev/null; then
         echo "  ✓ killed $pid"
-        ((KILLED++))
+        ((++KILLED))
     else
         echo "  ✗ failed to kill $pid (already gone?)"
     fi
