@@ -5,10 +5,13 @@ DIR=$(cd "$(dirname "$0")" && pwd)
 TMP=$(mktemp -d)
 sleep 60 &
 AUDIT_GROUP=$!
-sleep 60 &
+bash -c 'trap "" TERM; : >"$1"; while :; do :; done' _ "$TMP/audit-ready" &
 AUDIT_CHILD=$!
+while [ ! -e "$TMP/audit-ready" ]; do sleep 0.01; done
+kill "$AUDIT_CHILD"
+kill -0 "$AUDIT_CHILD"
 export AUDIT_GROUP AUDIT_CHILD
-trap 'kill "$AUDIT_GROUP" "$AUDIT_CHILD" 2>/dev/null || true; rm -rf "$TMP"' EXIT
+trap 'kill -KILL "$AUDIT_GROUP" "$AUDIT_CHILD" 2>/dev/null || true; rm -rf "$TMP"' EXIT
 mkdir -p "$TMP/bin" "$TMP/home"
 
 cat >"$TMP/bin/ps" <<'EOF'
@@ -61,13 +64,11 @@ LOG="$TMP/home/Library/Logs/cleanup-processes.log"
 
 grep -q 'ORPHANED VITEST: pid=900001' "$LOG"
 grep -q '900005 900002 900001' "$LOG"
-! grep -q 'pid=900003' "$LOG"
-! grep -q 'pid=900004' "$LOG"
+if grep -qE 'pid=900003|pid=900004' "$LOG"; then exit 1; fi
 grep -q "ORPHANED PNPM AUDIT: pid=$AUDIT_CHILD" "$LOG"
-! grep -q 'pid=900006' "$LOG"
-! grep -q 'pid=900007' "$LOG"
-! kill -0 "$AUDIT_CHILD" 2>/dev/null
-! kill -0 "$AUDIT_GROUP" 2>/dev/null
+if grep -qE 'pid=900006|pid=900007' "$LOG"; then exit 1; fi
+if kill -0 "$AUDIT_CHILD" 2>/dev/null; then exit 1; fi
+if kill -0 "$AUDIT_GROUP" 2>/dev/null; then exit 1; fi
 grep -q 'Done. Killed 2 process(es).' "$LOG"
 
 echo "cleanup-processes test passed"

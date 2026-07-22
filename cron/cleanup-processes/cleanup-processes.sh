@@ -111,10 +111,17 @@ UNIQUE_PIDS=($(printf '%s\n' "${PIDS_TO_KILL[@]}" | awk '!seen[$0]++'))
 echo "Killing ${#UNIQUE_PIDS[@]} stale process(es): ${UNIQUE_PIDS[*]}"
 for pid in "${UNIQUE_PIDS[@]}"; do
     if kill "$pid" 2>/dev/null; then
-        echo "  ✓ killed $pid"
+        echo "  ✓ sent TERM to $pid"
         ((++KILLED))
     else
         echo "  ✗ failed to kill $pid (already gone?)"
+    fi
+done
+
+sleep 1
+for pid in "${UNIQUE_PIDS[@]}"; do
+    if kill -0 "$pid" 2>/dev/null && kill -KILL "$pid" 2>/dev/null; then
+        echo "  ✓ forced KILL for $pid"
     fi
 done
 
