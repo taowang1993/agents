@@ -20,6 +20,13 @@ queue_process_tree() {
     PIDS_TO_KILL+=("$pid")
 }
 
+queue_process_group() {
+    local pgid="$1" pid
+    while read -r pid; do
+        [ -n "$pid" ] && queue_process_tree "$pid"
+    done < <(ps -eo pid=,pgid= | awk -v pgid="$pgid" '$2 == pgid {print $1}')
+}
+
 # ── 1. Superset orphans (crashpad_handler, terminal-host, host-service, pty-daemon)
 #    PPID=1 means the parent Superset.app is gone. Kill if >1 hour old.
 while read -r pid etime cmd; do
@@ -49,7 +56,20 @@ while read -r pid etime cmd; do
 done < <(ps -eo pid,ppid,etime,command | \
     awk '$2==1 && /node/ && /listen|server|--port|\.listen\(/ {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 3. Orphaned Vitest runs >30 minutes. Queue workers before their parent.
+# ── 3. Orphaned Codegraph MCP servers >1 hour. Queue children before their parent.
+while read -r pid etime cmd; do
+    age_seconds=$(echo "$etime" | awk -F'[-:]' '
+        NF==2 {print $1*60+$2}
+        NF==3 {print $1*3600+$2*60+$3}
+        NF==4 {print $1*86400+$2*3600+$3*60+$4}')
+    if [ "${age_seconds:-0}" -ge 3600 ]; then
+        echo "  ORPHANED CODEGRAPH: pid=$pid age=$etime cmd=$cmd"
+        queue_process_tree "$pid"
+    fi
+done < <(ps -eo pid,ppid,etime,command | \
+    awk '$2==1 && /codegraph/ && /serve --mcp/ {print $1, $3, substr($0, index($0,$4))}')
+
+# ── 4. Orphaned Vitest runs >30 minutes. Queue workers before their parent.
 while read -r pid etime cmd; do
     age_seconds=$(echo "$etime" | awk -F'[-:]' '
         NF==2 {print $1*60+$2}
@@ -62,7 +82,7 @@ while read -r pid etime cmd; do
 done < <(ps -eo pid,ppid,etime,command | \
     awk '$2==1 && (/\/vitest[.]mjs run( |$)/ || /(^|[ \/])pnpm( |$).* exec vitest run( |$)/) {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 4. Orphaned pnpm audit process groups >10 minutes.
+# ── 5. Stale pnpm audit process groups >10 minutes, attached or orphaned.
 while read -r pid etime cmd; do
     age_seconds=$(echo "$etime" | awk -F'[-:]' '
         NF==2 {print $1*60+$2}
@@ -70,16 +90,15 @@ while read -r pid etime cmd; do
         NF==4 {print $1*86400+$2*3600+$3*60+$4}')
     if [ "${age_seconds:-0}" -ge 600 ]; then
         pgid=$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d '[:space:]' || true)
-        leader_ppid=$(ps -o ppid= -p "$pgid" 2>/dev/null | tr -d '[:space:]' || true)
-        if [ "$leader_ppid" = 1 ]; then
-            echo "  ORPHANED PNPM AUDIT: pid=$pid age=$etime cmd=$cmd"
-            queue_process_tree "$pgid"
+        if [ -n "$pgid" ]; then
+            echo "  STALE PNPM AUDIT: pid=$pid age=$etime cmd=$cmd"
+            queue_process_group "$pgid"
         fi
     fi
 done < <(ps -eo pid,etime,command | \
     awk '$3 ~ /(^|\/)node$/ && $4 ~ /(^|\/)pnpm$/ && $5=="audit" && $6=="--json" {print $1, $2, substr($0, index($0,$3))}')
 
-# ── 5. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
+# ── 6. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')
     if [ "$days" -ge 1 ]; then
@@ -88,7 +107,7 @@ while read -r pid etime cmd; do
     fi
 done < <(ps -eo pid,ppid,etime,command | awk '$2==1 && /caffeinate/ {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 6. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
+# ── 7. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
 #    We target crashpad handlers, updaters, autoupdaters — not the main apps themselves.
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')

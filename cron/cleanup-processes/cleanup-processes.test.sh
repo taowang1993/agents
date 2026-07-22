@@ -2,6 +2,7 @@
 set -euo pipefail
 
 DIR=$(cd "$(dirname "$0")" && pwd)
+[ "$(plutil -extract ProgramArguments.0 raw -o - "$DIR/com.max.cleanup-processes.plist" 2>/dev/null)" = /bin/bash ]
 TMP=$(mktemp -d)
 sleep 60 &
 AUDIT_GROUP=$!
@@ -26,9 +27,11 @@ case "$*" in
     "-o pgid= -p $AUDIT_CHILD") echo "$AUDIT_GROUP" ;;
     '-o pgid= -p 900006') echo 900010 ;;
     '-o pgid= -p 900007') echo 900011 ;;
-    "-o ppid= -p $AUDIT_GROUP") echo 1 ;;
-    '-o ppid= -p 900010') echo 1 ;;
-    '-o ppid= -p 900011') echo 42 ;;
+    '-eo pid=,pgid=')
+        printf '%s %s\n' "$AUDIT_GROUP" "$AUDIT_GROUP"
+        printf '%s %s\n' "$AUDIT_CHILD" "$AUDIT_GROUP"
+        printf '900011 900011\n'
+        ;;
     *)
         cat <<'PROCESSES'
   PID  PPID     ELAPSED COMMAND
@@ -37,6 +40,10 @@ case "$*" in
 900005 900002       31:00 node /tmp/node_modules/vitest/dist/workers/forks.js
 900003     1       29:59 node /tmp/bin/pnpm --dir apps/web exec vitest run young.test.ts
 900004    42    04:00:00 node /tmp/node_modules/vitest/vitest.mjs run attached.test.ts
+910001     1    01:00:01 /tmp/codegraph/node codegraph.js serve --mcp --path /tmp/repo
+910002 910001    01:00:01 /tmp/codegraph/worker
+910003     1       59:59 /tmp/codegraph/node codegraph.js serve --mcp --path /tmp/repo
+910004    42    02:00:00 /tmp/codegraph/node codegraph.js serve --mcp --path /tmp/repo
 PROCESSES
         ;;
 esac
@@ -48,7 +55,7 @@ if [ "${1:-}" = -P ]; then
     case "${2:-}" in
         900001) echo 900002 ;;
         900002) echo 900005 ;;
-        "$AUDIT_GROUP") echo "$AUDIT_CHILD" ;;
+        910001) echo 910002 ;;
     esac
 fi
 EOF
@@ -65,8 +72,12 @@ LOG="$TMP/home/Library/Logs/cleanup-processes.log"
 grep -q 'ORPHANED VITEST: pid=900001' "$LOG"
 grep -q '900005 900002 900001' "$LOG"
 if grep -qE 'pid=900003|pid=900004' "$LOG"; then exit 1; fi
-grep -q "ORPHANED PNPM AUDIT: pid=$AUDIT_CHILD" "$LOG"
-if grep -qE 'pid=900006|pid=900007' "$LOG"; then exit 1; fi
+grep -q "STALE PNPM AUDIT: pid=$AUDIT_CHILD" "$LOG"
+grep -q 'STALE PNPM AUDIT: pid=900007' "$LOG"
+if grep -q 'pid=900006' "$LOG"; then exit 1; fi
+grep -q 'ORPHANED CODEGRAPH: pid=910001' "$LOG"
+grep -q '910002 910001' "$LOG"
+if grep -qE 'pid=910003|pid=910004' "$LOG"; then exit 1; fi
 if kill -0 "$AUDIT_CHILD" 2>/dev/null; then exit 1; fi
 if kill -0 "$AUDIT_GROUP" 2>/dev/null; then exit 1; fi
 grep -q 'Done. Killed 2 process(es).' "$LOG"
