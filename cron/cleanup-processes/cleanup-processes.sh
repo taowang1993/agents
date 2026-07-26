@@ -80,9 +80,22 @@ while read -r pid etime cmd; do
         queue_process_tree "$pid"
     fi
 done < <(ps -eo pid,ppid,etime,command | \
-    awk '$2==1 && (/\/vitest[.]mjs run( |$)/ || /(^|[ \/])pnpm( |$).* exec vitest run( |$)/) {print $1, $3, substr($0, index($0,$4))}')
+    awk '$2==1 && (/\/vitest[.]mjs run( |$)/ || /(^|[ \/])pnpm( |$).* exec vitest run( |$)/ || /\/vitest\/dist\/workers\/forks[.]js( |$)/) {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 5. Stale pnpm audit process groups >10 minutes, attached or orphaned.
+# ── 5. Orphaned TockSpeaker escalation helpers >1 hour.
+while read -r pid etime cmd; do
+    age_seconds=$(echo "$etime" | awk -F'[-:]' '
+        NF==2 {print $1*60+$2}
+        NF==3 {print $1*3600+$2*60+$3}
+        NF==4 {print $1*86400+$2*3600+$3*60+$4}')
+    if [ "${age_seconds:-0}" -ge 3600 ]; then
+        echo "  ORPHANED TOCKSPEAKER HELPER: pid=$pid age=$etime cmd=$cmd"
+        PIDS_TO_KILL+=("$pid")
+    fi
+done < <(ps -eo pid,ppid,etime,command | \
+    awk '$2==1 && /\/tockspeaker-helper-escalate-.*\/helper[.]mjs( |$)/ {print $1, $3, substr($0, index($0,$4))}')
+
+# ── 6. Stale pnpm audit process groups >10 minutes, attached or orphaned.
 while read -r pid etime cmd; do
     age_seconds=$(echo "$etime" | awk -F'[-:]' '
         NF==2 {print $1*60+$2}
@@ -98,7 +111,7 @@ while read -r pid etime cmd; do
 done < <(ps -eo pid,etime,command | \
     awk '$3 ~ /(^|\/)node$/ && $4 ~ /(^|\/)pnpm$/ && $5=="audit" && $6=="--json" {print $1, $2, substr($0, index($0,$3))}')
 
-# ── 6. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
+# ── 7. Zombie caffeinate >1 day (caffeinate -t 3600 should exit in 1 hour)
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')
     if [ "$days" -ge 1 ]; then
@@ -107,7 +120,7 @@ while read -r pid etime cmd; do
     fi
 done < <(ps -eo pid,ppid,etime,command | awk '$2==1 && /caffeinate/ {print $1, $3, substr($0, index($0,$4))}')
 
-# ── 7. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
+# ── 8. Orphaned app helpers/subsystems (PPID=1, known-leaky patterns only, >3 days)
 #    We target crashpad handlers, updaters, autoupdaters — not the main apps themselves.
 while read -r pid etime cmd; do
     days=$(echo "$etime" | awk -F'[-:]' '{if (NF==4) print $1; else print 0}')

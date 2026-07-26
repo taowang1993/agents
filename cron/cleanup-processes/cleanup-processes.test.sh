@@ -40,10 +40,16 @@ case "$*" in
 900005 900002       31:00 node /tmp/node_modules/vitest/dist/workers/forks.js
 900003     1       29:59 node /tmp/bin/pnpm --dir apps/web exec vitest run young.test.ts
 900004    42    04:00:00 node /tmp/node_modules/vitest/vitest.mjs run attached.test.ts
+900008     1       31:00 node /tmp/node_modules/vitest/dist/workers/forks.js
+900009     1       29:59 node /tmp/node_modules/vitest/dist/workers/forks.js
+900010    42    04:00:00 node /tmp/node_modules/vitest/dist/workers/forks.js
 910001     1    01:00:01 /tmp/codegraph/node codegraph.js serve --mcp --path /tmp/repo
 910002 910001    01:00:01 /tmp/codegraph/worker
 910003     1       59:59 /tmp/codegraph/node codegraph.js serve --mcp --path /tmp/repo
 910004    42    02:00:00 /tmp/codegraph/node codegraph.js serve --mcp --path /tmp/repo
+920001     1    01:00:01 node /tmp/tockspeaker-helper-escalate-old/helper.mjs
+920002     1       59:59 node /tmp/tockspeaker-helper-escalate-young/helper.mjs
+920003    42    02:00:00 node /tmp/tockspeaker-helper-escalate-attached/helper.mjs
 PROCESSES
         ;;
 esac
@@ -71,13 +77,16 @@ LOG="$TMP/home/Library/Logs/cleanup-processes.log"
 
 grep -q 'ORPHANED VITEST: pid=900001' "$LOG"
 grep -q '900005 900002 900001' "$LOG"
-if grep -qE 'pid=900003|pid=900004' "$LOG"; then exit 1; fi
+grep -q 'ORPHANED VITEST: pid=900008' "$LOG"
+if grep -qE 'pid=900003|pid=900004|pid=900009|pid=900010' "$LOG"; then exit 1; fi
 grep -q "STALE PNPM AUDIT: pid=$AUDIT_CHILD" "$LOG"
 grep -q 'STALE PNPM AUDIT: pid=900007' "$LOG"
 if grep -q 'pid=900006' "$LOG"; then exit 1; fi
 grep -q 'ORPHANED CODEGRAPH: pid=910001' "$LOG"
 grep -q '910002 910001' "$LOG"
 if grep -qE 'pid=910003|pid=910004' "$LOG"; then exit 1; fi
+grep -q 'ORPHANED TOCKSPEAKER HELPER: pid=920001' "$LOG"
+if grep -qE 'pid=920002|pid=920003' "$LOG"; then exit 1; fi
 if kill -0 "$AUDIT_CHILD" 2>/dev/null; then exit 1; fi
 if kill -0 "$AUDIT_GROUP" 2>/dev/null; then exit 1; fi
 grep -q 'Done. Killed 2 process(es).' "$LOG"
