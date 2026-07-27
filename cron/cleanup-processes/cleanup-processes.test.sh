@@ -32,6 +32,14 @@ case "$*" in
         printf '%s %s\n' "$AUDIT_CHILD" "$AUDIT_GROUP"
         printf '900011 900011\n'
         ;;
+    '-eo pid,pcpu,command')
+        printf '  PID  %%CPU COMMAND\n'
+        printf '930001  93.4 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Renderer).app/Contents/MacOS/Code Helper (Renderer)\n'
+        printf '930002  12.0 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Renderer).app/Contents/MacOS/Code Helper (Renderer)\n'
+        printf '930003  95.0 /Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Renderer).app/Contents/MacOS/Code Helper (Renderer)\n'
+        ;;
+    '-o pcpu= -p 930001') echo ' 94.1' ;;  # still hot -> kill
+    '-o pcpu= -p 930003') echo ' 10.0' ;;  # cooled off -> spare
     *)
         cat <<'PROCESSES'
   PID  PPID     ELAPSED COMMAND
@@ -72,7 +80,7 @@ exit 1
 EOF
 
 chmod +x "$TMP/bin/ps" "$TMP/bin/pgrep" "$TMP/bin/lsof"
-HOME="$TMP/home" PATH="$TMP/bin:/usr/bin:/bin:/usr/sbin:/sbin" /bin/bash "$DIR/cleanup-processes.sh"
+CPU_SAMPLE_INTERVAL=0 HOME="$TMP/home" PATH="$TMP/bin:/usr/bin:/bin:/usr/sbin:/sbin" /bin/bash "$DIR/cleanup-processes.sh"
 LOG="$TMP/home/Library/Logs/cleanup-processes.log"
 
 grep -q 'ORPHANED VITEST: pid=900001' "$LOG"
@@ -87,6 +95,8 @@ grep -q '910002 910001' "$LOG"
 if grep -qE 'pid=910003|pid=910004' "$LOG"; then exit 1; fi
 grep -q 'ORPHANED TOCKSPEAKER HELPER: pid=920001' "$LOG"
 if grep -qE 'pid=920002|pid=920003' "$LOG"; then exit 1; fi
+grep -q 'RUNAWAY CODE RENDERER: pid=930001 cpu=94.1%' "$LOG"
+if grep -qE 'pid=930002|pid=930003' "$LOG"; then exit 1; fi
 if kill -0 "$AUDIT_CHILD" 2>/dev/null; then exit 1; fi
 if kill -0 "$AUDIT_GROUP" 2>/dev/null; then exit 1; fi
 grep -q 'Done. Killed 2 process(es).' "$LOG"

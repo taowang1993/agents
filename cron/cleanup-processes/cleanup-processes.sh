@@ -131,6 +131,24 @@ while read -r pid etime cmd; do
 done < <(ps -eo pid,ppid,etime,command | \
     awk '$2==1 && /\/Applications\// && /(crashpad_handler|Autoupdate|Updater|Sparkle|Helper\(Renderer\))/ && !/Microsoft Edge\.app/ && !/Visual Studio Code/ && !/Warp/ {print $1, $3, substr($0, index($0,$4))}')
 
+# ── 9. Runaway VS Code renderers: Code Helper (Renderer) sustained ≥80% CPU.
+#    Only CPU-based rule, so sample twice and kill only if hot both times.
+#    Parent Code stays alive; VS Code just offers to reload the window.
+# ponytail: two snapshots, not true sustained tracking — a spike lasting <30s is ignored,
+# one lasting >30s around the run gets killed. Upgrade to cross-run state if it misfires.
+SAMPLE_INTERVAL="${CPU_SAMPLE_INTERVAL:-30}"
+HOT=$(ps -eo pid,pcpu,command | awk '$1 ~ /^[0-9]+$/ && $2+0 >= 80 && index($0, "Code Helper (Renderer)") > 0 {print $1}')
+if [ -n "$HOT" ]; then
+    sleep "$SAMPLE_INTERVAL"
+    for pid in $HOT; do
+        pcpu=$(ps -o pcpu= -p "$pid" 2>/dev/null | tr -d '[:space:]' || true)
+        if [ -n "$pcpu" ] && [ "${pcpu%.*}" -ge 80 ]; then
+            PIDS_TO_KILL+=("$pid")
+            echo "  RUNAWAY CODE RENDERER: pid=$pid cpu=$pcpu%"
+        fi
+    done
+fi
+
 # ── Kill phase
 if [ ${#PIDS_TO_KILL[@]} -eq 0 ]; then
     echo "Nothing to kill."

@@ -200,6 +200,10 @@ Ask one focused question at a time when intent, constraints, or the code seam is
 
 Unused-code analysis for JavaScript/TypeScript projects — unused files, dependencies, exports, types.
 
+### loopany
+
+Create, update, and evolve scheduled Loopany agent loops — recurring tasks, monitors, and goal-bound loops.
+
 ### maestro
 
 E2E UI testing for iOS, Android, Flutter, React Native, and Web with Maestro flows.
@@ -275,6 +279,10 @@ Origin: https://github.com/anthropics/skills/tree/main/skills/skill-creator
 ### skill-validator
 
 Validate and score Agent Skill packages for spec compliance, content quality, contamination, and LLM scoring.
+
+### skillify
+
+Create new skills, modify and improve existing ones, and measure skill performance with evals and benchmarks.
 
 ### ssh-tao
 
