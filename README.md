@@ -126,6 +126,12 @@ Find and safely clean large macOS developer/tooling junk.
 
 Check ChatGPT/Codex rate-limit reset credit expiration dates.
 
+### codex-security
+
+Scan repositories and code changes for vulnerabilities with the OpenAI Codex Security CLI; review coverage, validate findings, export results, and compare saved scans.
+
+Origin: https://github.com/openai/codex-security
+
 ### dedao
 
 Use `dedao-dl` for 得到 App workflows — login, cookies, account switching, purchased courses, audiobooks, ebooks, articles, notes, search results, URL-to-ID mapping, downloads, JSON output for agents, and troubleshooting.
