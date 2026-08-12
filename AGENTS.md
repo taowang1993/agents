@@ -167,6 +167,8 @@ Prompt templates are global Pi slash-command snippets. Add new templates as `pro
 | `codegraph`         | Cde intelligence for AI agents |
 | `clawpatch`         | Code review that lands fixes   |
 
+| `herdr` | Agent multiplexer that lives in your terminal |
+
 ## Launch Agents
 
 | Agent                       | Script                                                |
