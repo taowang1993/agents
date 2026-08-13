@@ -206,10 +206,6 @@ Ask one focused question at a time when intent, constraints, or the code seam is
 
 Unused-code analysis for JavaScript/TypeScript projects — unused files, dependencies, exports, types.
 
-### loopany
-
-Create, update, and evolve scheduled Loopany agent loops — recurring tasks, monitors, and goal-bound loops.
-
 ### maestro
 
 E2E UI testing for iOS, Android, Flutter, React Native, and Web with Maestro flows.
@@ -225,24 +221,6 @@ List, configure, authenticate, call, and inspect MCP servers/tools over HTTP or 
 ### munger
 
 Analyze decisions through Charlie Munger's worldview and mental-model methodology.
-
-### ok
-
-Explain OpenKnowledge, install or share projects, and open loose Markdown files. In-project editing uses the project-local runtime skill installed by `ok init`.
-
-Origin: https://github.com/inkeep/open-knowledge
-
-### open-knowledge-discovery
-
-Explain OpenKnowledge, install or share projects, and open loose Markdown files. In-project editing uses the project-local runtime skill installed by `ok init`.
-
-Origin: https://github.com/inkeep/open-knowledge
-
-### open-knowledge-write-skill
-
-Author Agent Skill packages and install them into OpenKnowledge-aware editors.
-
-Origin: https://github.com/inkeep/open-knowledge
 
 ### pg
 
