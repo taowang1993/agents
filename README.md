@@ -94,6 +94,12 @@ Build AI-powered features with the Vercel AI SDK — generateText, streamText, t
 
 Origin: https://github.com/kthrob/ai_sdk/tree/main/skills/use-ai-sdk
 
+### anydoc
+
+Convert local document files (PDF, DOCX, PPTX, XLSX, OpenDocument, RTF, EPUB, CSV) into Markdown with the anydoc CLI. Preferred over markitdown for local files; markitdown handles web page URLs only.
+
+Origin: https://github.com/firecrawl/anydoc/tree/main/skills/convert-documents-to-markdown
+
 ### architect
 
 Find deepening opportunities in a codebase, informed by the project's `architecture.md`. Use for improving architecture, finding refactoring opportunities, consolidating tightly-coupled modules, or making a codebase more testable and AI-navigable.
@@ -212,7 +218,7 @@ E2E UI testing for iOS, Android, Flutter, React Native, and Web with Maestro flo
 
 ### markitdown
 
-Convert URLs, PDFs, DOCX, HTML, and other files into Markdown using `uvx markitdown`.
+Convert web page URLs into Markdown using `uvx markitdown`. For local files (PDF/DOCX/PPTX/etc.), use anydoc instead.
 
 ### mcporter
 
