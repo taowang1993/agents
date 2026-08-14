@@ -96,7 +96,7 @@ Origin: https://github.com/kthrob/ai_sdk/tree/main/skills/use-ai-sdk
 
 ### anydoc
 
-Convert local document files (PDF, DOCX, PPTX, XLSX, OpenDocument, RTF, EPUB, CSV) into Markdown with the anydoc CLI. Preferred over markitdown for local files; markitdown handles web page URLs only.
+Convert local document files (PDF, DOCX, PPTX, XLSX, OpenDocument, RTF, EPUB, CSV) into Markdown with the anydoc CLI.
 
 Origin: https://github.com/firecrawl/anydoc/tree/main/skills/convert-documents-to-markdown
 
@@ -218,7 +218,7 @@ E2E UI testing for iOS, Android, Flutter, React Native, and Web with Maestro flo
 
 ### markitdown
 
-Convert web page URLs into Markdown using `uvx markitdown`. For local files (PDF/DOCX/PPTX/etc.), use anydoc instead.
+Convert web page URLs into Markdown using `uvx markitdown`. URLs only, not local document files.
 
 ### mcporter
 

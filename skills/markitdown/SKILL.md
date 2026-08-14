@@ -1,11 +1,11 @@
 ---
 name: markitdown
-description: Convert a web page (URL) into markdown using `uvx markitdown`. Always use markitdown instead of curl for reading webpages that do not end with `.md`. For local files (PDF/DOCX/PPTX/etc.), use the anydoc skill instead — never markitdown.
+description: Convert a web page (URL) into markdown using `uvx markitdown`. Always use markitdown instead of curl for reading webpages that do not end with `.md`. Not for local document files.
 ---
 
 Turn **web pages (URLs)** into **Markdown** so they can be inspected/quoted/processed like normal text.
 
-**Local files (PDF/DOCX/PPTX/XLSX/etc.): use the `anydoc` skill instead.** anydoc produces much cleaner Markdown for documents (proper headings, no mangled tables); markitdown is kept here only for URL fetching and HTML.
+Local document files (PDF/DOCX/PPTX/etc.) are out of scope for this skill — it handles URLs only.
 
 `markitdown` can fetch URLs by itself; this skill mainly wraps it to make saving + summarizing convenient.
 
