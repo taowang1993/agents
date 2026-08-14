@@ -1,6 +1,6 @@
 ---
 name: anydoc
-description: Convert local document files (PDF, Word .doc/.docx, PowerPoint .ppt/.pptx, Excel .xls/.xlsx, OpenDocument, RTF, EPUB, CSV) to GitHub-Flavored Markdown with the anydoc CLI. ALWAYS use anydoc instead of markitdown for local files — markitdown is only for web page URLs. Use when a task needs the contents of an office document, spreadsheet, presentation, ebook, or PDF you cannot read directly.
+description: Convert local document files to GitHub-Flavored Markdown with the anydoc CLI. Handles office documents (Word .doc/.docx, PowerPoint .ppt/.pptx, Excel .xls/.xlsx, OpenDocument, RTF), ebooks (EPUB), CSV, and PDF. ALWAYS use anydoc instead of markitdown for local files — markitdown is only for web page URLs. Use when a task needs the contents of a document, spreadsheet, presentation, ebook, or PDF you cannot read directly.
 license: MIT
 metadata:
   author: firecrawl
