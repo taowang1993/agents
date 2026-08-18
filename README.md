@@ -232,6 +232,10 @@ Analyze decisions through Charlie Munger's worldview and mental-model methodolog
 
 Analyze startups, writing, products, and decisions through Paul Graham's worldview and methodology.
 
+### pi-provider
+
+Add an OpenAI-compatible LLM provider to Pi by editing `~/.pi/agent/models.json` and `~/.pi/agent/auth.json`. No extension, no doc reading.
+
 ### playwright-cli
 
 Default browser automation tool. Page nav, click/type/fill, screenshots, snapshots, multi-tab, keyboard/mouse, drag-drop, file upload, dialogs. Sessions with state persistence. Network mocking. DevTools tracing and video. Test authoring and debugging.
