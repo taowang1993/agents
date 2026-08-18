@@ -36,6 +36,10 @@ Play a system sound (`Funk.aiff`) when the agent finishes a turn.
 
 Custom prompt editor with model selection, provider switching, and thinking-level settings.
 
+### sail
+
+Register Sail Research (`https://api.sailresearch.com/v1`) as a Pi provider with the `zai-org/GLM-5.2-FP8` model. Reads the API key from `SAIL_API_KEY`.
+
 ### screenshot
 
 Capture and attach screenshots for the agent to analyze.
