@@ -1,5 +1,5 @@
 ---
-name: dsh-plugin-development
+name: dsh
 description: Build, port, configure, test, package, or publish DeepSeek Harness plugins using Cordis. Make sure to use this skill whenever work mentions DSH plugins, DeepSeek Harness extensions, cordis.yml or cordis.patch.yml, apply(ctx), DSH tools, Cordis services or events, capability seams, plugin lifecycle, HMR, installable DSH bundles, profile composition, or migrating a feature into TockTeam or another DSH distribution.
 ---
 
@@ -12,15 +12,22 @@ Build the smallest plugin that owns one coherent capability. Verify every API ag
 Resolve `DSH_ROOT` in this order:
 
 1. Use `$DSH_ROOT` when it points to a DeepSeek Harness checkout.
-2. Use the current repository when it contains `docs/user/develop/basic/index.md`.
-3. Use `/Users/max/projects/resources/.harness/dsh` on Max's machine.
-4. Ask for the checkout path if none of these exists.
+2. Use the target or current repository when it contains `docs/user/develop/basic/index.md`.
+3. Otherwise, create a disposable shallow checkout:
+
+```sh
+DSH_ROOT="$(mktemp -d)/deepseek-harness"
+git clone --depth 1 --filter=blob:none \
+  https://github.com/deepseek-ai/deepseek-harness "$DSH_ROOT"
+```
 
 Confirm the documentation exists before coding:
 
 ```sh
 test -f "$DSH_ROOT/docs/user/develop/basic/index.md"
 ```
+
+Remove the disposable checkout after the task. When the target pins a DSH revision, inspect or fetch that revision instead of assuming the latest default branch is compatible.
 
 When targeting TockTeam or another distribution, inspect its pinned DSH revision and active profile layers first. Implement against the target's installed API, not merely the newest source checkout.
 

@@ -166,9 +166,9 @@ Origin: https://github.com/taowang1993/docsee/tree/main/skill/docsee
 
 Brainstorm and check availability of domain names using tldx CLI.
 
-### dsh-plugin-development
+### dsh
 
-Build, configure, test, package, and publish DeepSeek Harness plugins using Cordis and the authoritative local DSH documentation.
+Build, configure, test, package, and publish DeepSeek Harness plugins using Cordis and the authoritative DSH documentation.
 
 ### e2e-setup
 
