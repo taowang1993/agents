@@ -133,18 +133,51 @@ Restart the profile after adding, removing, or updating a bundle.
 
 Follow the target repository's test-first and quality-gate rules. Leave the smallest runnable regression check for nontrivial behavior.
 
-Verify the applicable cases:
+### Run Mandatory Real-Consumer Verification
 
-- Dump the composed configuration and confirm the expected bundle and row.
-- Start the target surface and use its available diagnostics or lifecycle evidence to confirm the plugin loaded successfully.
-- Exercise the registered tool, service, event, adapter, or UI contribution through its real consumer.
+Verify every new or changed plugin yourself through a real DSH consumer. Do not hand verification to the user, and do not treat unit tests, packaging, `--dump-config`, or startup logs as sufficient evidence.
+
+Use the preconfigured DeepSeek credential without printing or embedding it:
+
+1. Read it indirectly through `DEEPSEEK_API_KEY` from `${DSH_HOME:-$HOME/.dsh}/.env`; the default machine location is `~/.dsh/.env`.
+2. Require the credential file to exist with owner-only permissions before the model-driven run. If it is absent, ask the user to configure it; never place a literal key in a repository, fixture, command, report, or skill.
+3. Copy the credential file with mode `600` into a disposable `DSH_HOME` when isolation is needed, and delete that home after the run. Let DSH load the credential rather than parsing or echoing it.
+4. Use the target distribution's pinned DSH executable and profile shape. For model-callable tools, initialize the disposable `headless` profile; for UI or host integrations, boot the actual target surface.
+5. Package a fresh artifact, install it into the disposable profile, and dump the composed configuration to confirm the expected bundle and row.
+6. Create non-guessable fixtures, then run a real agent task that must invoke every new or changed capability and return exact fixture-derived values. Inspect the actual tool or surface evidence, including failure paths relevant to permissions and trust boundaries.
+7. Treat any load, schema, registration, execution, rendering, or cleanup failure as a plugin defect. Add the smallest regression check, fix it, rebuild the artifact, reinstall it, and repeat the real-consumer run until it passes.
+8. Remove the plugin and disposable profile, fixture, and package after verification. Keep the configured credential file untouched.
+
+A tool-plugin verification should follow this shape, adapting paths and assertions to the plugin:
+
+```sh
+SOURCE_DSH_HOME="${DSH_HOME:-$HOME/.dsh}"
+SOURCE_ENV="$SOURCE_DSH_HOME/.env"
+test -r "$SOURCE_ENV"
+
+TEST_HOME="$(mktemp -d)"
+TEST_FIXTURE="$(mktemp -d)"
+TEST_PACK="$(mktemp -d)"
+trap 'rm -rf "$TEST_HOME" "$TEST_FIXTURE" "$TEST_PACK"' EXIT
+install -m 600 "$SOURCE_ENV" "$TEST_HOME/.env"
+export DSH_HOME="$TEST_HOME"
+
+pnpm test
+pnpm pack --pack-destination "$TEST_PACK"
+dsh plugin --profile headless add "$TEST_PACK"/*.tgz
+dsh --profile headless --dump-config
+# Build the task from the plugin contract. Require real capability calls and
+# exact non-guessable values from TEST_FIXTURE; never include those values in the task.
+dsh --profile headless "<agent task that exercises every changed capability>"
+dsh plugin --profile headless remove <package-name>
+```
+
+Also verify the applicable lifecycle cases:
+
 - Supply invalid configuration and confirm loading fails with an actionable error.
 - Unload, disable, or hot-replace the plugin and confirm registrations and external resources disappear.
 - Remove a required service and confirm the dependent plugin disposes; restore it and confirm reactivation.
-- Install and remove the bundle from a disposable profile when distribution is in scope.
 - Run the target repository's typecheck, focused tests, and required security checks.
-
-Do not claim success from startup logs alone.
 
 ## Report the Result
 
