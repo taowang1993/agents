@@ -9,3 +9,5 @@ description: Validate the branch, open a PR, and fix conflicts
 3. If the PR has merge conflicts, merge `origin/main` into the branch, resolve only confident conflicts, rerun validation, commit, and push.
 
 4. Close only related Beads issues whose work is complete.
+
+5. Ensure all checks are green. 
