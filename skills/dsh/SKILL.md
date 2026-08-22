@@ -51,6 +51,88 @@ Read each selected page completely and follow its task-relevant links. Treat the
 
 Do not read every page by default. Expand only when the current task crosses that boundary.
 
+## Set Up a New DSH Plugin Project
+
+Complete the repository setup below whenever the user asks you to create a DSH plugin project. Do not make the user separately request agent instructions, Beads, references, or a local project skill.
+
+Treat that explicit create-project request as authorization for new local files plus local Git and Beads state. Ask before deleting or replacing existing content, configuring a remote, pushing, or writing credentials.
+
+Resolve contradictions in the requested project name or path before creating a lasting compatibility name. Otherwise, derive the path and a short stable Beads prefix as routine setup.
+
+### Initialize the Repository and Beads
+
+1. Inspect instructions in the target directory and its parents before writing.
+2. Refuse to overwrite an existing non-empty project. Inspect and extend it instead.
+3. Create the directory and initialize Git when needed:
+
+```sh
+mkdir -p /absolute/path/to/project
+cd /absolute/path/to/project
+git init -b main
+```
+
+4. Derive a short unique Beads prefix from the project name, then initialize Beads non-interactively:
+
+```sh
+bd init --non-interactive --prefix <prefix> --agents-profile minimal
+bd prime
+bd where
+```
+
+Before importing a third-party skill, scan its source with SkillSpector when available. If `bd init` installs its Beads skill atomically, scan the installed `.agents/skills/beads/` immediately and do not rely on it until the scan is safe.
+
+Keep the Beads initialization as its own small commit when repository policy permits commits.
+
+### Replace Generic Agent Instructions
+
+Replace generated boilerplate with project-specific guidance while preserving generated Beads integration blocks exactly, including their marker comments.
+
+Create `AGENTS.md` with:
+
+- the product contract and explicit non-goals;
+- the authoritative target distribution and pinned DSH revision;
+- source-of-truth and provenance paths;
+- Host, client, trust, lifecycle, and package boundaries;
+- local code style and test-first workflow;
+- focused, full-gate, packaged, and real-consumer verification;
+- Beads claim, handoff, and repository Git policy.
+
+Keep the instructions client-neutral. Create `CLAUDE.md` as a short pointer to `AGENTS.md`, then retain its generated Beads integration block.
+
+### Create Project Knowledge and a Local Skill
+
+Create `.agents/references/` and write only references with real project-specific content:
+
+- `architecture.md` for capability ownership, plugin shape, service seams, and compatibility direction;
+- `target-runtime.md` for the target distribution, pinned DSH checkout, profile composition, and verification commands;
+- `source-map.md` when porting behavior from another product or repository;
+- `security.md` when the plugin crosses filesystem, network, credential, process, mutation, or other trust boundaries.
+
+Create `.agents/skills/<project-slug>/SKILL.md`. Make it tell future agents when to load the references, how to choose the smallest correct seam, which focused checks to run, and how to prove the real DSH entry path. Refer to the global DSH skill instead of duplicating all Cordis documentation.
+
+Validate every created or modified local skill:
+
+```sh
+brew upgrade skill-validator
+skill-validator check --strict .agents/skills/<project-slug>
+```
+
+Scan imported skills with SkillSpector. Pass only an explicitly required directory allowance when validating generated third-party layouts; do not edit generated third-party skill content merely to silence a validator warning.
+
+### Verify and Commit the Setup
+
+Run:
+
+```sh
+bd lint
+git diff --check
+git status --short --branch
+```
+
+Confirm that local Markdown links and authoritative external paths resolve. Commit project instructions, references, and the local skill as a second small commit when repository policy permits commits. Report the final path, Beads prefix, validation results, commits, and missing remote configuration.
+
+Stop after this setup when the user requested only project creation. Do not invent plugin APIs or add placeholder runtime code to make the repository look complete. When the request also requires a buildable plugin scaffold, add only the package manifest, target-compatible TypeScript configuration, Cordis entry point, patch manifest, and smallest Loader-based lifecycle test required by the pinned DSH documentation.
+
 ## Choose the Smallest Plugin Shape
 
 Use a function plugin unless the capability itself must be exposed as a Cordis service:
