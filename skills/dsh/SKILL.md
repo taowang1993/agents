@@ -53,7 +53,7 @@ Do not read every page by default. Expand only when the current task crosses tha
 
 ## Set Up a New DSH Plugin Project
 
-Complete the repository setup below whenever the user asks you to create a DSH plugin project. Do not make the user separately request agent instructions, Beads, references, or a local project skill.
+Complete the repository setup below whenever the user asks you to create a DSH plugin project. Do not make the user separately request agent instructions, Beads, or references.
 
 Treat that explicit create-project request as authorization for new local files plus local Git and Beads state. Ask before deleting or replacing existing content, configuring a remote, pushing, or writing credentials.
 
@@ -71,23 +71,20 @@ cd /absolute/path/to/project
 git init -b main
 ```
 
-4. Derive a short unique Beads prefix from the project name, then initialize Beads non-interactively:
+4. Derive a short unique Beads prefix from the project name. Use the globally installed Beads skill and skip Beads-generated agent files:
 
 ```sh
-bd init --non-interactive --prefix <prefix> --agents-profile minimal
+bd init --non-interactive --prefix <prefix> --skip-agents
 bd prime
 bd where
+test ! -e .agents/skills
 ```
 
-Before importing a third-party skill, scan its source with SkillSpector when available. If `bd init` installs its Beads skill atomically, scan the installed `.agents/skills/beads/` immediately and do not rely on it until the scan is safe.
+Do not create, copy, or install a project-local skill during setup. Keep the Beads initialization as its own small commit when repository policy permits commits.
 
-Keep the Beads initialization as its own small commit when repository policy permits commits.
+### Create Project Agent Instructions
 
-### Replace Generic Agent Instructions
-
-Replace generated boilerplate with project-specific guidance while preserving generated Beads integration blocks exactly, including their marker comments.
-
-Create `AGENTS.md` with:
+Create project-specific `AGENTS.md` guidance with:
 
 - the product contract and explicit non-goals;
 - the authoritative target distribution and pinned DSH revision;
@@ -97,9 +94,9 @@ Create `AGENTS.md` with:
 - focused, full-gate, packaged, and real-consumer verification;
 - Beads claim, handoff, and repository Git policy.
 
-Keep the instructions client-neutral. Create `CLAUDE.md` as a short pointer to `AGENTS.md`, then retain its generated Beads integration block.
+Keep the instructions client-neutral. Point agents to `bd prime` and the globally installed Beads skill instead of embedding or installing another skill. Create `CLAUDE.md` as a short pointer to `AGENTS.md`.
 
-### Create Project Knowledge and a Local Skill
+### Create Project Knowledge
 
 Create `.agents/references/` and write only references with real project-specific content:
 
@@ -108,28 +105,20 @@ Create `.agents/references/` and write only references with real project-specifi
 - `source-map.md` when porting behavior from another product or repository;
 - `security.md` when the plugin crosses filesystem, network, credential, process, mutation, or other trust boundaries.
 
-Create `.agents/skills/<project-slug>/SKILL.md`. Make it tell future agents when to load the references, how to choose the smallest correct seam, which focused checks to run, and how to prove the real DSH entry path. Refer to the global DSH skill instead of duplicating all Cordis documentation.
-
-Validate every created or modified local skill:
-
-```sh
-brew upgrade skill-validator
-skill-validator check --strict .agents/skills/<project-slug>
-```
-
-Scan imported skills with SkillSpector. Pass only an explicitly required directory allowance when validating generated third-party layouts; do not edit generated third-party skill content merely to silence a validator warning.
+Keep `.agents/` limited to these project references. Add a project-local skill later only when the user explicitly requests one.
 
 ### Verify and Commit the Setup
 
 Run:
 
 ```sh
+test ! -e .agents/skills
 bd lint
 git diff --check
 git status --short --branch
 ```
 
-Confirm that local Markdown links and authoritative external paths resolve. Commit project instructions, references, and the local skill as a second small commit when repository policy permits commits. Report the final path, Beads prefix, validation results, commits, and missing remote configuration.
+Confirm that local Markdown links and authoritative external paths resolve. Commit project instructions and references as a second small commit when repository policy permits commits. Report the final path, Beads prefix, validation results, commits, and missing remote configuration.
 
 Stop after this setup when the user requested only project creation. Do not invent plugin APIs or add placeholder runtime code to make the repository look complete. When the request also requires a buildable plugin scaffold, add only the package manifest, target-compatible TypeScript configuration, Cordis entry point, patch manifest, and smallest Loader-based lifecycle test required by the pinned DSH documentation.
 
