@@ -52,19 +52,11 @@ Global Pi prompt templates are versioned in `~/.agents/prompts/`. Pi reads them 
 | -------- | ------- |
 | `/beads` | Read Beads epics, issues, and related plans. |
 | `/clean` | Delete merged branches and Beads cleanup artifacts. |
-| `/coder` | Run the TockCoder task list. |
-| `/designer` | Run the TockDesigner task list. |
-| `/driver` | Run the TockDriver task list. |
 | `/learn` | Learn from third-party projects, report ideas, and plan adoption. |
 | `/merge` | Merge green PRs, update main, and sync clean worktrees to main. |
-| `/pi` | Plan TockDriver evolution from the Pi SDK and Tockbot architecture. |
 | `/plan` | Write a plan and implement it. |
 | `/pr` | Validate the branch, open a PR, and fix conflicts. |
 | `/review` | Review unmerged changes and fix bad code. |
-| `/sandbox` | Audit and close Tockbot sandboxing gaps against Codex. |
-| `/skills` | Audit Tockbot skill system against OpenClaw and implement improvements. |
-| `/slider` | Run the TockSlider task list. |
-| `/web-design` | Review the web design system and update `web.md`. |
 
 ## Codex Automations
 
