@@ -25,8 +25,10 @@ Use this target when the user says Tao, MacBook Air, `MacBookAir`, or `/Users/ta
 - Login: `taowang`
 - Home: `/Users/taowang`
 - Remote Login command: `ssh taowang@MacBook-Pro`
-- Hostname observed over SSH: `MacBook-Pro.lan`
-- Current IP: unknown; do not reuse the MacBook Air IP
+- Hostnames observed over SSH: `MacBook-Pro.lan` and later `Taos-MBP.lan`
+- Last known fallback IP: `192.168.1.99` (may change; never use the MacBook Air IP)
+- Direct fallback: `ssh -o HostKeyAlias=MacBook-Pro taowang@192.168.1.99`
+- SSH service name when awake: `Tao’s MacBook Pro`
 - Current ED25519 host-key fingerprint: `SHA256:kNutRVXp6KP1S9Vis5VU23m9tx2TQgKqmZMo79ITubI`
 
 Use this target when the user says taowang, MacBook Pro, `MacBook-Pro`, or `/Users/taowang`.
@@ -46,7 +48,7 @@ Use `BatchMode=yes` so an unavailable key or host fails promptly instead of wait
 
 When a new host asks for host-key confirmation, verify its fingerprint or have the user complete the normal first interactive connection. Do not disable host-key checking or use `StrictHostKeyChecking=no`.
 
-If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If the MacBook Pro hostname fails, ask the user for its current IP rather than guessing or using the Air's IP.
+If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If the MacBook Pro hostname fails, retry `taowang@192.168.1.99` with `HostKeyAlias=MacBook-Pro`; ask the user for a current IP if that last-known address also fails.
 
 ## Run Remote Commands
 
