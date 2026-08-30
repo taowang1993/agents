@@ -274,9 +274,9 @@ Validate and score Agent Skill packages for spec compliance, content quality, co
 
 Create new skills, modify and improve existing ones, and measure skill performance with evals and benchmarks.
 
-### ssh-tao
+### ssh
 
-SSH into Tao's MacBook Air from Max's Mac, run remote commands safely, and transfer files with rsync/scp.
+SSH into either of Max's MacBooks, run remote commands safely, and transfer files with rsync/scp.
 
 ### surf
 
