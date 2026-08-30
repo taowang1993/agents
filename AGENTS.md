@@ -2,10 +2,11 @@
 
 ## Development Guidelines
 
-- If a file or directory looks different after your work, assume the user changed it. Never delete, revert, restore, overwrite, stage, commit, undo, or recreate files or directories the user created, changed, or removed between your turns — even if they conflict with your plan or prior edits. If you notice an unexpected change, stop and ask before touching that path.
+- If a file or directory looks different after your work, treat it as externally owned until you identify who changed it. First check whether another active agent or session is working in the same repository and verify ownership with that agent (use Intercom when available). If another agent owns the path, coordinate with them and do not touch their changes without explicit confirmation. If no agent owns it, assume the user changed it and stop to ask the user before touching that path. Never delete, revert, restore, overwrite, stage, commit, undo, or recreate user-owned changes without explicit permission, even if they conflict with your plan or prior edits.
 - When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
 - After creating or modifying an agent skill, use the skill-validator skill to audit it.
 - Before importing or installing third-party agent skills, scan them with SkillSpector.
+- When asking users to choose an option, always use non-technical terms.
 
 ### Git
 

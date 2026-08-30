@@ -9,6 +9,10 @@
 			"path": "../../projects/resources"
 		},
 		{
+			"name": "tockteam",
+			"path": "../../projects/tockteam"
+		},
+		{
 			"name": "tockbot",
 			"path": "../../projects/tockbot"
 		},
@@ -21,15 +25,15 @@
 			"path": "../../projects/tockdocs"
 		},
 		{
+			"name": "books",
 			"path": "../../books"
 		},
 		{
-			"path": "../../projects/soulart"
-		},
-		{
+			"name": ".codex",
 			"path": "../../.codex"
 		},
 		{
+			"name": ".pi",
 			"path": "../../.pi"
 		}
 	],

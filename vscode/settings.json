@@ -3,6 +3,7 @@
     "terminal.integrated.fontSize": 14,
     "terminal.integrated.lineHeight": 1.2,
     "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.enablePersistentSessions": false,
     "workbench.panel.defaultLocation": "right",
     "search.useIgnoreFiles": true,
     "search.useParentIgnoreFile": true,

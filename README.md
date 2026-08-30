@@ -32,6 +32,18 @@ Expand no-argument prompt templates inline when `/template` appears in prompt te
 
 Play a system sound (`Funk.aiff`) when the agent finishes a turn.
 
+### orca-agent-status
+
+Send Pi session and tool status to Orca.
+
+### orca-prefill
+
+Prefill Pi's prompt editor from Orca.
+
+### orca-titlebar-spinner
+
+Show an animated Pi title while an agent is running.
+
 ### prompt-editor
 
 Custom prompt editor with model selection, provider switching, and thinking-level settings.
