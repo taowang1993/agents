@@ -6,23 +6,15 @@
 		},
 		{
 			"name": "resources",
-			"path": "../../projects/resources"
+			"path": "../../resources"
 		},
 		{
 			"name": "tockteam",
 			"path": "../../projects/tockteam"
 		},
 		{
-			"name": "tockbot",
-			"path": "../../projects/tockbot"
-		},
-		{
 			"name": "worktrees",
 			"path": "../../projects/worktrees"
-		},
-		{
-			"name": "tockdocs",
-			"path": "../../projects/tockdocs"
 		},
 		{
 			"name": "books",
@@ -36,9 +28,5 @@
 			"name": ".pi",
 			"path": "../../.pi"
 		}
-	],
-	"settings": {
-		"workbench.colorTheme": "Dark Modern",
-		"git.ignoreLimitWarning": true
-	}
+	]
 }
