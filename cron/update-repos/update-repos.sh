@@ -1,10 +1,10 @@
 #!/bin/bash
-# Auto-update all git repositories in /Users/max/projects/resources
+# Auto-update all git repositories in ~/projects/resources
 # Logs output with timestamps
 
 LOG_DIR="$HOME/.cron-logs"
 LOG_FILE="$LOG_DIR/update-repos-$(date +%Y%m%d).log"
-PROJECTS_DIR="/Users/max/projects/resources"
+PROJECTS_DIR="$HOME/projects/resources"
 
 mkdir -p "$LOG_DIR"
 
