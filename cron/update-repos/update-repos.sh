@@ -4,7 +4,7 @@
 
 LOG_DIR="$HOME/.cron-logs"
 LOG_FILE="$LOG_DIR/update-repos-$(date +%Y%m%d).log"
-PROJECTS_DIR="$HOME/projects/resources"
+PROJECTS_DIR="${PROJECTS_DIR:-$HOME/projects/resources}"
 
 mkdir -p "$LOG_DIR"
 
