@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /Users/max/.local/bin/uv run --script /Users/max/.agents/shortcuts/due-screenshot/dual-screenshot.py
+exec /opt/homebrew/bin/uv run --script "$HOME/.agents/shortcuts/due-screenshot/dual-screenshot.py"
