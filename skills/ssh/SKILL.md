@@ -40,6 +40,7 @@ Use this target when the user says taowang, MacBook Pro, `MacBook-Pro`, or `/Use
 - Primary command: `ssh max@Max.local`
 - Hostname observed locally: `Mac.lan`
 - Current fallback IP: `192.168.1.118`
+- Current ED25519 host-key fingerprint: `SHA256:71DTN6YGbLhuIwAYoVndzwBSf80rpwwQU1UbCbT2mvw`
 
 Use this target when the user says Max, Max's Mac, `Max.local`, or `/Users/max`.
 
