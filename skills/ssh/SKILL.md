@@ -33,16 +33,16 @@ Use this target when the user says Tao, MacBook Air, `MacBookAir`, or `/Users/ta
 
 Use this target when the user says taowang, MacBook Pro, `MacBook-Pro`, or `/Users/taowang`.
 
-### Max's MacBook Air
+### m2 MacBook Air
 
 - Login: `max`
 - Home: `/Users/max`
-- Primary command: `ssh max@Max.local`
-- Hostname observed locally: `Mac.lan`
+- Primary command: `ssh max@m2.local`
+- Hostname: `m2`
 - Current fallback IP: `192.168.1.118`
 - Current ED25519 host-key fingerprint: `SHA256:71DTN6YGbLhuIwAYoVndzwBSf80rpwwQU1UbCbT2mvw`
 
-Use this target when the user says Max, Max's Mac, `Max.local`, or `/Users/max`.
+Use this target when the user says m2, M2, Max, Max's Mac, `m2.local`, or `/Users/max`.
 
 If the user does not identify which Mac to use, ask before running commands.
 
@@ -53,14 +53,14 @@ Run a non-interactive identity check before doing remote work:
 ```bash
 ssh -o BatchMode=yes -o ConnectTimeout=10 tao@MacBookAir.lan 'hostname; whoami; pwd'
 ssh -o BatchMode=yes -o ConnectTimeout=10 taowang@MacBook-Pro 'hostname; whoami; pwd'
-ssh -o BatchMode=yes -o ConnectTimeout=10 max@Max.local 'hostname; whoami; pwd'
+ssh -o BatchMode=yes -o ConnectTimeout=10 max@m2.local 'hostname; whoami; pwd'
 ```
 
 Use `BatchMode=yes` so an unavailable key or host fails promptly instead of waiting for a password. The current SSH key is authorized for Max's account.
 
 When a new host asks for host-key confirmation, verify its fingerprint or have the user complete the normal first interactive connection. Do not disable host-key checking or use `StrictHostKeyChecking=no`.
 
-If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If the MacBook Pro hostname fails, retry `taowang@192.168.1.243` with `HostKeyAlias=MacBook-Pro`. If Max's hostname fails, retry `max@192.168.1.118` with `HostKeyAlias=Max.local`. Ask the user for a current IP if the matching last-known address also fails.
+If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If the MacBook Pro hostname fails, retry `taowang@192.168.1.243` with `HostKeyAlias=MacBook-Pro`. If m2's hostname fails, retry `max@192.168.1.118` with `HostKeyAlias=m2.local`. Ask the user for a current IP if the matching last-known address also fails.
 
 ## Run Remote Commands
 
@@ -69,7 +69,7 @@ Keep remote commands non-interactive and clear:
 ```bash
 ssh -o BatchMode=yes tao@MacBookAir.lan 'ls -la "$HOME"'
 ssh -o BatchMode=yes taowang@MacBook-Pro 'ls -la "$HOME"'
-ssh -o BatchMode=yes max@Max.local 'ls -la "$HOME"'
+ssh -o BatchMode=yes max@m2.local 'ls -la "$HOME"'
 ```
 
 Use `$HOME` on the remote Mac; do not hard-code `/Users/max` there. For multi-line remote Python, pass the script on stdin to avoid quoting errors:
