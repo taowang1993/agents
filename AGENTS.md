@@ -7,6 +7,7 @@
 - After creating or modifying an agent skill, use the skill-validator skill to audit it.
 - Before importing or installing third-party agent skills, scan them with SkillSpector.
 - When asking users to choose an option, always use non-technical terms.
+- Never take control of the user's cursor, mouse, keyboard, or active app without explicit permission immediately beforehand; use background or app-scoped automation instead, and stop to ask if foreground or OS-level automation is unavoidable.
 
 ### Git
 
