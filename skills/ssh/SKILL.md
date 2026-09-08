@@ -20,18 +20,17 @@ Use the target mapping below before connecting. Treat the computer name and logi
 
 Use this target when the user says Tao, MacBook Air, `MacBookAir`, or `/Users/tao`.
 
-### MacBook Pro
+### m5 MacBook Pro
 
 - Login: `taowang`
 - Home: `/Users/taowang`
-- Remote Login command: `ssh taowang@MacBook-Pro`
-- Hostnames observed over SSH: `MacBook-Pro.lan` and later `Taos-MBP.lan`
-- Last known fallback IP: `192.168.1.243` (may change; never use the MacBook Air IP)
-- Direct fallback: `ssh -o HostKeyAlias=MacBook-Pro taowang@192.168.1.243`
-- SSH service name when awake: `Tao’s MacBook Pro`
+- Primary command: `ssh taowang@m5.local`
+- Hostname: `m5`
+- Current fallback IP: `192.168.1.99` (may change; never use a MacBook Air IP)
+- Direct fallback: `ssh -o HostKeyAlias=m5.local taowang@192.168.1.99`
 - Current ED25519 host-key fingerprint: `SHA256:kNutRVXp6KP1S9Vis5VU23m9tx2TQgKqmZMo79ITubI`
 
-Use this target when the user says taowang, MacBook Pro, `MacBook-Pro`, or `/Users/taowang`.
+Use this target when the user says m5, M5, taowang, MacBook Pro, `m5.local`, or `/Users/taowang`.
 
 ### m2 MacBook Air
 
@@ -52,7 +51,7 @@ Run a non-interactive identity check before doing remote work:
 
 ```bash
 ssh -o BatchMode=yes -o ConnectTimeout=10 tao@MacBookAir.lan 'hostname; whoami; pwd'
-ssh -o BatchMode=yes -o ConnectTimeout=10 taowang@MacBook-Pro 'hostname; whoami; pwd'
+ssh -o BatchMode=yes -o ConnectTimeout=10 taowang@m5.local 'hostname; whoami; pwd'
 ssh -o BatchMode=yes -o ConnectTimeout=10 max@m2.local 'hostname; whoami; pwd'
 ```
 
@@ -60,7 +59,7 @@ Use `BatchMode=yes` so an unavailable key or host fails promptly instead of wait
 
 When a new host asks for host-key confirmation, verify its fingerprint or have the user complete the normal first interactive connection. Do not disable host-key checking or use `StrictHostKeyChecking=no`.
 
-If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If the MacBook Pro hostname fails, retry `taowang@192.168.1.243` with `HostKeyAlias=MacBook-Pro`. If m2's hostname fails, retry `max@192.168.1.118` with `HostKeyAlias=m2.local`. Ask the user for a current IP if the matching last-known address also fails.
+If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If m5's hostname fails, retry `taowang@192.168.1.99` with `HostKeyAlias=m5.local`. If m2's hostname fails, retry `max@192.168.1.118` with `HostKeyAlias=m2.local`. Ask the user for a current IP if the matching last-known address also fails.
 
 ## Run Remote Commands
 
@@ -68,14 +67,14 @@ Keep remote commands non-interactive and clear:
 
 ```bash
 ssh -o BatchMode=yes tao@MacBookAir.lan 'ls -la "$HOME"'
-ssh -o BatchMode=yes taowang@MacBook-Pro 'ls -la "$HOME"'
+ssh -o BatchMode=yes taowang@m5.local 'ls -la "$HOME"'
 ssh -o BatchMode=yes max@m2.local 'ls -la "$HOME"'
 ```
 
 Use `$HOME` on the remote Mac; do not hard-code `/Users/max` there. For multi-line remote Python, pass the script on stdin to avoid quoting errors:
 
 ```bash
-ssh -o BatchMode=yes taowang@MacBook-Pro 'python3 -' <<'PY'
+ssh -o BatchMode=yes taowang@m5.local 'python3 -' <<'PY'
 from pathlib import Path
 print(Path.home())
 PY
@@ -84,7 +83,7 @@ PY
 Before modifying a remote file, use strict shell mode and create a timestamped backup:
 
 ```bash
-ssh -o BatchMode=yes taowang@MacBook-Pro 'bash -s' <<'SH'
+ssh -o BatchMode=yes taowang@m5.local 'bash -s' <<'SH'
 set -euo pipefail
 file="$HOME/.zshrc"
 cp "$file" "$file.pi-backup-$(date +%Y%m%d-%H%M%S)"
@@ -100,8 +99,8 @@ Prefer `rsync` for directories and repeatable transfers. Use `scp` for one-off f
 
 ```bash
 rsync -av ./path/ tao@MacBookAir.lan:~/path/
-rsync -av ./path/ taowang@MacBook-Pro:~/path/
-rsync -av taowang@MacBook-Pro:~/path/ ./path/
+rsync -av ./path/ taowang@m5.local:~/path/
+rsync -av taowang@m5.local:~/path/ ./path/
 ```
 
 State clearly whether each result came from the local Mac, the Air, or the Pro.
