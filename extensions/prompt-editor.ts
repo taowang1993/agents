@@ -31,7 +31,7 @@ type ModesFile = {
 // Only "default" is a forced/built-in mode. Others are just initial suggestions and can be renamed/deleted.
 const DEFAULT_MODE_ORDER = ["default"] as const;
 const CUSTOM_MODE_NAME = "custom" as const;
-const PREFERRED_MODE_NAMES = ["gpt-5.6-sol", "gpt-5.6-luna", "kimi-k3", "deepseek-v4-pro"] as const;
+const PREFERRED_MODE_NAMES = ["gpt-5.6-sol", "gpt-5.6-luna", "gpt-6-astra", "deepseek-v4-pro"] as const;
 type PreferredModeName = (typeof PREFERRED_MODE_NAMES)[number];
 
 function expandUserPath(p: string): string {
