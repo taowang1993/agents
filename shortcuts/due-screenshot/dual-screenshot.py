@@ -1,4 +1,4 @@
-#!/usr/bin/env -S /Users/max/.local/bin/uv run --script
+#!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.10"
 # dependencies = ["Pillow"]
@@ -56,7 +56,7 @@ def combine_vertical(img1: Image.Image, img2: Image.Image) -> Image.Image:
 def play_feedback_sound() -> None:
     """Play a feedback sound to indicate screenshot was taken."""
     # Absolute path — Shortcuts may execute from a temp copy of the script
-    sound = "/Users/max/.agents/shortcuts/due-screenshot/camera-shutter.mp3"
+    sound = str(Path(__file__).with_name("camera-shutter.mp3"))
     try:
         subprocess.run(["/usr/bin/afplay", "-v", "0.5", sound], capture_output=True, timeout=3)
     except Exception:
