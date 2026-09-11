@@ -2,6 +2,7 @@
 
 ## Development Guidelines
 
+- Prefer low-cost Luna subagents for well-scoped mechanical work, easy tasks, and straightforward implementation once requirements and boundaries are clear—for example, repetitive edits, documentation updates, fixture/test additions, and prescribed verification. Give each subagent explicit scope and acceptance checks; keep concurrent writers isolated. Keep ambiguous requirements, architecture, security-sensitive decisions, and final review with a stronger model, and verify subagent results before accepting them. Handle tiny tasks directly when delegation would cost more than it saves.
 - If a file or directory looks different after your work, treat it as externally owned until you identify who changed it. First check whether another active agent or session is working in the same repository and verify ownership with that agent (use Intercom when available). If another agent owns the path, coordinate with them and do not touch their changes without explicit confirmation. If no agent owns it, assume the user changed it and stop to ask the user before touching that path. Never delete, revert, restore, overwrite, stage, commit, undo, or recreate user-owned changes without explicit permission, even if they conflict with your plan or prior edits.
 - When updating a skill against the upstream, only update the content below the frontmatter and never overwrite the frontmatter.
 - After creating or modifying an agent skill, use the skill-validator skill to audit it.
@@ -170,6 +171,8 @@ Prompt templates are global Pi slash-command snippets. Add new templates as `pro
 | `clawpatch`         | Code review that lands fixes   |
 
 | `herdr` | Agent multiplexer that lives in your terminal |
+
+| `git` | Distributed revision control system |
 
 ## Launch Agents
 
