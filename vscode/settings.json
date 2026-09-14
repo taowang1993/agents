@@ -177,5 +177,6 @@
     "workbench.editorAssociations": {
         "*.copilotmd": "vscode.markdown.preview.editor"
     },
-    "markdownWysiwyg.tocContentGap": 16
+    "markdownWysiwyg.tocContentGap": 16,
+    "security.workspace.trust.untrustedFiles": "open"
 }

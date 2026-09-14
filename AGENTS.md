@@ -10,6 +10,7 @@
 - When asking users to choose an option, always use non-technical terms.
 - Never take control of the user's cursor, mouse, keyboard, or active app without explicit permission immediately beforehand; use background or app-scoped automation instead, and stop to ask if foreground or OS-level automation is unavoidable.
 - Temporary macOS Electron or Chromium verification must pass `--use-mock-keychain` before overriding `HOME`; prefer isolating `--user-data-dir` and application data roots while preserving `HOME`. Never interact with, reset, or modify the user's Keychain; if SecurityAgent appears, stop and verify the full launched process tree before continuing.
+- Never create worktrees unless asked.
 
 ### Git
 
