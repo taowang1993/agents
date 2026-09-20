@@ -11,6 +11,7 @@
 - Never take control of the user's cursor, mouse, keyboard, or active app without explicit permission immediately beforehand; use background or app-scoped automation instead, and stop to ask if foreground or OS-level automation is unavoidable.
 - Temporary macOS Electron or Chromium verification must pass `--use-mock-keychain` before overriding `HOME`; prefer isolating `--user-data-dir` and application data roots while preserving `HOME`. Never interact with, reset, or modify the user's Keychain; if SecurityAgent appears, stop and verify the full launched process tree before continuing.
 - Never create worktrees unless asked.
+- When sharing a local HTML page, report, or gallery for browser viewing, always show its full absolute filesystem path directly in a standalone code block so the user can copy and paste it into the browser address bar. Do not hide the path behind a Markdown link label or provide only a clickable link.
 
 ### Git
 
