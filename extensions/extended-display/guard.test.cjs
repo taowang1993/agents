@@ -1,9 +1,34 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { EventEmitter } = require('node:events');
-const { chooseDisplay, fitBounds, installWindowGuard, shellCommand, toolBlockReason } = require('./guard.cjs');
+const { chooseDisplay, fitBounds, installWindowGuard, shellCommand, toolBlockReason, registerEntrySchemes } = require('./guard.cjs');
+const { mkdtempSync, writeFileSync, rmSync } = require('node:fs');
+const { tmpdir } = require('node:os');
+const { join } = require('node:path');
 const primary = { id: 1, bounds: { x: 0, y: 0, width: 1512, height: 982 }, workArea: { x: 0, y: 33, width: 1512, height: 949 } };
 const side = { id: 10, bounds: { x: -1366, y: 0, width: 1366, height: 1024 }, workArea: { x: -1366, y: 25, width: 1366, height: 999 } };
+
+test('entry scheme declarations register only named secure protocols, not early app code or privilege overrides', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'guard-schemes-'));
+  const entry = join(dir, 'main.cjs');
+  const calls = [];
+  const electron = { protocol: { registerSchemesAsPrivileged: value => calls.push(value) } };
+  try {
+    registerEntrySchemes(electron);
+    registerEntrySchemes(electron, entry);
+    assert.deepEqual(calls, []);
+    writeFileSync(entry + '.protocols.json', JSON.stringify(['app']));
+    registerEntrySchemes(electron, entry);
+    assert.deepEqual(calls, [[{ scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, codeCache: true, corsEnabled: true } }]]);
+    for (const bad of [['http'], ['file'], ['javascript'], ['APP'], ['app', 'app'], Array(9).fill('app'), [{ scheme: 'app', privileges: { bypassCSP: true } }], { app: true }, null]) {
+      writeFileSync(entry + '.protocols.json', JSON.stringify(bad));
+      assert.throws(() => registerEntrySchemes(electron, entry), /scheme declaration/i);
+    }
+    writeFileSync(entry + '.protocols.json', '{broken');
+    assert.throws(() => registerEntrySchemes(electron, entry));
+    assert.equal(calls.length, 1, 'Invalid declarations must not reach Electron');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 test('chooses an extended display regardless of negative coordinates; rejects absent/mirrored/main targets', () => {
   assert.equal(chooseDisplay([primary, side], primary).id, 10);
@@ -48,10 +73,18 @@ test('creates hidden, places before showing, never focuses, constrains subsequen
   assert.equal(calls[0][1].show, false);
   assert.equal(calls[0][1].focusable, false);
   assert.equal(calls[0][1].x, -1366);
+  assert.equal(calls[0][1].y, side.workArea.y);
+  assert.equal(calls[0][1].width, side.workArea.width);
+  assert.equal(calls[0][1].height, side.workArea.height);
   assert.equal(calls.at(-1)[0], 'show');
   win.show(); win.focus(); win.setPosition(0, 0);
   assert.equal(win.getBounds().x, -1366);
   assert.equal(win.getBounds().y, 25);
+  win.setSize(640, 480);
+  assert.deepEqual(win.getBounds(), side.workArea, 'Main verification windows keep filling the extended display');
+  const dialog = new electron.BrowserWindow({ parent: win, width: 400, height: 300, show: false });
+  assert.equal(dialog.getBounds().width, 400, 'Owned child dialogs retain their requested size');
+  assert.equal(dialog.getBounds().height, 300);
   screen.getAllDisplays = () => [primary]; screen.emit('display-removed');
   assert.equal(win.dead, true); assert.equal(stopped, true);
 });

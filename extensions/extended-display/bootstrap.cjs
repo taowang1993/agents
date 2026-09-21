@@ -21,7 +21,7 @@ Module.registerHooks({
 });
 const { writeFileSync, renameSync } = require('node:fs');
 const path = require('node:path');
-const { installWindowGuard, PROFILE } = require('./guard.cjs');
+const { installWindowGuard, registerEntrySchemes, PROFILE } = require('./guard.cjs');
 const childProcess = require('node:child_process');
 const { syncBuiltinESMExports } = require('node:module');
 const config = JSON.parse(process.env.PI_EXTENDED_DISPLAY_CONFIG);
@@ -37,6 +37,7 @@ let state = { ready: false };
 function stop(error) { state.error = String(error); report(); app.exit(1); }
 process.on('uncaughtException', stop);
 process.on('unhandledRejection', stop);
+registerEntrySchemes(electron, config.entry);
 app.setPath('appData', config.root);
 app.setPath('userData', path.join(config.root, 'user-data'));
 app.setPath('sessionData', path.join(config.root, 'user-data'));

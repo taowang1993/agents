@@ -12,6 +12,24 @@ const shellCommand = command => `/usr/bin/sandbox-exec -p ${quote(PROFILE)} /bin
 const overlaps = (a, b) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 const rectangle = b => b && ['x', 'y', 'width', 'height'].every(k => Number.isFinite(b[k])) && b.width > 0 && b.height > 0;
 
+// Electron requires standard custom schemes before ready; target code still loads
+// only after display validation. The sidecar is data, never an early code hook.
+function registerEntrySchemes(electron, entry) {
+  if (!entry) return;
+  const { readFileSync } = require('node:fs');
+  let text;
+  try { text = readFileSync(entry + '.protocols.json', 'utf8'); }
+  catch (error) { if (error.code === 'ENOENT') return; throw error; }
+  const names = JSON.parse(text);
+  const reserved = new Set(['http', 'https', 'file', 'data', 'javascript', 'about', 'blob', 'chrome', 'devtools', 'ws', 'wss']);
+  if (!Array.isArray(names) || names.length > 8 || new Set(names).size !== names.length
+    || names.some(name => typeof name !== 'string' || !/^[a-z][a-z0-9+.-]{1,31}$/.test(name) || reserved.has(name))) {
+    throw new Error('Invalid entry scheme declaration. Supply up to eight unique custom scheme names.');
+  }
+  if (names.length) electron.protocol.registerSchemesAsPrivileged(names.map(scheme => ({ scheme,
+    privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true, codeCache: true, corsEnabled: true } })));
+}
+
 function chooseDisplay(displays, primary, requestedId) {
   const candidates = displays.filter(d => d.id !== primary.id && rectangle(d.bounds) && rectangle(d.workArea)
     && !overlaps(d.bounds, primary.bounds) && (requestedId === undefined || requestedId === d.id));
@@ -51,14 +69,16 @@ function installWindowGuard(electron, { displayId, stop, record = () => {} }) {
     const Wrapped = new Proxy(Original, {
       construct(Target, args) {
         const options = args[0] ?? {};
-        const bounds = constrain(Object.fromEntries(['x', 'y', 'width', 'height'].filter(k => options[k] !== undefined).map(k => [k, options[k]])));
+        // Main verification windows fill the selected display; child dialogs stay bounded.
+        const windowBounds = b => constrain(options.parent ? b : current().workArea);
+        const bounds = windowBounds(Object.fromEntries(['x', 'y', 'width', 'height'].filter(k => options[k] !== undefined).map(k => [k, options[k]])));
         const win = new Target({ ...options, ...bounds, show: false, focusable: false, fullscreen: false,
           fullscreenable: false, maximizable: false, movable: false, resizable: false,
           minWidth: 1, minHeight: 1, maxWidth: current().workArea.width, maxHeight: current().workArea.height,
           webPreferences: { ...options.webPreferences, disableDialogs: true } });
         windows.add(win);
         const setBounds = win.setBounds.bind(win), showInactive = win.showInactive.bind(win);
-        const place = b => { const fitted = constrain(b); setBounds(fitted, false); return fitted; };
+        const place = b => { const fitted = windowBounds(b); setBounds(fitted, false); return fitted; };
         win.setBounds = b => { place({ ...win.getBounds(), ...b }); };
         win.setPosition = (x, y) => { place({ ...win.getBounds(), x, y }); };
         win.setSize = (width, height) => { place({ ...win.getBounds(), width, height }); };
@@ -131,4 +151,4 @@ function toolBlockReason(toolName, input) {
   if (name === 'mcp' && !input.tool && !input.connect && !input.url && !input.server && (!input.action || input.action === 'ui-messages')) return null;
   return `Extended-display guard: ${name} is not a guarded local GUI execution path. Use extended_display for visible app/browser verification; do not bypass this guard.`;
 }
-module.exports = { PROFILE, chooseDisplay, fitBounds, installWindowGuard, shellCommand, toolBlockReason };
+module.exports = { PROFILE, chooseDisplay, fitBounds, installWindowGuard, shellCommand, toolBlockReason, registerEntrySchemes };
