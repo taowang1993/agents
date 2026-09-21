@@ -26,8 +26,8 @@ Use this target when the user says Tao, MacBook Air, `MacBookAir`, or `/Users/ta
 - Home: `/Users/taowang`
 - Primary command: `ssh taowang@m5.local`
 - Hostname: `m5`
-- Current fallback IP: `192.168.1.99` (may change; never use a MacBook Air IP)
-- Direct fallback: `ssh -o HostKeyAlias=m5.local taowang@192.168.1.99`
+- Current fallback IP: `192.168.3.60` (may change; never use a MacBook Air IP)
+- Direct fallback: `ssh -o HostKeyAlias=m5.local taowang@192.168.3.60`
 - Current ED25519 host-key fingerprint: `SHA256:kNutRVXp6KP1S9Vis5VU23m9tx2TQgKqmZMo79ITubI`
 
 Use this target when the user says m5, M5, taowang, MacBook Pro, `m5.local`, or `/Users/taowang`.
@@ -38,7 +38,7 @@ Use this target when the user says m5, M5, taowang, MacBook Pro, `m5.local`, or 
 - Home: `/Users/max`
 - Primary command: `ssh max@m2.local`
 - Hostname: `m2`
-- Current fallback IP: `192.168.1.118`
+- Current fallback IP: `192.168.3.61`
 - Current ED25519 host-key fingerprint: `SHA256:71DTN6YGbLhuIwAYoVndzwBSf80rpwwQU1UbCbT2mvw`
 
 Use this target when the user says m2, M2, Max, Max's Mac, `m2.local`, or `/Users/max`.
@@ -59,7 +59,13 @@ Use `BatchMode=yes` so an unavailable key or host fails promptly instead of wait
 
 When a new host asks for host-key confirmation, verify its fingerprint or have the user complete the normal first interactive connection. Do not disable host-key checking or use `StrictHostKeyChecking=no`.
 
-If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If m5's hostname fails, retry `taowang@192.168.1.99` with `HostKeyAlias=m5.local`. If m2's hostname fails, retry `max@192.168.1.118` with `HostKeyAlias=m2.local`. Ask the user for a current IP if the matching last-known address also fails.
+If a `.local` hostname fails to resolve, discover the current IP over mDNS first:
+
+```bash
+dns-sd -G v4 m2.local    # also works for m5.local, MacBookAir.local
+```
+
+If the MacBook Air hostname fails, retry `tao@192.168.1.71`. If m5's hostname fails, retry `taowang@192.168.3.60` with `HostKeyAlias=m5.local`. If m2's hostname fails, retry `max@192.168.3.61` with `HostKeyAlias=m2.local`. Ask the user for a current IP if the matching last-known address also fails. Note: the LAN moved from `192.168.1.x` to `192.168.3.x` as of 2026-09; older IPs recorded above may be stale.
 
 ## Run Remote Commands
 
